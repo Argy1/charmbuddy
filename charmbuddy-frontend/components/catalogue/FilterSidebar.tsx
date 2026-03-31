@@ -44,6 +44,14 @@ type FlatCategory = {
   name: string;
 };
 
+const FALLBACK_CATEGORIES: FlatCategory[] = [
+  { id: 1, name: "Necklace" },
+  { id: 2, name: "Bracelet" },
+  { id: 3, name: "Bag Charm" },
+  { id: 4, name: "Phonestrap" },
+  { id: 5, name: "Crochet Stuff" },
+];
+
 function flattenCategories(categories: Category[]): FlatCategory[] {
   const flattened: FlatCategory[] = [];
   categories.forEach((category) => {
@@ -67,15 +75,10 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
         if (!isMounted) {
           return;
         }
-        setCategories(flattenCategories(response.data).slice(0, 8));
+        const flattened = flattenCategories(response.data).slice(0, 8);
+        setCategories(flattened.length > 0 ? flattened : FALLBACK_CATEGORIES);
       } catch {
-        setCategories([
-          { id: 1, name: "Necklace" },
-          { id: 2, name: "Bracelet" },
-          { id: 3, name: "Bag Charm" },
-          { id: 4, name: "Phonestrap" },
-          { id: 5, name: "Crochet Stuff" },
-        ]);
+        setCategories(FALLBACK_CATEGORIES);
       }
     };
 
@@ -88,24 +91,24 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
 
   return (
     <motion.aside
-      className={`${mobile ? "w-full h-auto" : "h-[694px] w-[283px]"} rounded-[20px] border border-black bg-[rgba(255,255,255,0.4)] backdrop-blur-[12.6px] px-[14px] py-[37px]`}
+      className={`${mobile ? "w-full h-auto" : "w-full max-w-[300px]"} rounded-[20px] border border-black bg-[rgba(255,255,255,0.4)] backdrop-blur-[12.6px] px-[14px] py-[20px] md:py-[24px] xl:py-[28px]`}
       initial={{ opacity: 0, x: prefersReducedMotion ? 0 : -20, filter: prefersReducedMotion ? "blur(0px)" : "blur(4px)" }}
       transition={prefersReducedMotion ? { duration: 0.2 } : springs.soft}
       viewport={{ amount: 0.4, once: true }}
       whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
     >
-      <div className={`${mobile ? "h-auto" : "h-[606px]"} w-[255px] max-w-full flex flex-col gap-[15px]`}>
-        <div className="flex w-[243px] max-w-full flex-col gap-[22px]">
-          <div className="flex w-full items-center gap-[66px]">
+      <div className="w-full max-w-full flex flex-col gap-[16px] md:gap-[18px]">
+        <div className="flex w-full flex-col gap-[16px]">
+          <div className="flex w-full items-center justify-between gap-[12px]">
             <p className="font-[var(--font-satoshi)] text-[24px] font-[900] tracking-[2.4px] text-black">Filters</p>
-            <button className="rounded-[10px] border border-black px-[16px] py-[8px]" onClick={onReset} type="button">
+            <button className="rounded-[10px] border border-black px-[14px] py-[7px]" onClick={onReset} type="button">
               <span className="font-[var(--font-satoshi)] text-[18px] font-[700] tracking-[1.8px] text-black">Reset</span>
             </button>
           </div>
           <AppImage alt="Divider" className="h-[1px] w-full" height={1} src="/catalogue/line-1.svg" width={243} />
         </div>
 
-        <div className="flex h-[38px] w-[243px] max-w-full items-center justify-between rounded-[20px] bg-[#705cb2] px-[12px] py-[8px]">
+        <div className="flex h-[38px] w-full items-center justify-between rounded-[20px] bg-[#705cb2] px-[12px] py-[8px]">
           <input
             className="w-full bg-transparent pr-[8px] font-[var(--font-satoshi)] text-[14px] font-[500] tracking-[1.2px] text-white outline-none placeholder:text-white/70"
             onChange={(event) => onChange({ search: event.target.value })}
@@ -115,20 +118,20 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
           <AppImage alt="Search" className="h-[20px] w-[20px]" height={20} src="/catalogue/icon-search-small.svg" width={20} />
         </div>
 
-        <div className="flex w-full flex-col gap-[25px]">
-          <div className="flex w-[199px] flex-col gap-[22px]">
+        <div className="flex w-full flex-col gap-[22px]">
+          <div className="flex w-full flex-col gap-[14px]">
             <div className="flex items-center gap-[17px]">
               <p className="font-[var(--font-satoshi)] text-[24px] font-[700] text-black">Categories</p>
               <AppImage alt="Arrow" className="h-[30px] w-[30px]" height={30} src="/catalogue/icon-arrow-down.svg" width={30} />
             </div>
-            <div className="flex h-[163px] flex-col justify-center gap-[11px]">
+            <div className="flex min-h-[50px] flex-col gap-[11px]">
               <CategoryRow
                 key="all-categories"
                 label="All Categories"
                 onClick={() => onChange({ categoryId: null })}
                 selected={filters.categoryId === null}
               />
-              {categories.slice(0, 5).map((category) => (
+              {categories.map((category) => (
                 <CategoryRow
                   key={category.id}
                   label={category.name}
@@ -139,14 +142,14 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
             </div>
           </div>
 
-          <div className="flex w-full flex-col gap-[30px]">
+          <div className="flex w-full flex-col gap-[20px]">
             <div className="flex items-center gap-[10px]">
               <p className="font-[var(--font-satoshi)] text-[24px] font-[700] text-black">Price Range</p>
               <AppImage alt="Arrow" className="h-[30px] w-[30px]" height={30} src="/catalogue/icon-arrow-down.svg" width={30} />
             </div>
 
-            <div className="flex w-[255px] max-w-full flex-col gap-[26px]">
-              <div className="relative h-[45px] w-full">
+            <div className="flex w-full max-w-full flex-col gap-[20px]">
+              <div className="relative h-[45px] w-full max-w-[255px]">
                 <div className="absolute left-[63.775px] top-0 h-[16px] w-[16px] rounded-[100px] bg-[#705cb2]" />
                 <div className="absolute left-[239.2px] top-0 h-[16px] w-[16px] rounded-[100px] bg-[#705cb2]" />
                 <div className="absolute left-0 top-[5px] h-[6px] w-[255px] rounded-[999px] bg-[rgba(112,92,178,0.2)]" />
@@ -188,9 +191,9 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
                 />
               </div>
 
-              <div className="flex w-[240px] flex-col gap-[8px]">
+              <div className="flex w-full max-w-[255px] flex-col gap-[8px]">
                 <p className="font-[var(--font-satoshi)] text-[14px] font-[500] leading-[20px] text-[#0a0a0a]">Quick Select:</p>
-                <div className="grid grid-cols-2 gap-y-[8px] gap-x-[40px]">
+                <div className="grid grid-cols-2 gap-[8px]">
                   <QuickButton active={filters.minPrice === null && filters.maxPrice === 50} label="Under $50" onClick={() => onChange({ minPrice: null, maxPrice: 50 })} />
                   <QuickButton active={filters.minPrice === 50 && filters.maxPrice === 100} label="$50-$100" onClick={() => onChange({ minPrice: 50, maxPrice: 100 })} />
                   <QuickButton active={filters.minPrice === 100 && filters.maxPrice === 150} label="$100-$150" onClick={() => onChange({ minPrice: 100, maxPrice: 150 })} />

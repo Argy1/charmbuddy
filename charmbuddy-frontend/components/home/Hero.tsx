@@ -32,14 +32,14 @@ export default function Hero() {
             Mix, match, and customize your everyday charms!
           </motion.p>
           <motion.div variants={revealItem()} whileHover={{ y: prefersReducedMotion ? 0 : -4 }} whileTap={{ scale: prefersReducedMotion ? 1 : 0.96 }}>
-            <Link
-              className="backdrop-blur-[2.5px] bg-[rgba(89,0,255,0.1)] border border-[rgba(255,255,255,0.4)] border-solid px-[15px] py-[10px] rounded-[50px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] w-fit transition-shadow"
-              href={routes.catalogue}
-            >
-              <span className="font-[var(--font-satoshi)] text-[28px] font-medium leading-[normal] text-black">Find Your </span>
-              <span className="font-[var(--font-fanlste)] text-[28px] italic leading-[normal] text-black">Bloom</span>
-            </Link>
-          </motion.div>
+              <Link
+                className="backdrop-blur-[2.5px] bg-[rgba(89,0,255,0.1)] border border-[rgba(255,255,255,0.4)] border-solid px-[14px] py-[8px] rounded-[50px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] w-fit max-w-full transition-shadow"
+                href={routes.catalogue}
+              >
+                <span className="font-[var(--font-satoshi)] text-[clamp(22px,5vw,26px)] font-medium leading-[normal] text-black">Find Your </span>
+                <span className="font-[var(--font-fanlste)] text-[clamp(22px,5vw,26px)] italic leading-[normal] text-black">Bloom</span>
+              </Link>
+            </motion.div>
         </motion.div>
       </section>
 
@@ -57,11 +57,11 @@ export default function Hero() {
             </motion.p>
             <motion.div variants={revealItem()} whileHover={{ y: prefersReducedMotion ? 0 : -4 }} whileTap={{ scale: prefersReducedMotion ? 1 : 0.96 }}>
               <Link
-                className="backdrop-blur-[2.5px] bg-[rgba(89,0,255,0.1)] border border-[rgba(255,255,255,0.4)] border-solid px-[15px] py-[10px] rounded-[50px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] transition-shadow"
+                className="backdrop-blur-[2.5px] bg-[rgba(89,0,255,0.1)] border border-[rgba(255,255,255,0.4)] border-solid px-[14px] py-[8px] rounded-[50px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] transition-shadow"
                 href={routes.catalogue}
               >
-                <span className="font-[var(--font-satoshi)] text-[36px] font-medium leading-[normal] text-black"> Find Your </span>
-                <span className="font-[var(--font-fanlste)] text-[36px] italic leading-[normal] text-black">Bloom</span>
+                <span className="font-[var(--font-satoshi)] text-[clamp(26px,3vw,32px)] font-medium leading-[normal] text-black">Find Your </span>
+                <span className="font-[var(--font-fanlste)] text-[clamp(26px,3vw,32px)] italic leading-[normal] text-black">Bloom</span>
               </Link>
             </motion.div>
           </motion.div>
