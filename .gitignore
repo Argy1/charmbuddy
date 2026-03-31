@@ -1,0 +1,24 @@
+# General
+.DS_Store
+Thumbs.db
+
+# Frontend
+charmbuddy-frontend/node_modules/
+charmbuddy-frontend/.next/
+charmbuddy-frontend/out/
+charmbuddy-frontend/dist/
+charmbuddy-frontend/.vercel/
+
+# Backend
+charmbuddy-backend/vendor/
+charmbuddy-backend/node_modules/
+charmbuddy-backend/.env
+charmbuddy-backend/.phpunit.result.cache
+charmbuddy-backend/database/database.sqlite
+charmbuddy-backend/bootstrap/cache/*.php
+charmbuddy-backend/bootstrap/cache/*.tmp
+charmbuddy-backend/storage/logs/*.log
+charmbuddy-backend/storage/framework/sessions/*
+charmbuddy-backend/storage/framework/views/*
+charmbuddy-backend/storage/framework/cache/data/*
+charmbuddy-backend/storage/framework/testing/disks/*

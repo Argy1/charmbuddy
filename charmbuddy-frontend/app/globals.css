@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #8798ff;
+  --tint: #a5baff;
+  --glass-purple: rgba(89, 0, 255, 0.1);
+  --glass-white-40: rgba(255, 255, 255, 0.4);
+  --glass-white-50: rgba(255, 255, 255, 0.5);
+  --glass-border-60: rgba(255, 255, 255, 0.6);
+  --glass-border-30: rgba(255, 255, 255, 0.3);
+  --text-muted: rgba(0, 0, 0, 0.5);
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-tint: var(--tint);
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-dmsans), sans-serif;
+  color: #000;
+  background: #edf1ff;
+}
+
+.page-title {
+  font-family: var(--font-fanlste), serif;
+  font-size: clamp(40px, 6vw, 64px);
+  line-height: 1;
+  letter-spacing: clamp(2.6px, 0.4vw, 4px);
+}
+
+.section-title {
+  font-family: var(--font-satoshi), sans-serif;
+  font-size: clamp(32px, 5vw, 48px);
+  line-height: 1.05;
+  letter-spacing: clamp(3px, 0.45vw, 7.2px);
+}
+
+.body-lead {
+  font-family: var(--font-satoshi), sans-serif;
+  font-size: clamp(18px, 2.4vw, 24px);
+  line-height: 1.35;
+  letter-spacing: clamp(1px, 0.2vw, 3.6px);
+}
+
+.bloo-bg {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #edf1ff;
+}
+
+.bloo-bg::before {
+  content: "";
+  position: absolute;
+  left: -486px;
+  top: -139px;
+  width: 2238px;
+  height: 1078px;
+  z-index: -2;
+  background-image: linear-gradient(-26.499796666184665deg, rgb(135, 152, 255) 49.351%, rgb(165, 186, 255) 51.842%);
+  filter: blur(250px);
+}
+
+.bloo-bg::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -89.9519px;
+  width: 1440px;
+  height: 843.6982px;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("/home/bg-noise-top.png");
+  background-position: top left;
+  background-size: 1472px 1472px;
+  mix-blend-mode: soft-light;
+}
