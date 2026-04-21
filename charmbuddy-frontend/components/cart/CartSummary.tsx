@@ -117,9 +117,10 @@ export default function CartSummary() {
               </div>
               <motion.div whileHover={{ y: -2, scale: 1.03 }} whileTap={{ scale: 0.96 }}>
                 <Link className="inline-flex items-center justify-center whitespace-nowrap rounded-[50px] bg-black px-[16px] py-[8px] font-[var(--font-satoshi)] text-[16px] leading-[normal] tracking-[1.6px] text-white sm:text-[20px] sm:tracking-[3px]" href={routes.checkout}>
-                  Continue to Payment
+                  Checkout Sekarang
                 </Link>
               </motion.div>
+              <p className="font-[var(--font-satoshi)] text-[12px] tracking-[1px] text-black/55">Ongkir otomatis dipilih ke opsi termurah di halaman checkout.</p>
           </div>
         </div>
       </div>

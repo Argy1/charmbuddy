@@ -20,13 +20,13 @@ export default function Reveal({ children, delay = 0, distance = 36, once = true
     <motion.div
       className={className}
       initial={{ opacity: 0, y: prefersReducedMotion ? 0 : distance, filter: prefersReducedMotion ? "blur(0px)" : "blur(6px)" }}
+      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       transition={{
         duration: prefersReducedMotion ? durations.fast : durations.cinematic,
         delay,
         ease: cinematicEase,
       }}
       viewport={{ once, amount: 0.2 }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
     >
       {children}
     </motion.div>

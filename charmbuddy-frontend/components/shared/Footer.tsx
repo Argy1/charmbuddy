@@ -11,13 +11,49 @@ export default function Footer() {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <footer className="bg-[#8798ff] px-[20px] py-[30px] xl:h-[450px] xl:px-[81px] xl:py-[75px]">
+    <footer className="relative overflow-hidden bg-[#8798ff] px-[20px] py-[30px] xl:h-[450px] xl:px-[81px] xl:py-[75px]">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-[84px] opacity-85"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 100%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-[2px]"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 100%)",
+        }}
+      />
+      <svg
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-[-1px] h-[52px] w-full opacity-70"
+        preserveAspectRatio="none"
+        viewBox="0 0 1440 120"
+      >
+        <path
+          d="M0,36 C180,90 360,8 540,38 C720,68 900,96 1080,54 C1260,12 1350,30 1440,52 L1440,0 L0,0 Z"
+          fill="rgba(255,255,255,0.24)"
+        />
+      </svg>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.08]"
+        style={{
+          backgroundImage:
+            "radial-gradient(rgba(255,255,255,0.9) 0.8px, transparent 0.8px)",
+          backgroundSize: "8px 8px",
+        }}
+      />
       <Reveal>
-        <div className="flex flex-col items-center gap-[28px] xl:flex-row xl:items-end xl:justify-center xl:gap-[151px]">
+        <div className="relative z-[1] flex flex-col items-center gap-[28px] xl:flex-row xl:items-end xl:justify-center xl:gap-[151px]">
           <div className="flex w-full max-w-[296px] flex-col items-center gap-[28px]">
             <motion.div whileHover={prefersReducedMotion ? undefined : { scale: 1.04, y: -2 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}>
               <Link href={routes.home}>
-                <AppImage alt="Bloo.my" className="h-[196px] w-[233px] object-cover" height={196} src="/home/footer-logo.png" width={233} />
+                <AppImage alt="Bloo.my" className="h-[180px] w-[220px] object-contain" height={180} src="/home/brand/logo-badge-dark.png" width={220} />
               </Link>
             </motion.div>
             <div className="flex h-[35px] w-full items-center justify-center gap-[52px]">

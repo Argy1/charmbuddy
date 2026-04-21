@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/lib/api/client";
 
-const API_ASSET_BASE = API_BASE_URL.replace(/\/api\/v1\/?$/, "");
+const API_ASSET_BASE = API_BASE_URL.replace(/\/api(?:\/v1)?\/?$/, "");
 
 export function resolveApiAsset(path: string | null | undefined, fallback: string): string {
   if (!path) {

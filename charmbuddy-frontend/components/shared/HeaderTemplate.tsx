@@ -26,17 +26,17 @@ export default function HeaderTemplate() {
   };
 
   const navClass = (href: string) =>
-    `flex h-[45px] items-center justify-center rounded-[10px] px-[16px] py-[8px] transition-colors ${
+    `flex h-[40px] items-center justify-center rounded-[10px] px-[14px] py-[6px] transition-colors ${
       isNavActive(href) ? "border border-white bg-[#8798ff]" : ""
     }`;
 
   const navTextClass = (href: string) =>
-    `font-[var(--font-fanlste)] text-[24px] font-normal leading-[normal] tracking-[3.6px] ${
+    `font-[var(--font-fanlste)] text-[18px] font-normal leading-[normal] tracking-[2px] ${
       isNavActive(href) ? "text-white" : "text-black"
     }`;
 
   const actionClass = (href: string) =>
-    `flex h-[38px] w-[38px] items-center justify-center rounded-[10px] transition-colors ${
+    `flex h-[34px] w-[34px] items-center justify-center rounded-[10px] transition-colors ${
       isNavActive(href) ? "border border-white bg-[#8798ff]" : ""
     }`;
 
@@ -44,17 +44,17 @@ export default function HeaderTemplate() {
     <div className="relative w-full">
       <header className="backdrop-blur-[1px] bg-[rgba(255,255,255,0.4)] border border-[rgba(255,255,255,0.6)] border-solid flex h-[80px] items-center justify-between rounded-[50px] w-full">
         <Link className="ml-[8px] flex h-[64px] w-[112px] items-center justify-center rounded-[10px] transition-colors" href={routes.home}>
-          <AppImage alt="Charmbuddy logo" className="h-[60px] w-[96px] object-contain" height={60} src="/home/header-logo.png" width={96} />
+          <AppImage alt="Charmbuddy logo" className="h-[58px] w-[96px] object-contain" height={58} src="/home/brand/logo-primary.png" width={96} />
         </Link>
 
-        <nav className="hidden h-[45px] w-[363px] items-center gap-[10px] xl:flex">
-          <Link className={`${navClass(routes.faq)} w-[79px]`} href={routes.faq}>
+        <nav className="hidden h-[40px] w-[360px] items-center gap-[8px] xl:flex">
+          <Link className={`${navClass(routes.faq)} w-[74px]`} href={routes.faq}>
             <span className={navTextClass(routes.faq)}>FAQ</span>
           </Link>
-          <Link className={`${navClass(routes.catalogue)} w-[161px]`} href={routes.catalogue}>
+          <Link className={`${navClass(routes.catalogue)} w-[142px]`} href={routes.catalogue}>
             <span className={navTextClass(routes.catalogue)}>Catalogue</span>
           </Link>
-          <Link className={`${navClass(routes.about)} w-[150px]`} href={routes.about}>
+          <Link className={`${navClass(routes.about)} w-[132px]`} href={routes.about}>
             <span className={navTextClass(routes.about)}>About Us</span>
           </Link>
         </nav>
@@ -81,17 +81,17 @@ export default function HeaderTemplate() {
 
           <motion.div whileHover={{ scale: prefersReducedMotion ? 1 : 1.06 }} whileTap={{ scale: prefersReducedMotion ? 1 : 0.94 }}>
             <Link className={actionClass(routes.search)} href={routes.search}>
-              <AppImage alt="" className="h-[20px] w-[20px] object-contain" height={20} src="/home/header-search.svg" width={20} />
+              <AppImage alt="" className="h-[18px] w-[18px] object-contain" height={18} src="/home/header-search.svg" width={18} />
             </Link>
           </motion.div>
           <motion.div whileHover={{ scale: prefersReducedMotion ? 1 : 1.06 }} whileTap={{ scale: prefersReducedMotion ? 1 : 0.94 }}>
             <Link className={actionClass(routes.cart)} href={routes.cart}>
-              <AppImage alt="" className="h-[20px] w-[20px] object-contain" height={20} src="/home/header-cart.svg" width={20} />
+              <AppImage alt="" className="h-[18px] w-[18px] object-contain" height={18} src="/home/header-cart.svg" width={18} />
             </Link>
           </motion.div>
           <motion.div whileHover={{ scale: prefersReducedMotion ? 1 : 1.06 }} whileTap={{ scale: prefersReducedMotion ? 1 : 0.94 }}>
             <Link className={actionClass(routes.profile)} href={accountHref}>
-              <AppImage alt="" className="h-[20px] w-[20px] object-contain" height={20} src="/home/header-profile.svg" width={20} />
+              <AppImage alt="" className="h-[18px] w-[18px] object-contain" height={18} src="/home/header-profile.svg" width={18} />
             </Link>
           </motion.div>
         </div>

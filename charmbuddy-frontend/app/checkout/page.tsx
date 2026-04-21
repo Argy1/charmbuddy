@@ -306,11 +306,19 @@ export default function CheckoutPage() {
 
       setShippingOptions(response.data.options);
       setSelectedShipping((prev) => {
+        const cheapestOption =
+          response.data.options.reduce<ShippingOption | null>((lowest, option) => {
+            if (!lowest || option.cost < lowest.cost) {
+              return option;
+            }
+            return lowest;
+          }, null) ?? null;
+
         if (!prev) {
-          return response.data.options[0] ?? null;
+          return cheapestOption;
         }
 
-        return response.data.options.find((option) => `${option.courier}-${option.service}` === `${prev.courier}-${prev.service}`) ?? response.data.options[0] ?? null;
+        return response.data.options.find((option) => `${option.courier}-${option.service}` === `${prev.courier}-${prev.service}`) ?? cheapestOption;
       });
       trackCheckoutEvent("shipping_loaded", { count: response.data.options.length });
     } catch (error) {

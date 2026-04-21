@@ -8,6 +8,9 @@ import { listCategoriesApi } from "@/lib/api/categories";
 import { springs } from "@/lib/motion";
 import type { Category } from "@/lib/api/types";
 
+const PRICE_MIN = 0;
+const PRICE_MAX = 300;
+
 export type CatalogueFilterState = {
   search: string;
   categoryId: number | null;
@@ -57,6 +60,12 @@ function flattenCategories(categories: Category[]): FlatCategory[] {
 export default function FilterSidebar({ mobile = false, filters, onChange, onReset }: FilterSidebarProps) {
   const prefersReducedMotion = useReducedMotion();
   const [categories, setCategories] = useState<FlatCategory[]>([]);
+  const [categoryOpen, setCategoryOpen] = useState(true);
+  const [priceOpen, setPriceOpen] = useState(true);
+  const sliderMin = Math.max(PRICE_MIN, Math.min(filters.minPrice ?? PRICE_MIN, filters.maxPrice ?? PRICE_MAX));
+  const sliderMax = Math.min(PRICE_MAX, Math.max(filters.maxPrice ?? PRICE_MAX, filters.minPrice ?? PRICE_MIN));
+  const rangePercentStart = ((sliderMin - PRICE_MIN) / (PRICE_MAX - PRICE_MIN)) * 100;
+  const rangePercentEnd = ((sliderMax - PRICE_MIN) / (PRICE_MAX - PRICE_MIN)) * 100;
 
   useEffect(() => {
     let isMounted = true;
@@ -88,13 +97,13 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
 
   return (
     <motion.aside
-      className={`${mobile ? "w-full h-auto" : "h-[694px] w-[283px]"} rounded-[20px] border border-black bg-[rgba(255,255,255,0.4)] backdrop-blur-[12.6px] px-[14px] py-[37px]`}
+      className={`${mobile ? "w-full" : "w-[283px] min-h-[694px]"} rounded-[20px] border border-black bg-[rgba(255,255,255,0.4)] backdrop-blur-[12.6px] px-[14px] py-[37px]`}
       initial={{ opacity: 0, x: prefersReducedMotion ? 0 : -20, filter: prefersReducedMotion ? "blur(0px)" : "blur(4px)" }}
       transition={prefersReducedMotion ? { duration: 0.2 } : springs.soft}
       viewport={{ amount: 0.4, once: true }}
       whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
     >
-      <div className={`${mobile ? "h-auto" : "h-[606px]"} w-[255px] max-w-full flex flex-col gap-[15px]`}>
+      <div className="flex w-[255px] max-w-full flex-col gap-[15px]">
         <div className="flex w-[243px] max-w-full flex-col gap-[22px]">
           <div className="flex w-full items-center gap-[66px]">
             <p className="font-[var(--font-satoshi)] text-[24px] font-[900] tracking-[2.4px] text-black">Filters</p>
@@ -116,44 +125,71 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
         </div>
 
         <div className="flex w-full flex-col gap-[25px]">
-          <div className="flex w-[199px] flex-col gap-[22px]">
-            <div className="flex items-center gap-[17px]">
-              <p className="font-[var(--font-satoshi)] text-[24px] font-[700] text-black">Categories</p>
-              <AppImage alt="Arrow" className="h-[30px] w-[30px]" height={30} src="/catalogue/icon-arrow-down.svg" width={30} />
-            </div>
-            <div className="flex h-[163px] flex-col justify-center gap-[11px]">
-              <CategoryRow
-                key="all-categories"
-                label="All Categories"
-                onClick={() => onChange({ categoryId: null })}
-                selected={filters.categoryId === null}
+          <div className="flex w-[199px] flex-col gap-[18px]">
+            <button className="flex items-center gap-[10px]" onClick={() => setCategoryOpen((prev) => !prev)} type="button">
+              <p className="font-[var(--font-satoshi)] text-[22px] font-[700] text-black">Categories</p>
+              <AppImage
+                alt="Toggle categories"
+                className={`h-[26px] w-[26px] transition-transform ${categoryOpen ? "" : "-rotate-90"}`}
+                height={26}
+                src="/catalogue/icon-arrow-down.svg"
+                width={26}
               />
+            </button>
+            <div className={`${categoryOpen ? "flex" : "hidden"} flex-col gap-[11px]`}>
+              <CategoryRow label="All Categories" onClick={() => onChange({ categoryId: null })} selected={filters.categoryId === null} />
               {categories.slice(0, 5).map((category) => (
-                <CategoryRow
-                  key={category.id}
-                  label={category.name}
-                  onClick={() => onChange({ categoryId: category.id })}
-                  selected={filters.categoryId === category.id}
-                />
+                <CategoryRow key={category.id} label={category.name} onClick={() => onChange({ categoryId: category.id })} selected={filters.categoryId === category.id} />
               ))}
             </div>
           </div>
 
-          <div className="flex w-full flex-col gap-[30px]">
-            <div className="flex items-center gap-[10px]">
-              <p className="font-[var(--font-satoshi)] text-[24px] font-[700] text-black">Price Range</p>
-              <AppImage alt="Arrow" className="h-[30px] w-[30px]" height={30} src="/catalogue/icon-arrow-down.svg" width={30} />
-            </div>
+          <div className="flex w-full flex-col gap-[20px]">
+            <button className="flex items-center gap-[10px]" onClick={() => setPriceOpen((prev) => !prev)} type="button">
+              <p className="font-[var(--font-satoshi)] text-[22px] font-[700] text-black">Price Range</p>
+              <AppImage
+                alt="Toggle price range"
+                className={`h-[26px] w-[26px] transition-transform ${priceOpen ? "" : "-rotate-90"}`}
+                height={26}
+                src="/catalogue/icon-arrow-down.svg"
+                width={26}
+              />
+            </button>
 
-            <div className="flex w-[255px] max-w-full flex-col gap-[26px]">
-              <div className="relative h-[45px] w-full">
-                <div className="absolute left-[63.775px] top-0 h-[16px] w-[16px] rounded-[100px] bg-[#705cb2]" />
-                <div className="absolute left-[239.2px] top-0 h-[16px] w-[16px] rounded-[100px] bg-[#705cb2]" />
-                <div className="absolute left-0 top-[5px] h-[6px] w-[255px] rounded-[999px] bg-[rgba(112,92,178,0.2)]" />
-                <div className="absolute left-[71.775px] top-[5px] h-[6px] w-[175.425px] rounded-[999px] bg-[#705cb2]" />
-                <div className="absolute left-0 top-[25px] flex w-full items-center justify-between text-[14px] font-[500] text-black">
-                  <span>${filters.minPrice ?? 0}</span>
-                  <span>${filters.maxPrice ?? 0}</span>
+            <div className={`${priceOpen ? "flex" : "hidden"} w-[255px] max-w-full flex-col gap-[26px]`}>
+              <div className="relative h-[54px] w-full">
+                <div className="absolute left-0 top-[9px] h-[6px] w-full rounded-[999px] bg-[rgba(112,92,178,0.2)]" />
+                <div
+                  className="absolute top-[9px] h-[6px] rounded-[999px] bg-[#705cb2]"
+                  style={{ left: `${rangePercentStart}%`, right: `${100 - rangePercentEnd}%` }}
+                />
+                <input
+                  aria-label="Minimum price"
+                  className="absolute left-0 top-0 h-[24px] w-full appearance-none bg-transparent [&::-webkit-slider-thumb]:h-[16px] [&::-webkit-slider-thumb]:w-[16px] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#705cb2] [&::-webkit-slider-thumb]:cursor-pointer"
+                  max={PRICE_MAX}
+                  min={PRICE_MIN}
+                  onChange={(e) => {
+                    const nextMin = Math.min(Number(e.target.value), sliderMax);
+                    onChange({ minPrice: nextMin, maxPrice: sliderMax });
+                  }}
+                  type="range"
+                  value={sliderMin}
+                />
+                <input
+                  aria-label="Maximum price"
+                  className="absolute left-0 top-0 h-[24px] w-full appearance-none bg-transparent [&::-webkit-slider-thumb]:h-[16px] [&::-webkit-slider-thumb]:w-[16px] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#705cb2] [&::-webkit-slider-thumb]:cursor-pointer"
+                  max={PRICE_MAX}
+                  min={PRICE_MIN}
+                  onChange={(e) => {
+                    const nextMax = Math.max(Number(e.target.value), sliderMin);
+                    onChange({ minPrice: sliderMin, maxPrice: nextMax });
+                  }}
+                  type="range"
+                  value={sliderMax}
+                />
+                <div className="absolute left-0 top-[32px] flex w-full items-center justify-between text-[14px] font-[500] text-black">
+                  <span>${sliderMin}</span>
+                  <span>${sliderMax}</span>
                 </div>
               </div>
 
@@ -167,10 +203,15 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
                       return;
                     }
                     const parsed = Number(value);
-                    onChange({ minPrice: Number.isFinite(parsed) ? parsed : null });
+                    if (!Number.isFinite(parsed)) {
+                      onChange({ minPrice: null });
+                      return;
+                    }
+                    const safeMin = Math.max(PRICE_MIN, Math.min(parsed, sliderMax));
+                    onChange({ minPrice: safeMin });
                   }}
                   placeholder="Min price"
-                  value={filters.minPrice ?? ""}
+                  value={sliderMin}
                 />
                 <input
                   className="h-[32px] rounded-[8px] border border-black/15 px-[8px] text-[12px]"
@@ -181,10 +222,15 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
                       return;
                     }
                     const parsed = Number(value);
-                    onChange({ maxPrice: Number.isFinite(parsed) ? parsed : null });
+                    if (!Number.isFinite(parsed)) {
+                      onChange({ maxPrice: null });
+                      return;
+                    }
+                    const safeMax = Math.min(PRICE_MAX, Math.max(parsed, sliderMin));
+                    onChange({ maxPrice: safeMax });
                   }}
                   placeholder="Max price"
-                  value={filters.maxPrice ?? ""}
+                  value={sliderMax}
                 />
               </div>
 

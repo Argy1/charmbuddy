@@ -9,8 +9,9 @@ type AppImageProps = Omit<ImageProps, "src" | "alt"> & {
   fallbackSrc?: string;
 };
 
-export default function AppImage({ src, alt, fallbackSrc, onError, ...props }: AppImageProps) {
+export default function AppImage({ src, alt, fallbackSrc, onError, unoptimized, ...props }: AppImageProps) {
   const [currentSrc, setCurrentSrc] = useState(src);
+  const shouldBypassOptimization = /^https?:\/\//.test(currentSrc);
 
   useEffect(() => {
     setCurrentSrc(src);
@@ -26,6 +27,7 @@ export default function AppImage({ src, alt, fallbackSrc, onError, ...props }: A
         }
         onError?.(event);
       }}
+      unoptimized={unoptimized ?? shouldBypassOptimization}
       src={currentSrc}
     />
   );

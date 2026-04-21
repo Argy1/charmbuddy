@@ -4,6 +4,7 @@ import AppImage from "@/components/shared/AppImage";
 
 type PaymentMethodModalProps = {
   open?: boolean;
+  asPage?: boolean;
   onDone?: () => void;
   onBrowse?: () => void;
   onOverlayClick?: () => void;
@@ -74,7 +75,7 @@ function UploadBox({ onBrowse, selectedFileName }: { onBrowse?: () => void; sele
   );
 }
 
-export default function PaymentMethodModal({ open = true, onDone, onBrowse, onOverlayClick, selectedFileName, isUploading = false, errorMessage }: PaymentMethodModalProps) {
+export default function PaymentMethodModal({ open = true, asPage = false, onDone, onBrowse, onOverlayClick, selectedFileName, isUploading = false, errorMessage }: PaymentMethodModalProps) {
   const prefersReducedMotion = useReducedMotion();
 
   if (!open) {
@@ -89,10 +90,18 @@ export default function PaymentMethodModal({ open = true, onDone, onBrowse, onOv
     event.stopPropagation();
   };
 
+  const overlayClassName = asPage
+    ? "relative z-[10] w-full"
+    : "fixed inset-0 z-[100] bg-[rgba(82,82,82,0.6)] backdrop-blur-[2px]";
+
+  const containerClassName = asPage
+    ? "mx-auto flex w-full max-w-[1440px] items-center justify-center px-[16px] py-[24px] md:px-[24px] xl:px-[53px]"
+    : "flex min-h-screen items-center justify-center p-[16px]";
+
   return (
     <AnimatePresence>
-      <motion.div animate={{ opacity: 1 }} className="fixed inset-0 z-[100] bg-[#525252]" exit={{ opacity: 0 }} initial={{ opacity: 0 }} onClick={handleOverlayClick}>
-        <div className="flex min-h-screen items-center justify-center p-[16px]">
+      <motion.div animate={{ opacity: 1 }} className={overlayClassName} exit={{ opacity: 0 }} initial={{ opacity: 0 }} onClick={asPage ? undefined : handleOverlayClick}>
+        <div className={containerClassName}>
           <motion.div
             animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
             className="relative w-[min(900px,92vw)] rounded-[20px] bg-white"

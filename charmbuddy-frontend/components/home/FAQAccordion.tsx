@@ -63,7 +63,7 @@ export default function FAQAccordion({ items, defaultOpenId }: FAQAccordionProps
 
   return (
     <>
-      <section className="xl:hidden mt-[56px]">
+      <section className="xl:hidden mt-[84px]">
         <Reveal>
           <div className="mx-auto flex max-w-[1192px] flex-col gap-[18px]">
             <p className="page-title text-center text-black">
@@ -77,7 +77,7 @@ export default function FAQAccordion({ items, defaultOpenId }: FAQAccordionProps
         </Reveal>
       </section>
 
-      <section className="hidden xl:block mt-[120px]">
+      <section className="hidden xl:block mt-[148px]">
         <Reveal>
           <div className="mx-auto flex h-full w-full max-w-[1192px] flex-col items-center justify-between gap-[18px]">
             <p className="page-title w-full text-center text-black">

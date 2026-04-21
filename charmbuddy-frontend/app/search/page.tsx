@@ -12,12 +12,23 @@ import HeaderTemplate from "@/components/shared/HeaderTemplate";
 import { resolveApiAsset } from "@/lib/api/asset";
 import { useProducts } from "@/lib/api/hooks";
 import { routes } from "@/lib/routes";
+import { productUploadManifest } from "@/lib/static/product-upload-manifest";
 
 export default function SearchPage() {
   const prefersReducedMotion = useReducedMotion();
   const [query, setQuery] = useState("");
-  const { products } = useProducts({ search: query, per_page: 60 });
-  const filtered = useMemo(() => products, [products]);
+  const { products, isLoading, error } = useProducts({ search: query, per_page: 60 });
+  const normalizedQuery = query.trim().toLowerCase();
+  const fallbackProducts = productUploadManifest.slice(0, 6);
+  const filtered = useMemo(
+    () =>
+      products.filter((product) =>
+        normalizedQuery.length === 0
+          ? true
+          : `${product.name} ${product.category?.name ?? ""}`.toLowerCase().includes(normalizedQuery),
+      ),
+    [products, normalizedQuery],
+  );
 
   return (
     <div className="bloo-bg min-h-screen">
@@ -36,29 +47,51 @@ export default function SearchPage() {
               />
             </motion.div>
 
-            <div className="mt-[24px] grid grid-cols-1 gap-[20px] sm:grid-cols-2 lg:grid-cols-3">
-              <AnimatePresence mode="popLayout">
-                {filtered.map((product) => (
-                  <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 16 }} key={product.id} layout>
-                    <InteractivePress>
-                      <Link className="block rounded-[20px] border border-black bg-white p-[12px]" href={routes.product(product.slug)}>
-                        <AppImage
-                          alt={product.name}
-                          className="h-[220px] w-full rounded-[10px] object-cover"
-                          height={220}
-                          src={resolveApiAsset(product.image_path, "/catalogue/product-image.png")}
-                          width={500}
-                        />
-                        <div className="mt-[10px] flex items-center justify-between">
-                          <p className="font-[var(--font-fanlste)] text-[20px] tracking-[2.4px]">{product.name}</p>
-                          <p className="font-[var(--font-satoshi)] text-[20px] tracking-[2.4px]">${product.price}</p>
-                        </div>
-                      </Link>
-                    </InteractivePress>
-                  </motion.div>
+            {error ? <p className="mt-[20px] font-[var(--font-satoshi)] text-[18px] text-black/70">Produk utama belum bisa dimuat, menampilkan dummy sementara.</p> : null}
+            {isLoading ? <p className="mt-[20px] font-[var(--font-satoshi)] text-[18px] text-black/70">Loading products...</p> : null}
+            {!isLoading && !error && filtered.length === 0 ? (
+              <p className="mt-[20px] font-[var(--font-satoshi)] text-[18px] text-black/70">
+                {normalizedQuery.length > 0 ? "Produk tidak ditemukan untuk pencarian ini." : "Belum ada produk untuk ditampilkan."}
+              </p>
+            ) : null}
+            {!isLoading && !error && filtered.length > 0 ? (
+              <div className="mt-[24px] grid grid-cols-1 gap-[20px] sm:grid-cols-2 lg:grid-cols-3">
+                <AnimatePresence mode="popLayout">
+                  {filtered.map((product) => (
+                    <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 16 }} key={product.id} layout>
+                      <InteractivePress>
+                        <Link className="block rounded-[20px] border border-black bg-white p-[12px]" href={routes.product(product.slug)}>
+                          <AppImage
+                            alt={product.name}
+                            className="h-[220px] w-full rounded-[10px] object-cover"
+                            height={220}
+                            src={resolveApiAsset(product.image_path, "/catalogue/product-image.png")}
+                            width={500}
+                          />
+                          <div className="mt-[10px] flex items-center justify-between">
+                            <p className="font-[var(--font-fanlste)] text-[20px] tracking-[2.4px]">{product.name}</p>
+                            <p className="font-[var(--font-satoshi)] text-[20px] tracking-[2.4px]">${product.price}</p>
+                          </div>
+                        </Link>
+                      </InteractivePress>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            ) : null}
+            {!isLoading && error ? (
+              <div className="mt-[24px] grid grid-cols-1 gap-[20px] sm:grid-cols-2 lg:grid-cols-3">
+                {fallbackProducts.map((item) => (
+                  <Link className="block rounded-[20px] border border-black bg-white p-[12px]" href={routes.catalogue} key={item.sku}>
+                    <AppImage alt={item.name} className="h-[220px] w-full rounded-[10px] object-cover" height={220} src={item.image} width={500} />
+                    <div className="mt-[10px] flex items-center justify-between">
+                      <p className="font-[var(--font-fanlste)] text-[20px] tracking-[2.4px]">{item.name}</p>
+                      <p className="font-[var(--font-satoshi)] text-[20px] tracking-[2.4px]">${item.price}</p>
+                    </div>
+                  </Link>
                 ))}
-              </AnimatePresence>
-            </div>
+              </div>
+            ) : null}
           </section>
         </Reveal>
       </div>

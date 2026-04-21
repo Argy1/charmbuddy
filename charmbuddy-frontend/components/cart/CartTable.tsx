@@ -33,18 +33,22 @@ export default function CartTable() {
         <div className="flex w-full flex-col items-center gap-[7px]">
           <div className="flex w-full items-center justify-between xl:w-[696px]">
             <div className="flex items-center gap-[25px] font-[var(--font-satoshi)] leading-[normal] not-italic">
-              <p className="font-[var(--font-satoshi)] text-[36px] tracking-[3.6px] text-black">Cart</p>
-              <p className="text-[16px] tracking-[2.4px] text-[#c4c4c4]">({totalItems} products)</p>
+              <p className="font-[var(--font-satoshi)] text-[32px] tracking-[2.8px] text-black sm:text-[36px]">Cart</p>
+              <p className="text-[15px] tracking-[1.6px] text-black/45 sm:text-[16px]">({totalItems} products)</p>
             </div>
-            <button className="flex h-[42px] w-[42px] items-center justify-center rounded-[20px] bg-[#8798ff] p-0 text-white sm:h-[42px] sm:w-auto sm:max-w-[192px] sm:gap-[10px] sm:px-[16px] sm:py-[8px]" onClick={clearCart} type="button">
-              <span className="flex w-[26px] justify-center font-[var(--font-satoshi)] text-[16px] tracking-[2.4px]">X</span>
-              <span className="hidden w-[116px] font-[var(--font-satoshi)] text-[20px] tracking-[3px] sm:inline-flex">Clear cart</span>
+            <button
+              className="flex h-[42px] min-w-[110px] items-center justify-center gap-[6px] rounded-[14px] bg-[#8798ff] px-[10px] py-[8px] text-white sm:min-w-[156px] sm:gap-[10px] sm:px-[16px]"
+              onClick={clearCart}
+              type="button"
+            >
+              <span className="flex w-[18px] justify-center font-[var(--font-satoshi)] text-[14px] tracking-[1.5px] sm:w-[26px] sm:text-[16px]">X</span>
+              <span className="inline-flex font-[var(--font-satoshi)] text-[14px] tracking-[1.4px] sm:text-[18px] sm:tracking-[2.2px]">Clear cart</span>
             </button>
           </div>
           <AppImage alt="" className="h-[1px] w-full" height={1} src="/cart/line-cart.svg" width={696} />
         </div>
 
-        <div className="hidden w-full items-center gap-[218px] font-[var(--font-satoshi)] text-[21px] leading-[normal] tracking-[3.15px] text-black xl:flex">
+        <div className="hidden w-full items-center gap-[190px] font-[var(--font-satoshi)] text-[20px] leading-[normal] tracking-[2.2px] text-black xl:flex">
           <p>Produk</p>
           <p>Count</p>
           <p>Price</p>

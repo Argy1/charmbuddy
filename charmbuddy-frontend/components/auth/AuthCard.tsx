@@ -24,6 +24,8 @@ export default function AuthCard({ mode = "login" }: AuthCardProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -82,12 +84,12 @@ export default function AuthCard({ mode = "login" }: AuthCardProps) {
     >
       {!isRegister ? (
         <div className="mx-auto flex w-full max-w-[695px] flex-col items-center gap-[18px] sm:gap-[24px]">
-          <h1 className="w-full text-center font-[var(--font-fanlste)] text-[clamp(56px,16vw,64px)] leading-[normal] text-white">Login</h1>
+          <h1 className="w-full text-center font-[var(--font-fanlste)] text-[clamp(48px,14vw,60px)] leading-[normal] text-white">Login</h1>
 
           <motion.label className="bg-white flex h-[60px] w-full items-center px-[12px] py-[14px] sm:px-[18px]">
             <div className="flex w-full min-w-0 items-center gap-[10px]">
               <input
-                className="min-w-0 flex-1 bg-transparent font-[var(--font-satoshi)] text-[clamp(18px,5vw,24px)] leading-[normal] text-black outline-none"
+                className="min-w-0 flex-1 bg-transparent font-[var(--font-satoshi)] text-[clamp(16px,4vw,22px)] leading-[normal] text-black outline-none"
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
                 type="email"
@@ -100,13 +102,16 @@ export default function AuthCard({ mode = "login" }: AuthCardProps) {
           <motion.label className="bg-white flex h-[60px] w-full items-center px-[12px] py-[14px] sm:px-[15px]">
             <div className="flex w-full min-w-0 items-center gap-[10px]">
               <input
-                className="min-w-0 flex-1 bg-transparent font-[var(--font-satoshi)] text-[clamp(18px,5vw,24px)] leading-[normal] text-black outline-none"
+                className="min-w-0 flex-1 bg-transparent font-[var(--font-satoshi)] text-[clamp(16px,4vw,22px)] leading-[normal] text-black outline-none"
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
               />
-              <AppImage alt="Password" className="h-[28px] w-[28px] shrink-0 sm:h-[30px] sm:w-[30px]" height={30} src="/auth/icon-password.svg" width={30} />
+              <button className="shrink-0 rounded-[6px] px-[6px] py-[2px] text-[12px] font-[700] text-black/70" onClick={() => setShowPassword((prev) => !prev)} type="button">
+                {showPassword ? "Hide" : "Show"}
+              </button>
+              <AppImage alt="Password" className="h-[24px] w-[24px] shrink-0 sm:h-[28px] sm:w-[28px]" height={28} src="/auth/icon-password.svg" width={28} />
             </div>
           </motion.label>
 
@@ -116,7 +121,7 @@ export default function AuthCard({ mode = "login" }: AuthCardProps) {
             </button>
           </InteractivePress>
 
-          <div className="flex w-full flex-wrap items-center justify-center gap-x-[10px] gap-y-[2px] text-center text-[clamp(22px,6vw,24px)] leading-[normal] text-white">
+          <div className="flex w-full flex-wrap items-center justify-center gap-x-[8px] gap-y-[2px] text-center text-[clamp(16px,3.4vw,20px)] leading-[normal] text-white">
             <p className="font-[var(--font-satoshi)]">Dont Have an Account?</p>
             <Link className="font-[var(--font-satoshi)] font-[700]" href={routes.register}>
               Register
@@ -125,7 +130,7 @@ export default function AuthCard({ mode = "login" }: AuthCardProps) {
         </div>
       ) : (
         <div className="mx-auto flex w-full max-w-[695px] flex-col items-center gap-[18px] sm:gap-[20px]">
-          <h1 className="w-full text-center font-[var(--font-fanlste)] text-[clamp(56px,16vw,64px)] leading-[normal] text-white">Register</h1>
+          <h1 className="w-full text-center font-[var(--font-fanlste)] text-[clamp(48px,14vw,60px)] leading-[normal] text-white">Register</h1>
 
           <motion.label className="bg-white flex h-[60px] w-full items-center px-[12px] py-[14px] sm:px-[18px]">
             <div className="flex w-full min-w-0 items-center gap-[10px]">
@@ -155,26 +160,32 @@ export default function AuthCard({ mode = "login" }: AuthCardProps) {
           <motion.label className="bg-white flex h-[60px] w-full items-center px-[12px] py-[14px] sm:px-[15px]">
             <div className="flex w-full min-w-0 items-center gap-[10px]">
               <input
-                className="min-w-0 flex-1 bg-transparent font-[var(--font-satoshi)] text-[clamp(18px,5vw,24px)] leading-[normal] text-black outline-none"
+                className="min-w-0 flex-1 bg-transparent font-[var(--font-satoshi)] text-[clamp(16px,4vw,22px)] leading-[normal] text-black outline-none"
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
               />
-              <AppImage alt="Password" className="h-[28px] w-[28px] shrink-0 sm:h-[30px] sm:w-[30px]" height={30} src="/auth/icon-password-register.svg" width={30} />
+              <button className="shrink-0 rounded-[6px] px-[6px] py-[2px] text-[12px] font-[700] text-black/70" onClick={() => setShowPassword((prev) => !prev)} type="button">
+                {showPassword ? "Hide" : "Show"}
+              </button>
+              <AppImage alt="Password" className="h-[24px] w-[24px] shrink-0 sm:h-[28px] sm:w-[28px]" height={28} src="/auth/icon-password-register.svg" width={28} />
             </div>
           </motion.label>
 
           <motion.label className="bg-white flex h-[60px] w-full items-center px-[12px] py-[14px] sm:px-[15px]">
             <div className="flex w-full min-w-0 items-center gap-[10px]">
               <input
-                className="min-w-0 flex-1 bg-transparent font-[var(--font-satoshi)] text-[clamp(18px,5vw,24px)] leading-[normal] text-black outline-none"
+                className="min-w-0 flex-1 bg-transparent font-[var(--font-satoshi)] text-[clamp(16px,4vw,22px)] leading-[normal] text-black outline-none"
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm Password"
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 value={confirmPassword}
               />
-              <AppImage alt="Confirm Password" className="h-[28px] w-[28px] shrink-0 sm:h-[30px] sm:w-[30px]" height={30} src="/auth/icon-password-register.svg" width={30} />
+              <button className="shrink-0 rounded-[6px] px-[6px] py-[2px] text-[12px] font-[700] text-black/70" onClick={() => setShowConfirmPassword((prev) => !prev)} type="button">
+                {showConfirmPassword ? "Hide" : "Show"}
+              </button>
+              <AppImage alt="Confirm Password" className="h-[24px] w-[24px] shrink-0 sm:h-[28px] sm:w-[28px]" height={28} src="/auth/icon-password-register.svg" width={28} />
             </div>
           </motion.label>
 
