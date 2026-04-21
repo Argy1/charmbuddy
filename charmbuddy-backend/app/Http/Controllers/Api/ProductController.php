@@ -28,7 +28,7 @@ class ProductController extends Controller
             ->select(['id', 'category_id', 'slug', 'name', 'description', 'price', 'stock', 'weight', 'image_path', 'created_at'])
             ->with([
                 'category:id,name,parent_id',
-                'images:id,product_id,image_path,is_primary',
+                'images:id,product_id,image_path',
             ])
             ->when($categoryId !== null && $categoryId > 0, function ($query) use ($categoryId) {
                 $query->where('category_id', $categoryId);
@@ -67,7 +67,7 @@ class ProductController extends Controller
         $query = Product::query()
             ->with([
                 'category:id,name,parent_id',
-                'images:id,product_id,image_path,is_primary',
+                'images:id,product_id,image_path',
             ]);
 
         $product = is_numeric($identifier)
