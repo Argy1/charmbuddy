@@ -16,6 +16,7 @@ class ProductController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        $likeOperator = DB::connection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
         $perPage = max(1, min(60, $request->integer('per_page', 12)));
         $search = trim((string) $request->query('search', $request->query('keyword', '')));
         $searchTerms = array_values(array_filter(preg_split('/\s+/', $search) ?: []));
@@ -34,16 +35,16 @@ class ProductController extends Controller
             ->when($categoryId !== null && $categoryId > 0, function ($query) use ($categoryId) {
                 $query->where('category_id', $categoryId);
             })
-            ->when($search !== '', function ($query) use ($search, $searchTerms) {
+            ->when($search !== '', function ($query) use ($search, $searchTerms, $likeOperator) {
                 $terms = $searchTerms !== [] ? $searchTerms : [$search];
 
-                $query->where(function ($outerQuery) use ($terms) {
+                $query->where(function ($outerQuery) use ($terms, $likeOperator) {
                     foreach ($terms as $term) {
-                        $outerQuery->where(function ($innerQuery) use ($term) {
-                            $innerQuery->where('name', 'like', '%'.$term.'%')
-                                ->orWhere('description', 'like', '%'.$term.'%')
-                                ->orWhereHas('category', function ($categoryQuery) use ($term) {
-                                    $categoryQuery->where('name', 'like', '%'.$term.'%');
+                        $outerQuery->where(function ($innerQuery) use ($term, $likeOperator) {
+                            $innerQuery->where('name', $likeOperator, '%'.$term.'%')
+                                ->orWhere('description', $likeOperator, '%'.$term.'%')
+                                ->orWhereHas('category', function ($categoryQuery) use ($term, $likeOperator) {
+                                    $categoryQuery->where('name', $likeOperator, '%'.$term.'%');
                                 });
                         });
                     }
