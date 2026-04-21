@@ -18,6 +18,7 @@ class ProductController extends Controller
     {
         $perPage = max(1, min(60, $request->integer('per_page', 12)));
         $search = trim((string) $request->query('search', $request->query('keyword', '')));
+        $searchTerms = array_values(array_filter(preg_split('/\s+/', $search) ?: []));
         $category = $request->query('category', $request->query('category_id'));
         $categoryId = is_numeric($category) ? (int) $category : null;
         $sort = trim((string) $request->query('sort', 'newest'));
@@ -33,10 +34,19 @@ class ProductController extends Controller
             ->when($categoryId !== null && $categoryId > 0, function ($query) use ($categoryId) {
                 $query->where('category_id', $categoryId);
             })
-            ->when($search !== '', function ($query) use ($search) {
-                $query->where(function ($innerQuery) use ($search) {
-                    $innerQuery->where('name', 'like', '%'.$search.'%')
-                        ->orWhere('description', 'like', '%'.$search.'%');
+            ->when($search !== '', function ($query) use ($search, $searchTerms) {
+                $terms = $searchTerms !== [] ? $searchTerms : [$search];
+
+                $query->where(function ($outerQuery) use ($terms) {
+                    foreach ($terms as $term) {
+                        $outerQuery->where(function ($innerQuery) use ($term) {
+                            $innerQuery->where('name', 'like', '%'.$term.'%')
+                                ->orWhere('description', 'like', '%'.$term.'%')
+                                ->orWhereHas('category', function ($categoryQuery) use ($term) {
+                                    $categoryQuery->where('name', 'like', '%'.$term.'%');
+                                });
+                        });
+                    }
                 });
             })
             ->when($minPrice !== null, function ($query) use ($minPrice) {
