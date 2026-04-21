@@ -19,5 +19,9 @@ export function resolveApiAsset(path: string | null | undefined, fallback: strin
     return `${API_ASSET_BASE}/${path}`;
   }
 
+  if (path.startsWith("products/")) {
+    return `${API_ASSET_BASE}/${path}`;
+  }
+
   return `${API_ASSET_BASE}/storage/${path}`;
 }
