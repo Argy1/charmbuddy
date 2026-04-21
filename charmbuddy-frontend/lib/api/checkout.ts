@@ -98,19 +98,17 @@ function normalizeProvinces(payload: unknown): ShippingProvince[] {
     return [];
   }
 
-  return payload
-    .map((entry) => {
+  return payload.flatMap((entry) => {
       const value = (entry ?? {}) as Record<string, unknown>;
       const provinceId = toNumber(value.province_id ?? value.id);
       const province = toString(value.province ?? value.name);
 
       if (provinceId <= 0 || !province) {
-        return null;
+        return [];
       }
 
-      return { province_id: provinceId, province };
-    })
-    .filter((entry): entry is ShippingProvince => entry !== null);
+      return [{ province_id: provinceId, province }];
+    });
 }
 
 function normalizeCities(payload: unknown): ShippingCity[] {
@@ -118,8 +116,7 @@ function normalizeCities(payload: unknown): ShippingCity[] {
     return [];
   }
 
-  return payload
-    .map((entry) => {
+  return payload.flatMap((entry) => {
       const value = (entry ?? {}) as Record<string, unknown>;
       const cityId = toNumber(value.city_id ?? value.id);
       const provinceId = toNumber(value.province_id);
@@ -127,12 +124,11 @@ function normalizeCities(payload: unknown): ShippingCity[] {
       const type = toString(value.type || undefined) || undefined;
 
       if (cityId <= 0 || !cityName) {
-        return null;
+        return [];
       }
 
-      return { city_id: cityId, province_id: provinceId, city_name: cityName, type };
-    })
-    .filter((entry): entry is ShippingCity => entry !== null);
+      return [{ city_id: cityId, province_id: provinceId, city_name: cityName, type }];
+    });
 }
 
 export async function getShippingProvincesApi() {
