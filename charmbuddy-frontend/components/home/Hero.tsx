@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
@@ -22,22 +22,22 @@ export default function Hero() {
           >
             <AppImage alt="Charm" className="h-auto w-full" height={780} src="/home/hero-object.png" width={835} />
           </motion.div>
-          <motion.h1 className="font-[var(--font-fanlste)] text-[44px] leading-[1.02] text-black sm:text-[52px]" variants={revealItem()}>
+          <motion.h1 className="font-fanlste text-[40px] leading-[1.02] text-black sm:text-[48px]" variants={revealItem()}>
             Be My Bloo
           </motion.h1>
-          <motion.p className="font-[var(--font-satoshi)] text-[18px] font-medium leading-[1.3] text-black sm:text-[20px]" variants={revealItem()}>
+          <motion.p className="font-satoshi text-[15px] font-medium leading-[1.4] text-black sm:text-[16px]" variants={revealItem()}>
             Handcrafted accessories designed to let your true colors bloom.
           </motion.p>
-          <motion.p className="font-[var(--font-fanlste)] text-[20px] italic tracking-[3px] text-black sm:text-[22px]" variants={revealItem()}>
+          <motion.p className="font-fanlste text-[16px] italic tracking-[2px] text-black sm:text-[18px]" variants={revealItem()}>
             Mix, match, and customize your everyday charms!
           </motion.p>
           <motion.div variants={revealItem()} whileHover={{ y: prefersReducedMotion ? 0 : -4 }} whileTap={{ scale: prefersReducedMotion ? 1 : 0.96 }}>
             <Link
-              className="backdrop-blur-[2.5px] bg-[rgba(89,0,255,0.1)] border border-[rgba(255,255,255,0.4)] border-solid px-[15px] py-[10px] rounded-[50px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] w-fit transition-shadow"
+              className="backdrop-blur-[2.5px] bg-[rgba(89,0,255,0.1)] border border-[rgba(255,255,255,0.4)] border-solid px-[14px] py-[8px] rounded-[50px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] w-fit transition-shadow"
               href={routes.catalogue}
             >
-              <span className="font-[var(--font-satoshi)] text-[22px] font-medium leading-[normal] text-black sm:text-[24px]">Find Your </span>
-              <span className="font-[var(--font-fanlste)] text-[22px] italic leading-[normal] text-black sm:text-[24px]">Bloom</span>
+              <span className="font-satoshi text-[14px] font-medium leading-[normal] text-black sm:text-[16px]">Find Your </span>
+              <span className="font-fanlste text-[14px] italic leading-[normal] text-black sm:text-[16px]">Bloom</span>
             </Link>
           </motion.div>
         </motion.div>
@@ -46,33 +46,33 @@ export default function Hero() {
       <section className="hidden xl:block">
         <div className="relative mx-auto grid w-full max-w-[1333px] grid-cols-[minmax(0,1fr)_minmax(0,560px)] items-start gap-[24px]">
           <motion.div animate="visible" className="flex min-h-[493px] flex-col items-start gap-[32px] pt-[100px]" initial="hidden" variants={revealContainer}>
-            <motion.h1 className="font-[var(--font-fanlste)] text-[clamp(72px,7.5vw,106px)] leading-[0.95] text-black" variants={revealItem()}>
+            <motion.h1 className="font-fanlste text-[clamp(72px,9vw,128px)] leading-[0.98] text-black" variants={revealItem()}>
               Be My Bloo
             </motion.h1>
-            <motion.p className="max-w-[680px] font-[var(--font-satoshi)] text-[30px] font-medium leading-[1.2] text-black" variants={revealItem()}>
+            <motion.p className="max-w-[750px] font-satoshi text-[clamp(18px,2.5vw,36px)] font-medium leading-[1.45] text-black" variants={revealItem()}>
               Handcrafted accessories designed to let your true colors bloom.
             </motion.p>
-            <motion.p className="w-full font-[var(--font-fanlste)] text-[26px] italic leading-[normal] tracking-[3px] text-black" variants={revealItem()}>
+            <motion.p className="w-full font-fanlste text-[clamp(18px,2.1vw,30px)] italic leading-[normal] tracking-[4.5px] text-black" variants={revealItem()}>
               Mix, match, and customize your everyday charms!
             </motion.p>
             <motion.div variants={revealItem()} whileHover={{ y: prefersReducedMotion ? 0 : -4 }} whileTap={{ scale: prefersReducedMotion ? 1 : 0.96 }}>
               <Link
-                className="backdrop-blur-[2.5px] bg-[rgba(89,0,255,0.1)] border border-[rgba(255,255,255,0.4)] border-solid px-[15px] py-[10px] rounded-[50px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] transition-shadow"
+                className="backdrop-blur-[2.5px] bg-[rgba(89,0,255,0.1)] border border-[rgba(255,255,255,0.4)] border-solid px-[26px] py-[23px] rounded-[50px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] transition-shadow"
                 href={routes.catalogue}
               >
-                <span className="font-[var(--font-satoshi)] text-[26px] font-medium leading-[normal] text-black"> Find Your </span>
-                <span className="font-[var(--font-fanlste)] text-[26px] italic leading-[normal] text-black">Bloom</span>
+                <span className="font-satoshi text-[clamp(18px,2.5vw,36px)] font-medium leading-[normal] text-black"> Find Your </span>
+                <span className="font-fanlste text-[clamp(18px,2.5vw,36px)] italic leading-[normal] text-black">Bloom</span>
               </Link>
             </motion.div>
           </motion.div>
 
           <motion.div
             animate={{ opacity: 1, rotate: 0, scale: 1, y: 0 }}
-            className="pointer-events-none -mt-[20px] flex min-h-[940px] items-start justify-end"
+            className="pointer-events-none -mt-[20px] flex min-h-140 items-start justify-end"
             initial={{ opacity: 0, rotate: prefersReducedMotion ? 0 : -2, scale: prefersReducedMotion ? 1 : 0.9, y: prefersReducedMotion ? 0 : 24 }}
             transition={{ duration: prefersReducedMotion ? durations.normal : 1.3, ease: cinematicEase }}
           >
-            <AppImage alt="Charm" className="h-auto max-h-[900px] w-auto max-w-full object-contain" height={900} src="/home/hero-object.png" width={560} />
+            <AppImage alt="Charm" className="h-auto max-h-135 w-auto max-w-full object-contain" height={540} src="/home/hero-object.png" width={560} />
           </motion.div>
         </div>
       </section>

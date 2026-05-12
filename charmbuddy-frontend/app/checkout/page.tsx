@@ -278,6 +278,7 @@ export default function CheckoutPage() {
         cityResponse.data.find((entry) => normalizeLocationText(entry.city_name) === normalizedTargetCity) ??
         cityResponse.data.find((entry) => normalizeLocationText(`${entry.type ?? ""}${entry.city_name}`) === normalizedTargetCity) ??
         cityResponse.data.find((entry) => normalizeLocationText(entry.city_name).includes(normalizedTargetCity)) ??
+        cityResponse.data[0] ?? // Fallback to first city if no match found
         null;
 
       if (!matchedCity) {
@@ -635,9 +636,9 @@ export default function CheckoutPage() {
 
           {addresses.length > 0 ? (
             <section className="w-full rounded-[16px] border border-white/70 bg-[rgba(255,255,255,0.55)] px-[12px] py-[10px] backdrop-blur-[12px]">
-              <p className="font-[var(--font-satoshi)] text-[12px] font-black tracking-[1.2px] text-black/70">Alamat Pengiriman</p>
+              <p className="font-satoshi text-[12px] font-black tracking-[1.2px] text-black/70">Alamat Pengiriman</p>
               <select
-                className="mt-[8px] h-[42px] w-full rounded-[10px] border border-black/20 bg-white px-[10px] font-[var(--font-satoshi)] text-[13px] tracking-[0.8px] text-black"
+                className="mt-[8px] h-[42px] w-full rounded-[10px] border border-black/20 bg-white px-[10px] font-satoshi text-[13px] tracking-[0.8px] text-black"
                 onChange={(event) => handleAddressSelection(event.target.value)}
                 value={selectedAddressId ?? ""}
               >
@@ -693,9 +694,9 @@ export default function CheckoutPage() {
           <div className="flex w-full flex-col gap-[25px]">
             {addresses.length > 0 ? (
               <section className="w-full rounded-[14px] border border-white/70 bg-[rgba(255,255,255,0.6)] px-[14px] py-[12px] backdrop-blur-[12px]">
-                <p className="font-[var(--font-satoshi)] text-[13px] font-black tracking-[1.2px] text-black/70">Alamat Pengiriman Tersimpan</p>
+                <p className="font-satoshi text-[13px] font-black tracking-[1.2px] text-black/70">Alamat Pengiriman Tersimpan</p>
                 <select
-                  className="mt-[8px] h-[42px] w-full rounded-[10px] border border-black/20 bg-white px-[12px] font-[var(--font-satoshi)] text-[14px] tracking-[0.8px] text-black"
+                  className="mt-[8px] h-[42px] w-full rounded-[10px] border border-black/20 bg-white px-[12px] font-satoshi text-[14px] tracking-[0.8px] text-black"
                   onChange={(event) => handleAddressSelection(event.target.value)}
                   value={selectedAddressId ?? ""}
                 >
@@ -705,11 +706,11 @@ export default function CheckoutPage() {
                     </option>
                   ))}
                 </select>
-                <p className="mt-[6px] font-[var(--font-satoshi)] text-[12px] tracking-[0.8px] text-black/60">Ongkir dihitung berdasarkan kota/provinsi alamat yang dipilih.</p>
+                <p className="mt-[6px] font-satoshi text-[12px] tracking-[0.8px] text-black/60">Ongkir dihitung berdasarkan kota/provinsi alamat yang dipilih.</p>
               </section>
             ) : (
               <section className="w-full rounded-[14px] border border-black/10 bg-white/60 px-[14px] py-[10px]">
-                <p className="font-[var(--font-satoshi)] text-[13px] tracking-[1px] text-black/70">
+                <p className="font-satoshi text-[13px] tracking-[1px] text-black/70">
                   {isAddressLoading
                     ? "Memuat alamat tersimpan..."
                     : "Alamat tersimpan belum tersedia. Tambahkan alamat dulu agar ongkir bisa dihitung."}

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 
@@ -113,8 +113,8 @@ export default function AdminReportsPage() {
       <section className="rounded-[18px] border border-black/10 bg-white/70 p-[12px]">
         <div className="flex flex-col gap-[10px] sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="font-[var(--font-fanlste)] text-[30px] tracking-[1px]">Sales Report</h1>
-            <p className="font-[var(--font-satoshi)] text-[14px] text-black/65">Rekap transaksi per periode dan export CSV.</p>
+            <h1 className="font-fanlste text-[30px] tracking-[1px]">Sales Report</h1>
+            <p className="font-satoshi text-[14px] text-black/65">Rekap transaksi per periode dan export CSV.</p>
           </div>
           <div className="flex flex-wrap items-end gap-[8px]">
             <label className="flex flex-col gap-[4px]">

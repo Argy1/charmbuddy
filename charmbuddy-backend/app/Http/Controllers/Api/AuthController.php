@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -73,7 +74,7 @@ class AuthController extends Controller
 
         // 3. Buat Token Baru
         // (Opsional: Hapus token lama biar gak numpuk)
-        // $user->tokens()->delete(); 
+        // $user->tokens()->delete();
         $token = $user->createToken('auth_token')->plainTextToken;
 
         // 4. Kirim Balasan
@@ -85,6 +86,60 @@ class AuthController extends Controller
                 'token' => $token
             ]
         ], 200);
+    }
+
+    /**
+     * UPDATE PROFILE: Edit nama, email, atau password
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $validator = Validator::make($request->all(), [
+            'name'             => 'sometimes|string|max:255',
+            'email'            => 'sometimes|string|email|max:255|unique:users,email,' . $user->id,
+            'avatar'           => 'sometimes|file|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'current_password' => 'required_with:new_password|string',
+            'new_password'     => 'sometimes|string|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ada kesalahan input data.',
+                'errors'  => $validator->errors(),
+            ], 422);
+        }
+
+        if ($request->filled('new_password')) {
+            if (!Hash::check($request->current_password, $user->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Password saat ini salah.',
+                    'errors'  => ['current_password' => ['Password saat ini salah.']],
+                ], 422);
+            }
+            $user->password = Hash::make($request->new_password);
+        }
+
+        if ($request->filled('name'))  { $user->name  = $request->name; }
+        if ($request->filled('email')) { $user->email = $request->email; }
+
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar_path) {
+                Storage::disk('public')->delete($user->avatar_path);
+            }
+
+            $user->avatar_path = $request->file('avatar')->store('avatars', 'public');
+        }
+
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Profil berhasil diperbarui.',
+            'data'    => $user,
+        ]);
     }
 
     /**

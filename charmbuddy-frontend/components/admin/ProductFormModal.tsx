@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { type FormEvent, useState } from "react";
@@ -81,13 +81,13 @@ export default function ProductFormModal({ open, categories, initialProduct, isS
             initial={{ y: prefersReducedMotion ? 0 : 30, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="font-[var(--font-fanlste)] text-[36px] tracking-[1px]">{initialProduct ? "Edit Product" : "New Product"}</h2>
+            <h2 className="font-fanlste text-[36px] tracking-[1px]">{initialProduct ? "Edit Product" : "New Product"}</h2>
             <form className="mt-[10px] space-y-[10px]" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 gap-[10px] sm:grid-cols-2">
                 <label className="flex flex-col gap-[6px]">
-                  <span className="font-[var(--font-satoshi)] text-[13px] tracking-[1px]">Category</span>
+                  <span className="font-satoshi text-[13px] tracking-[1px]">Category</span>
                   <select
-                    className="h-[42px] rounded-[10px] border border-black/20 bg-white px-[10px] font-[var(--font-satoshi)] text-[14px]"
+                    className="h-[42px] rounded-[10px] border border-black/20 bg-white px-[10px] font-satoshi text-[14px]"
                     onChange={(e) => setForm((prev) => ({ ...prev, category_id: e.target.value }))}
                     required
                     value={form.category_id}
@@ -101,18 +101,18 @@ export default function ProductFormModal({ open, categories, initialProduct, isS
                   </select>
                 </label>
                 <label className="flex flex-col gap-[6px]">
-                  <span className="font-[var(--font-satoshi)] text-[13px] tracking-[1px]">Name</span>
+                  <span className="font-satoshi text-[13px] tracking-[1px]">Name</span>
                   <input
-                    className="h-[42px] rounded-[10px] border border-black/20 bg-white px-[10px] font-[var(--font-satoshi)] text-[14px]"
+                    className="h-[42px] rounded-[10px] border border-black/20 bg-white px-[10px] font-satoshi text-[14px]"
                     onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
                     required
                     value={form.name}
                   />
                 </label>
                 <label className="flex flex-col gap-[6px]">
-                  <span className="font-[var(--font-satoshi)] text-[13px] tracking-[1px]">Price</span>
+                  <span className="font-satoshi text-[13px] tracking-[1px]">Price</span>
                   <input
-                    className="h-[42px] rounded-[10px] border border-black/20 bg-white px-[10px] font-[var(--font-satoshi)] text-[14px]"
+                    className="h-[42px] rounded-[10px] border border-black/20 bg-white px-[10px] font-satoshi text-[14px]"
                     min={0}
                     onChange={(e) => setForm((prev) => ({ ...prev, price: e.target.value }))}
                     required
@@ -121,9 +121,9 @@ export default function ProductFormModal({ open, categories, initialProduct, isS
                   />
                 </label>
                 <label className="flex flex-col gap-[6px]">
-                  <span className="font-[var(--font-satoshi)] text-[13px] tracking-[1px]">Stock</span>
+                  <span className="font-satoshi text-[13px] tracking-[1px]">Stock</span>
                   <input
-                    className="h-[42px] rounded-[10px] border border-black/20 bg-white px-[10px] font-[var(--font-satoshi)] text-[14px]"
+                    className="h-[42px] rounded-[10px] border border-black/20 bg-white px-[10px] font-satoshi text-[14px]"
                     min={0}
                     onChange={(e) => setForm((prev) => ({ ...prev, stock: e.target.value }))}
                     required
@@ -132,9 +132,9 @@ export default function ProductFormModal({ open, categories, initialProduct, isS
                   />
                 </label>
                 <label className="flex flex-col gap-[6px]">
-                  <span className="font-[var(--font-satoshi)] text-[13px] tracking-[1px]">Weight (g)</span>
+                  <span className="font-satoshi text-[13px] tracking-[1px]">Weight (g)</span>
                   <input
-                    className="h-[42px] rounded-[10px] border border-black/20 bg-white px-[10px] font-[var(--font-satoshi)] text-[14px]"
+                    className="h-[42px] rounded-[10px] border border-black/20 bg-white px-[10px] font-satoshi text-[14px]"
                     min={0}
                     onChange={(e) => setForm((prev) => ({ ...prev, weight: e.target.value }))}
                     required
@@ -143,10 +143,10 @@ export default function ProductFormModal({ open, categories, initialProduct, isS
                   />
                 </label>
                 <label className="flex flex-col gap-[6px]">
-                  <span className="font-[var(--font-satoshi)] text-[13px] tracking-[1px]">Image</span>
+                  <span className="font-satoshi text-[13px] tracking-[1px]">Image</span>
                   <input
                     accept="image/*"
-                    className="h-[42px] rounded-[10px] border border-black/20 bg-white px-[10px] py-[8px] font-[var(--font-satoshi)] text-[14px]"
+                    className="h-[42px] rounded-[10px] border border-black/20 bg-white px-[10px] py-[8px] font-satoshi text-[14px]"
                     onChange={(e) => setForm((prev) => ({ ...prev, image: e.target.files?.[0] ?? null }))}
                     type="file"
                   />
@@ -154,19 +154,19 @@ export default function ProductFormModal({ open, categories, initialProduct, isS
               </div>
 
               <label className="flex flex-col gap-[6px]">
-                <span className="font-[var(--font-satoshi)] text-[13px] tracking-[1px]">Description</span>
+                <span className="font-satoshi text-[13px] tracking-[1px]">Description</span>
                 <textarea
-                  className="min-h-[88px] rounded-[10px] border border-black/20 bg-white px-[10px] py-[8px] font-[var(--font-satoshi)] text-[14px]"
+                  className="min-h-[88px] rounded-[10px] border border-black/20 bg-white px-[10px] py-[8px] font-satoshi text-[14px]"
                   onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
                   value={form.description}
                 />
               </label>
 
               <div className="flex items-center justify-end gap-[8px]">
-                <button className="rounded-[10px] border border-black/20 px-[12px] py-[8px] font-[var(--font-satoshi)] text-[14px]" onClick={onClose} type="button">
+                <button className="rounded-[10px] border border-black/20 px-[12px] py-[8px] font-satoshi text-[14px]" onClick={onClose} type="button">
                   Cancel
                 </button>
-                <button className="rounded-[10px] bg-black px-[14px] py-[8px] font-[var(--font-satoshi)] text-[14px] text-white disabled:opacity-60" disabled={isSubmitting} type="submit">
+                <button className="rounded-[10px] bg-black px-[14px] py-[8px] font-satoshi text-[14px] text-white disabled:opacity-60" disabled={isSubmitting} type="submit">
                   {isSubmitting ? "Saving..." : "Save Product"}
                 </button>
               </div>

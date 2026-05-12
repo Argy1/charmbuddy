@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -45,7 +45,7 @@ export default function AdminSidebar({ compact = false, onNavigate }: AdminSideb
               <span className={`mr-[10px] inline-flex h-[24px] w-[24px] items-center justify-center rounded-[8px] text-[11px] font-[700] ${active ? "bg-white/20" : "bg-[#8798ff]/20"}`}>
                 {item.icon}
               </span>
-              <span className={`font-[var(--font-satoshi)] text-[16px] tracking-[1.2px] ${compact ? "hidden xl:inline" : "inline"}`}>{item.label}</span>
+              <span className={`font-satoshi text-[16px] tracking-[1.2px] ${compact ? "hidden xl:inline" : "inline"}`}>{item.label}</span>
             </Link>
           );
         })}

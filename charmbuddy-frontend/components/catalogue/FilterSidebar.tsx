@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
@@ -29,7 +29,7 @@ function CategoryRow({ label, selected, onClick }: { label: string; selected?: b
   return (
     <button className="flex items-center gap-[16px] text-left" onClick={onClick} type="button">
       <AppImage alt="Category" className="h-[20px] w-[20px]" height={20} src={selected ? "/catalogue/radio-on.svg" : "/catalogue/radio-off.svg"} width={20} />
-      <p className="font-[var(--font-satoshi)] text-[16px] font-[500] leading-[normal] text-black text-center whitespace-nowrap">{label}</p>
+      <p className="font-satoshi text-[16px] font-[500] leading-[normal] text-black text-center whitespace-nowrap">{label}</p>
     </button>
   );
 }
@@ -37,7 +37,7 @@ function CategoryRow({ label, selected, onClick }: { label: string; selected?: b
 function QuickButton({ label, onClick, active }: { label: string; onClick: () => void; active?: boolean }) {
   return (
     <button className={`h-[32px] w-[100px] rounded-[8px] border-[0.8px] px-[12.8px] py-[0.8px] ${active ? "border-black bg-[rgba(149,178,254,0.5)]" : "border-[rgba(0,0,0,0.1)] bg-white"}`} onClick={onClick} type="button">
-      <span className="font-[var(--font-satoshi)] text-[12px] font-[500] leading-[16px] text-[#0a0a0a]">{label}</span>
+      <span className="font-satoshi text-[12px] font-[500] leading-[16px] text-[#0a0a0a]">{label}</span>
     </button>
   );
 }
@@ -106,9 +106,9 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
       <div className="flex w-[255px] max-w-full flex-col gap-[15px]">
         <div className="flex w-[243px] max-w-full flex-col gap-[22px]">
           <div className="flex w-full items-center gap-[66px]">
-            <p className="font-[var(--font-satoshi)] text-[24px] font-[900] tracking-[2.4px] text-black">Filters</p>
+            <p className="font-satoshi text-[24px] font-[900] tracking-[2.4px] text-black">Filters</p>
             <button className="rounded-[10px] border border-black px-[16px] py-[8px]" onClick={onReset} type="button">
-              <span className="font-[var(--font-satoshi)] text-[18px] font-[700] tracking-[1.8px] text-black">Reset</span>
+              <span className="font-satoshi text-[18px] font-[700] tracking-[1.8px] text-black">Reset</span>
             </button>
           </div>
           <AppImage alt="Divider" className="h-[1px] w-full" height={1} src="/catalogue/line-1.svg" width={243} />
@@ -116,7 +116,7 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
 
         <div className="flex h-[38px] w-[243px] max-w-full items-center justify-between rounded-[20px] bg-[#705cb2] px-[12px] py-[8px]">
           <input
-            className="w-full bg-transparent pr-[8px] font-[var(--font-satoshi)] text-[14px] font-[500] tracking-[1.2px] text-white outline-none placeholder:text-white/70"
+            className="w-full bg-transparent pr-[8px] font-satoshi text-[14px] font-[500] tracking-[1.2px] text-white outline-none placeholder:text-white/70"
             onChange={(event) => onChange({ search: event.target.value })}
             placeholder="Search product..."
             value={filters.search}
@@ -127,10 +127,10 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
         <div className="flex w-full flex-col gap-[25px]">
           <div className="flex w-[199px] flex-col gap-[18px]">
             <button className="flex items-center gap-[10px]" onClick={() => setCategoryOpen((prev) => !prev)} type="button">
-              <p className="font-[var(--font-satoshi)] text-[22px] font-[700] text-black">Categories</p>
+              <p className="font-satoshi text-[22px] font-[700] text-black">Categories</p>
               <AppImage
                 alt="Toggle categories"
-                className={`h-[26px] w-[26px] transition-transform ${categoryOpen ? "" : "-rotate-90"}`}
+                className={`h-[16px] w-[26px] transition-transform rotate-0 ${categoryOpen ? "rotate-180" : "-rotate-180"}`}
                 height={26}
                 src="/catalogue/icon-arrow-down.svg"
                 width={26}
@@ -146,10 +146,10 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
 
           <div className="flex w-full flex-col gap-[20px]">
             <button className="flex items-center gap-[10px]" onClick={() => setPriceOpen((prev) => !prev)} type="button">
-              <p className="font-[var(--font-satoshi)] text-[22px] font-[700] text-black">Price Range</p>
+              <p className="font-satoshi text-[22px] font-[700] text-black">Price Range</p>
               <AppImage
                 alt="Toggle price range"
-                className={`h-[26px] w-[26px] transition-transform ${priceOpen ? "" : "-rotate-90"}`}
+                className={`h-[16px] w-[26px] transition-transform rotate-0 ${priceOpen ? "rotate-180" : "-rotate-180"}`}
                 height={26}
                 src="/catalogue/icon-arrow-down.svg"
                 width={26}
@@ -165,25 +165,27 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
                 />
                 <input
                   aria-label="Minimum price"
-                  className="absolute left-0 top-0 h-[24px] w-full appearance-none bg-transparent [&::-webkit-slider-thumb]:h-[16px] [&::-webkit-slider-thumb]:w-[16px] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#705cb2] [&::-webkit-slider-thumb]:cursor-pointer"
+                  className="absolute left-0 top-0 h-[24px] w-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:h-[16px] [&::-webkit-slider-thumb]:w-[16px] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#705cb2] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto"
                   max={PRICE_MAX}
                   min={PRICE_MIN}
                   onChange={(e) => {
                     const nextMin = Math.min(Number(e.target.value), sliderMax);
                     onChange({ minPrice: nextMin, maxPrice: sliderMax });
                   }}
+                  style={{ zIndex: 5 }}
                   type="range"
                   value={sliderMin}
                 />
                 <input
                   aria-label="Maximum price"
-                  className="absolute left-0 top-0 h-[24px] w-full appearance-none bg-transparent [&::-webkit-slider-thumb]:h-[16px] [&::-webkit-slider-thumb]:w-[16px] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#705cb2] [&::-webkit-slider-thumb]:cursor-pointer"
+                  className="absolute left-0 top-0 h-[24px] w-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:h-[16px] [&::-webkit-slider-thumb]:w-[16px] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#705cb2] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto"
                   max={PRICE_MAX}
                   min={PRICE_MIN}
                   onChange={(e) => {
                     const nextMax = Math.max(Number(e.target.value), sliderMin);
                     onChange({ minPrice: sliderMin, maxPrice: nextMax });
                   }}
+                  style={{ zIndex: 4 }}
                   type="range"
                   value={sliderMax}
                 />
@@ -235,7 +237,7 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
               </div>
 
               <div className="flex w-[240px] flex-col gap-[8px]">
-                <p className="font-[var(--font-satoshi)] text-[14px] font-[500] leading-[20px] text-[#0a0a0a]">Quick Select:</p>
+                <p className="font-satoshi text-[14px] font-[500] leading-[20px] text-[#0a0a0a]">Quick Select:</p>
                 <div className="grid grid-cols-2 gap-y-[8px] gap-x-[40px]">
                   <QuickButton active={filters.minPrice === null && filters.maxPrice === 50} label="Under $50" onClick={() => onChange({ minPrice: null, maxPrice: 50 })} />
                   <QuickButton active={filters.minPrice === 50 && filters.maxPrice === 100} label="$50-$100" onClick={() => onChange({ minPrice: 50, maxPrice: 100 })} />

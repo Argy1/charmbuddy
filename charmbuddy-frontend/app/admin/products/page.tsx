@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { type FormEvent, useEffect, useMemo, useState } from "react";
 
@@ -173,13 +173,13 @@ export default function AdminProductsPage() {
         <div className="flex flex-col gap-[10px] lg:flex-row lg:items-center lg:justify-between">
           <form className="flex w-full flex-col gap-[8px] sm:flex-row" onSubmit={handleSearchSubmit}>
             <input
-              className="h-[40px] flex-1 rounded-[10px] border border-black/20 bg-white px-[10px] font-[var(--font-satoshi)] text-[14px]"
+              className="h-[40px] flex-1 rounded-[10px] border border-black/20 bg-white px-[10px] font-satoshi text-[14px]"
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search products..."
               value={search}
             />
             <select
-              className="h-[40px] rounded-[10px] border border-black/20 bg-white px-[10px] font-[var(--font-satoshi)] text-[14px]"
+              className="h-[40px] rounded-[10px] border border-black/20 bg-white px-[10px] font-satoshi text-[14px]"
               onChange={(e) => {
                 setCategoryId(e.target.value);
                 setPage(1);
@@ -193,13 +193,13 @@ export default function AdminProductsPage() {
                 </option>
               ))}
             </select>
-            <button className="h-[40px] rounded-[10px] bg-black px-[12px] font-[var(--font-satoshi)] text-[14px] text-white" type="submit">
+            <button className="h-[40px] rounded-[10px] bg-black px-[12px] font-satoshi text-[14px] text-white" type="submit">
               Search
             </button>
           </form>
 
           <div className="flex items-center gap-[8px]">
-            <label className="flex items-center gap-[6px] rounded-[10px] bg-white px-[10px] py-[8px] font-[var(--font-satoshi)] text-[13px]">
+            <label className="flex items-center gap-[6px] rounded-[10px] bg-white px-[10px] py-[8px] font-satoshi text-[13px]">
               <input
                 checked={lowStockOnly}
                 onChange={(e) => {
@@ -210,14 +210,14 @@ export default function AdminProductsPage() {
               />
               Low stock
             </label>
-            <button className="h-[40px] rounded-[10px] bg-[#8798ff] px-[12px] font-[var(--font-satoshi)] text-[14px] text-white" onClick={handleOpenCreate} type="button">
+            <button className="h-[40px] rounded-[10px] bg-[#8798ff] px-[12px] font-satoshi text-[14px] text-white" onClick={handleOpenCreate} type="button">
               + New Product
             </button>
           </div>
         </div>
 
         {pagination ? (
-          <p className="mt-[8px] font-[var(--font-satoshi)] text-[13px] text-black/65">
+          <p className="mt-[8px] font-satoshi text-[13px] text-black/65">
             Page {pagination.current_page} / {pagination.last_page} - Total {pagination.total} products
           </p>
         ) : null}
@@ -225,7 +225,7 @@ export default function AdminProductsPage() {
 
       {errorMessage ? (
         <section className="rounded-[14px] border border-red-200 bg-red-50 p-[12px]">
-          <p className="font-[var(--font-satoshi)] text-[14px] text-red-700">{errorMessage}</p>
+          <p className="font-satoshi text-[14px] text-red-700">{errorMessage}</p>
         </section>
       ) : null}
 
@@ -234,7 +234,7 @@ export default function AdminProductsPage() {
       {pagination && pagination.last_page > 1 ? (
         <section className="flex items-center justify-end gap-[8px]">
           <button
-            className="rounded-[10px] border border-black/20 px-[10px] py-[6px] font-[var(--font-satoshi)] text-[13px] disabled:opacity-50"
+            className="rounded-[10px] border border-black/20 px-[10px] py-[6px] font-satoshi text-[13px] disabled:opacity-50"
             disabled={pagination.current_page <= 1}
             onClick={() => setPage((prev) => Math.max(1, prev - 1))}
             type="button"
@@ -242,7 +242,7 @@ export default function AdminProductsPage() {
             Prev
           </button>
           <button
-            className="rounded-[10px] border border-black/20 px-[10px] py-[6px] font-[var(--font-satoshi)] text-[13px] disabled:opacity-50"
+            className="rounded-[10px] border border-black/20 px-[10px] py-[6px] font-satoshi text-[13px] disabled:opacity-50"
             disabled={pagination.current_page >= pagination.last_page}
             onClick={() => setPage((prev) => prev + 1)}
             type="button"

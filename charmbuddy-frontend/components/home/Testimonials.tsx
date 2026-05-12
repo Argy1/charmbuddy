@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion, useReducedMotion } from "framer-motion";
 
@@ -38,22 +38,16 @@ function Card({ delay = 0, item }: { delay?: number; item: TestimonialItem }) {
 
   return (
     <motion.div
-      className="bg-[rgba(165,186,255,0.5)] rounded-[40px] px-[32px] py-[20px] w-full max-w-[386px] h-max min-h-[150px]"
+      className="bg-[rgba(165,186,255,0.5)] rounded-[50px] px-[32px] py-[24px] w-full max-w-[386px] h-max"
       initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 30, filter: prefersReducedMotion ? "blur(0px)" : "blur(5px)" }}
       transition={{ delay, duration: prefersReducedMotion ? 0.2 : 0.85 }}
       viewport={{ once: true, amount: 0.35 }}
       whileHover={prefersReducedMotion ? undefined : { rotateX: 2, rotateY: -2, y: -6 }}
       whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
     >
-      <div className="w-full h-max max-w-[300px]">
-        <div className="flex items-center justify-between gap-[10px]">
-          <div className="flex items-center gap-[10px]">
-            <AppImage alt={item.name} className="h-[46px] w-[46px] rounded-full object-cover" height={46} src={item.avatar} width={46} />
-            <p className="text-[20px] font-[900] font-[var(--font-satoshi)] leading-[normal]">{item.name}</p>
-          </div>
-          <span className="rounded-[999px] bg-white/60 px-[10px] py-[4px] text-[12px] font-[700] tracking-[1px] text-black">★ {item.rating}</span>
-        </div>
-        <p className="mt-[14px] text-[17px] font-[500] font-[var(--font-satoshi)] leading-[1.35]">{item.quote}</p>
+      <div className="flex flex-col items-center gap-[24px]">
+        <p className="font-satoshi font-[900] text-[24px] leading-[normal] text-black text-center w-full">{item.name}</p>
+        <p className="font-satoshi font-[500] text-[24px] leading-[1.45] text-black w-full">{item.quote}</p>
       </div>
     </motion.div>
   );
@@ -64,13 +58,13 @@ export default function Testimonials() {
     <>
       <section className="xl:hidden mt-[64px]">
         <Reveal>
-          <p className="text-center text-[40px] leading-[normal] text-black sm:text-[44px]">
-            <span className="font-[var(--font-satoshi)] font-[700]">Real </span>
-            <span className="font-[var(--font-fanlste)]">S</span>
-            <span className="font-[var(--font-fanlste)] italic">miles</span>
-            <span className="font-[var(--font-fanlste)]">, </span>
-            <span className="font-[var(--font-satoshi)] font-[700]">Real </span>
-            <span className="font-[var(--font-fanlste)] italic">Blooms</span>
+          <p className="text-center text-[28px] leading-[1.15] text-black sm:text-[34px]">
+            <span className="font-satoshi font-[700]">Real </span>
+            <span className="font-fanlste">S</span>
+            <span className="font-fanlste italic">miles</span>
+            <span className="font-fanlste">, </span>
+            <span className="font-satoshi font-[700]">Real </span>
+            <span className="font-fanlste italic">Blooms</span>
           </p>
           <div className="mt-[24px] flex flex-col items-center gap-[18px]">
             {testimonialItems.map((item, index) => (
@@ -82,17 +76,17 @@ export default function Testimonials() {
 
       <section className="hidden xl:block mt-[110px]">
         <Reveal>
-          <div className="mx-auto w-full max-w-[1180px]">
-            <p className="mx-auto w-full max-w-[760px] text-center text-[56px] leading-[normal] text-black">
-              <span className="font-[var(--font-satoshi)] font-[700]">Real </span>
-              <span className="font-[var(--font-fanlste)]">S</span>
-              <span className="font-[var(--font-fanlste)] italic">miles</span>
-              <span className="font-[var(--font-fanlste)]">, </span>
-              <span className="font-[var(--font-satoshi)] font-[700]">Real </span>
-              <span className="font-[var(--font-fanlste)] italic">Blooms</span>
+          <div className="mx-auto w-full">
+            <p className="mx-auto w-full max-w-[760px] text-center text-[64px] leading-[1.1] text-black">
+              <span className="font-satoshi font-[700]">Real </span>
+              <span className="font-fanlste">S</span>
+              <span className="font-fanlste italic">miles</span>
+              <span className="font-fanlste">, </span>
+              <span className="font-satoshi font-[700]">Real </span>
+              <span className="font-fanlste italic">Blooms</span>
             </p>
 
-            <div className="mt-[44px] flex items-center justify-between gap-[16px]">
+            <div className="mt-[44px] flex items-stretch justify-center gap-[44px]">
               {testimonialItems.map((item, index) => (
                 <Card delay={0.05 + index * 0.12} item={item} key={`desktop-${item.name}`} />
               ))}

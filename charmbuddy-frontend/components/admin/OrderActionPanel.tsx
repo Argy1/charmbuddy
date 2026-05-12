@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { type FormEvent, useState } from "react";
@@ -32,14 +32,14 @@ export default function OrderActionPanel({ open, order, isSubmitting, onClose, o
             initial={{ y: 24, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="font-[var(--font-fanlste)] text-[30px] tracking-[1px]">Ship Order</h3>
-            <p className="mt-[8px] font-[var(--font-satoshi)] text-[14px] text-black/70">Order #{order.id} - {order.user?.name ?? "Customer"}</p>
-            <p className="font-[var(--font-satoshi)] text-[14px] text-black/70">Status sekarang: {order.status}</p>
+            <h3 className="font-fanlste text-[30px] tracking-[1px]">Ship Order</h3>
+            <p className="mt-[8px] font-satoshi text-[14px] text-black/70">Order #{order.id} - {order.user?.name ?? "Customer"}</p>
+            <p className="font-satoshi text-[14px] text-black/70">Status sekarang: {order.status}</p>
             <form className="mt-[12px] space-y-[10px]" onSubmit={handleSubmit}>
               <label className="flex flex-col gap-[6px]">
-                <span className="font-[var(--font-satoshi)] text-[13px] tracking-[1px]">Tracking Number</span>
+                <span className="font-satoshi text-[13px] tracking-[1px]">Tracking Number</span>
                 <input
-                  className="h-[42px] rounded-[10px] border border-black/20 px-[10px] font-[var(--font-satoshi)] text-[14px]"
+                  className="h-[42px] rounded-[10px] border border-black/20 px-[10px] font-satoshi text-[14px]"
                   onChange={(e) => setTrackingNumber(e.target.value)}
                   placeholder="Input tracking number"
                   required
@@ -48,10 +48,10 @@ export default function OrderActionPanel({ open, order, isSubmitting, onClose, o
               </label>
 
               <div className="flex justify-end gap-[8px]">
-                <button className="rounded-[10px] border border-black/20 px-[12px] py-[8px] font-[var(--font-satoshi)] text-[14px]" onClick={onClose} type="button">
+                <button className="rounded-[10px] border border-black/20 px-[12px] py-[8px] font-satoshi text-[14px]" onClick={onClose} type="button">
                   Cancel
                 </button>
-                <button className="rounded-[10px] bg-black px-[14px] py-[8px] font-[var(--font-satoshi)] text-[14px] text-white disabled:opacity-60" disabled={isSubmitting} type="submit">
+                <button className="rounded-[10px] bg-black px-[14px] py-[8px] font-satoshi text-[14px] text-white disabled:opacity-60" disabled={isSubmitting} type="submit">
                   {isSubmitting ? "Saving..." : "Confirm Ship"}
                 </button>
               </div>

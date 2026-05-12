@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
@@ -59,7 +59,7 @@ export default function AboutSection() {
         </ParallaxY>
 
         <div className="w-full rounded-[28px] border border-[rgba(255,255,255,0.39)] bg-[rgba(255,255,255,0.42)] px-[18px] py-[16px] backdrop-blur-[12.9px] xl:min-h-[384px] xl:w-[859px] xl:px-[28px] xl:py-[20px]">
-          <p className="mx-auto w-full text-center font-[var(--font-fanlste)] text-[clamp(28px,3vw,42px)] leading-[1.15] tracking-[clamp(1.5px,0.3vw,3px)] text-[#5d2f8a] xl:w-[827px]">
+          <p className="mx-auto w-full text-center font-fanlste text-[clamp(28px,3vw,42px)] leading-[1.15] tracking-[clamp(1.5px,0.3vw,3px)] text-[#5d2f8a] xl:w-[827px]">
             &quot;More than accessories, these are pieces of your story.&quot;
           </p>
 

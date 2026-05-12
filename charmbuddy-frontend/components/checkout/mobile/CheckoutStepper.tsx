@@ -37,7 +37,7 @@ export default function CheckoutStepper({ steps, currentStep, onStepChange }: Ch
               >
                 {index + 1}
               </motion.button>
-              <p className={`truncate font-[var(--font-satoshi)] text-[11px] tracking-[1.1px] ${isCurrent ? "text-black" : "text-black/60"}`}>{step.label}</p>
+              <p className={`truncate font-satoshi text-[11px] tracking-[1.1px] ${isCurrent ? "text-black" : "text-black/60"}`}>{step.label}</p>
               {index < steps.length - 1 ? (
                 <div className={`hidden h-[2px] flex-1 rounded-full sm:block ${index < currentIndex ? "bg-black" : "bg-black/25"}`} />
               ) : null}

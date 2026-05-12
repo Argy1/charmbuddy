@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -38,7 +38,7 @@ export default function ProductGrid({ mobile = false, filters }: ProductGridProp
       ? fallbackCards.map((item) => (
           <Link className="block w-[241px] border border-black/10 bg-white p-[12px]" href={routes.catalogue} key={item.sku}>
             <AppImage alt={item.name} className="h-[255px] w-[241px] object-cover" height={255} src={item.image} width={241} />
-            <p className="mt-[10px] font-[var(--font-fanlste)] text-[18px] tracking-[1.6px]">{item.name}</p>
+            <p className="mt-[10px] font-fanlste text-[18px] tracking-[1.6px]">{item.name}</p>
           </Link>
         ))
       : products.map((product) => <ProductCard key={product.id} product={product} />);
@@ -46,9 +46,9 @@ export default function ProductGrid({ mobile = false, filters }: ProductGridProp
   if (mobile) {
     return (
       <>
-        {error ? <p className="mb-[12px] font-[var(--font-satoshi)] text-[14px] text-black/70">Produk utama belum bisa dimuat, menampilkan dummy sementara.</p> : null}
+        {error ? <p className="mb-[12px] font-satoshi text-[14px] text-black/70">Produk utama belum bisa dimuat, menampilkan dummy sementara.</p> : null}
         {!isLoading && !error && products.length === 0 ? (
-          <p className="mb-[12px] font-[var(--font-satoshi)] text-[14px] text-black/70">
+          <p className="mb-[12px] font-satoshi text-[14px] text-black/70">
             {hasFilters ? "Tidak ada produk yang cocok dengan filter saat ini." : "Belum ada produk yang tersedia."}
           </p>
         ) : null}
@@ -59,9 +59,9 @@ export default function ProductGrid({ mobile = false, filters }: ProductGridProp
 
   return (
     <>
-      {error ? <p className="mb-[12px] font-[var(--font-satoshi)] text-[14px] text-black/70">Produk utama belum bisa dimuat, menampilkan dummy sementara.</p> : null}
+      {error ? <p className="mb-[12px] font-satoshi text-[14px] text-black/70">Produk utama belum bisa dimuat, menampilkan dummy sementara.</p> : null}
       {!isLoading && !error && products.length === 0 ? (
-        <p className="mb-[12px] font-[var(--font-satoshi)] text-[14px] text-black/70">
+        <p className="mb-[12px] font-satoshi text-[14px] text-black/70">
           {hasFilters ? "Tidak ada produk yang cocok dengan filter saat ini." : "Belum ada produk yang tersedia."}
         </p>
       ) : null}

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 
@@ -59,15 +59,15 @@ export default function FAQPage() {
 
         <Reveal className="mx-auto mt-[32px] w-full max-w-[1192px] xl:mt-[71px]">
           <h1 className="page-title text-center text-black">
-            <span className="font-[var(--font-satoshi)] font-bold">Your Guide to </span>
-            <span className="font-[var(--font-fanlste)] italic">Blooming</span>
+            <span className="font-satoshi font-bold">Your Guide to </span>
+            <span className="font-fanlste italic">Blooming</span>
           </h1>
 
           <div className="mt-[32px]">
             {faqItems.length > 0 ? <FAQAccordion defaultOpenIds={[faqItems[0]?.id ?? "1"]} items={faqItems} /> : null}
             {faqItems.length === 0 ? (
               <div className="rounded-[16px] border border-black/15 bg-white/70 px-[16px] py-[20px] text-center">
-                <p className="font-[var(--font-satoshi)] text-[16px] text-black/70">
+                <p className="font-satoshi text-[16px] text-black/70">
                   {loadError ?? "Belum ada FAQ yang dipublikasikan."}
                 </p>
               </div>

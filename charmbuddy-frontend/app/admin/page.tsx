@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -59,8 +59,8 @@ export default function AdminOverviewPage() {
       <section className="rounded-[18px] border border-black/10 bg-white/70 p-[12px]">
         <div className="flex flex-col gap-[10px] sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="font-[var(--font-fanlste)] text-[32px] tracking-[1px]">Dashboard Summary</p>
-            <p className="font-[var(--font-satoshi)] text-[14px] text-black/65">Monitor performa order, payment, dan stok produk.</p>
+            <p className="font-fanlste text-[32px] tracking-[1px]">Dashboard Summary</p>
+            <p className="font-satoshi text-[14px] text-black/65">Monitor performa order, payment, dan stok produk.</p>
           </div>
           <form
             className="flex flex-wrap items-end gap-[8px]"
@@ -70,24 +70,24 @@ export default function AdminOverviewPage() {
             }}
           >
             <label className="flex flex-col gap-[4px]">
-              <span className="font-[var(--font-satoshi)] text-[12px] text-black/65">From</span>
+              <span className="font-satoshi text-[12px] text-black/65">From</span>
               <input
-                className="h-[38px] rounded-[10px] border border-black/20 bg-white px-[8px] font-[var(--font-satoshi)] text-[13px]"
+                className="h-[38px] rounded-[10px] border border-black/20 bg-white px-[8px] font-satoshi text-[13px]"
                 onChange={(e) => setRange((prev) => ({ ...prev, from: e.target.value }))}
                 type="date"
                 value={range.from}
               />
             </label>
             <label className="flex flex-col gap-[4px]">
-              <span className="font-[var(--font-satoshi)] text-[12px] text-black/65">To</span>
+              <span className="font-satoshi text-[12px] text-black/65">To</span>
               <input
-                className="h-[38px] rounded-[10px] border border-black/20 bg-white px-[8px] font-[var(--font-satoshi)] text-[13px]"
+                className="h-[38px] rounded-[10px] border border-black/20 bg-white px-[8px] font-satoshi text-[13px]"
                 onChange={(e) => setRange((prev) => ({ ...prev, to: e.target.value }))}
                 type="date"
                 value={range.to}
               />
             </label>
-            <button className="h-[38px] rounded-[10px] bg-black px-[12px] font-[var(--font-satoshi)] text-[13px] text-white" type="submit">
+            <button className="h-[38px] rounded-[10px] bg-black px-[12px] font-satoshi text-[13px] text-white" type="submit">
               Apply
             </button>
           </form>
@@ -96,7 +96,7 @@ export default function AdminOverviewPage() {
 
       {errorMessage ? (
         <section className="rounded-[14px] border border-red-200 bg-red-50 p-[12px]">
-          <p className="font-[var(--font-satoshi)] text-[14px] text-red-700">{errorMessage}</p>
+          <p className="font-satoshi text-[14px] text-red-700">{errorMessage}</p>
         </section>
       ) : null}
 
@@ -105,21 +105,21 @@ export default function AdminOverviewPage() {
       <section className="grid grid-cols-1 gap-[10px] xl:grid-cols-2">
         <article className="rounded-[18px] border border-black/10 bg-white/75 p-[12px]">
           <div className="flex items-center justify-between">
-            <h2 className="font-[var(--font-fanlste)] text-[28px] tracking-[1px]">Low Stock</h2>
-            <Link className="font-[var(--font-satoshi)] text-[13px] text-[#2d44cf]" href={routes.admin.products}>
+            <h2 className="font-fanlste text-[28px] tracking-[1px]">Low Stock</h2>
+            <Link className="font-satoshi text-[13px] text-[#2d44cf]" href={routes.admin.products}>
               Manage products
             </Link>
           </div>
           <div className="mt-[8px] space-y-[8px]">
             {isLoading ? <div className="h-[120px] animate-pulse rounded-[12px] bg-white/70" /> : null}
             {!isLoading && lowStockProducts.length === 0 ? (
-              <p className="font-[var(--font-satoshi)] text-[14px] text-black/65">Tidak ada produk low stock.</p>
+              <p className="font-satoshi text-[14px] text-black/65">Tidak ada produk low stock.</p>
             ) : null}
             {!isLoading
               ? lowStockProducts.map((product) => (
                   <div className="flex items-center justify-between rounded-[12px] bg-white px-[10px] py-[8px]" key={product.id}>
-                    <p className="font-[var(--font-satoshi)] text-[14px]">{product.name}</p>
-                    <p className="font-[var(--font-satoshi)] text-[14px] font-[700] text-red-600">{product.stock}</p>
+                    <p className="font-satoshi text-[14px]">{product.name}</p>
+                    <p className="font-satoshi text-[14px] font-[700] text-red-600">{product.stock}</p>
                   </div>
                 ))
               : null}
@@ -127,15 +127,15 @@ export default function AdminOverviewPage() {
         </article>
 
         <article className="rounded-[18px] border border-black/10 bg-white/75 p-[12px]">
-          <h2 className="font-[var(--font-fanlste)] text-[28px] tracking-[1px]">Quick Access</h2>
+          <h2 className="font-fanlste text-[28px] tracking-[1px]">Quick Access</h2>
           <div className="mt-[10px] grid grid-cols-1 gap-[8px] sm:grid-cols-3">
-            <Link className="rounded-[12px] bg-[#8798ff] px-[10px] py-[12px] text-center font-[var(--font-satoshi)] text-[14px] text-white" href={routes.admin.products}>
+            <Link className="rounded-[12px] bg-[#8798ff] px-[10px] py-[12px] text-center font-satoshi text-[14px] text-white" href={routes.admin.products}>
               New Product
             </Link>
-            <Link className="rounded-[12px] bg-black px-[10px] py-[12px] text-center font-[var(--font-satoshi)] text-[14px] text-white" href={routes.admin.orders}>
+            <Link className="rounded-[12px] bg-black px-[10px] py-[12px] text-center font-satoshi text-[14px] text-white" href={routes.admin.orders}>
               Process Orders
             </Link>
-            <Link className="rounded-[12px] bg-white px-[10px] py-[12px] text-center font-[var(--font-satoshi)] text-[14px]" href={routes.admin.payments}>
+            <Link className="rounded-[12px] bg-white px-[10px] py-[12px] text-center font-satoshi text-[14px]" href={routes.admin.payments}>
               Review Payments
             </Link>
           </div>

@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 
 import { resolveApiAsset } from "@/lib/api/asset";
-import { listOrdersApi } from "@/lib/api/orders";
+import { listOrdersApi, uploadPaymentProofApi } from "@/lib/api/orders";
 import type { Order as ApiOrder } from "@/lib/api/types";
 import { useAuth } from "@/lib/auth-context";
 import AmbientBackdrop from "@/components/motion/AmbientBackdrop";
@@ -16,7 +16,7 @@ import Footer from "@/components/shared/Footer";
 import HeaderTemplate from "@/components/shared/HeaderTemplate";
 import { routes } from "@/lib/routes";
 import { useRequireAuth } from "@/lib/use-require-auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const sortCycle: SortKey[] = ["latest", "oldest", "highest_total", "lowest_total", "status"];
 
@@ -38,12 +38,16 @@ export default function OrderHistoryPage() {
   const isAllowed = useRequireAuth();
   const { isAuthResolved, token } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const targetOrderId = searchParams.get("order");
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoadingOrders, setIsLoadingOrders] = useState(true);
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("latest");
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
+  const [uploadingOrderId, setUploadingOrderId] = useState<number | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isAuthResolved || !token) {
@@ -62,7 +66,7 @@ export default function OrderHistoryPage() {
 
         const mapped = response.data.map(mapOrderToDisplay);
         setOrders(mapped);
-        setExpandedOrderId(mapped[0]?.id ?? null);
+        setExpandedOrderId(mapped.find((order) => order.id === targetOrderId)?.id ?? mapped[0]?.id ?? null);
       } catch {
         if (!isMounted) {
           return;
@@ -81,7 +85,7 @@ export default function OrderHistoryPage() {
     return () => {
       isMounted = false;
     };
-  }, [isAuthResolved, token]);
+  }, [isAuthResolved, targetOrderId, token]);
 
   const filteredOrders = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -129,6 +133,21 @@ export default function OrderHistoryPage() {
     setExpandedOrderId((prev) => (prev === orderId ? null : orderId));
   };
 
+  const handleResendPayment = async (orderId: number, file: File) => {
+    if (!token) return;
+    setUploadingOrderId(orderId);
+    setUploadError(null);
+    try {
+      await uploadPaymentProofApi(token, orderId, file);
+      const response = await listOrdersApi(token);
+      setOrders(response.data.map(mapOrderToDisplay));
+    } catch {
+      setUploadError("Gagal mengirim bukti pembayaran. Coba lagi.");
+    } finally {
+      setUploadingOrderId(null);
+    }
+  };
+
   if (!isAllowed) {
     return null;
   }
@@ -160,23 +179,34 @@ export default function OrderHistoryPage() {
             <div className="h-[180px] w-full animate-pulse rounded-[50px] bg-white/70" />
           ) : null}
 
-          <AnimatePresence initial={false} mode="popLayout">
+          <AnimatePresence initial={false} mode="wait">
             {sortedOrders.map((order) => {
               const expanded = expandedOrderId === order.id;
               return (
-                <motion.div className="flex flex-col gap-[24px]" key={order.id} layout>
-                  <OrderCard
-                    expanded={expanded}
-                    onToggle={() => handleToggle(order.id)}
-                    onTrackOrder={() => void router.push(`${routes.statusOrder}?order=${order.id}`)}
-                    order={order}
-                  />
-                  <OrderExpandedDetail
-                    expanded={expanded}
-                    onToggle={() => handleToggle(order.id)}
-                    onTrackOrder={() => void router.push(`${routes.statusOrder}?order=${order.id}`)}
-                    order={order}
-                  />
+                <motion.div
+                  className="flex flex-col gap-[24px]"
+                  key={order.id}
+                  layout
+                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {expanded ? (
+                    <OrderExpandedDetail
+                      expanded={expanded}
+                      isUploadingPayment={uploadingOrderId === order.rawId}
+                      onResendPayment={handleResendPayment}
+                      onToggle={() => handleToggle(order.id)}
+                      onTrackOrder={() => void router.push(`${routes.statusOrder}?order=${order.id}`)}
+                      order={order}
+                      uploadError={uploadError}
+                    />
+                  ) : (
+                    <OrderCard
+                      expanded={expanded}
+                      onToggle={() => handleToggle(order.id)}
+                      onTrackOrder={() => void router.push(`${routes.statusOrder}?order=${order.id}`)}
+                      order={order}
+                    />
+                  )}
                 </motion.div>
               );
             })}
@@ -194,6 +224,7 @@ export default function OrderHistoryPage() {
 function mapOrderToDisplay(order: ApiOrder): Order {
   return {
     id: String(order.id),
+    rawId: order.id,
     transactionId: order.order_number,
     dateLabel: new Date(order.created_at).toLocaleString("id-ID", {
       day: "2-digit",
@@ -204,6 +235,7 @@ function mapOrderToDisplay(order: ApiOrder): Order {
     }),
     statusLabel: statusLabelMap[order.status] ?? order.status,
     total: order.total,
+    paymentStatusReview: order.payment?.status_review ?? null,
     items: order.items.map((item) => ({
       id: String(item.id),
       productId: String(item.product_id ?? ""),

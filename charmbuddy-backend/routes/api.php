@@ -52,6 +52,7 @@ Route::get('/content/{key}', [ContentController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::patch('/user/profile', [AuthController::class, 'updateProfile']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me', function (Request $request) {
         return response()->json([
@@ -142,6 +143,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/orders/{id}/approve', [OrderAdminController::class, 'approve']);
         Route::put('/orders/{id}/reject', [OrderAdminController::class, 'reject']);
         Route::put('/orders/{id}/ship', [OrderAdminController::class, 'ship']);
+        Route::put('/orders/{id}/finish', [OrderAdminController::class, 'finish']);
         Route::get('/orders/{id}/statuses', [OrderStatusHistoryAdminController::class, 'index']);
         Route::post('/orders/{id}/statuses', [OrderStatusHistoryAdminController::class, 'store']);
         Route::put('/orders/{id}/statuses/{historyId}', [OrderStatusHistoryAdminController::class, 'update']);

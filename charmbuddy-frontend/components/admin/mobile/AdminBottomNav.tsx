@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -30,7 +30,7 @@ export default function AdminBottomNav() {
 
           return (
             <Link
-              className={`min-w-[82px] rounded-[10px] px-[6px] py-[10px] text-center font-[var(--font-satoshi)] text-[11px] tracking-[0.8px] ${
+              className={`min-w-[82px] rounded-[10px] px-[6px] py-[10px] text-center font-satoshi text-[11px] tracking-[0.8px] ${
                 active ? "bg-[#8798ff] text-white" : "bg-white/60 text-black"
               }`}
               href={item.href}

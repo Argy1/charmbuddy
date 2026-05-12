@@ -16,7 +16,7 @@ return new class extends Migration
             $table->decimal('shipping_cost', 12, 2)->default(0);
             $table->text('shipping_address');
             $table->string('courier_service');
-            $table->enum('status', ['Pending', 'Paid', 'Processed', 'Shipped'])->default('Pending');
+            $table->enum('status', ['Pending', 'Paid', 'Processed', 'Shipped', 'Finished'])->default('Pending');
             $table->string('payment_proof_path')->nullable();
             $table->string('tracking_number')->nullable();
             $table->timestamps();

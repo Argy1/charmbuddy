@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -42,15 +42,15 @@ function ProductCard({ card }: { card: CatalogueCard }) {
         </div>
         <div className="flex items-end justify-between px-[8px] pb-[11px] pt-[12px]">
           <div className="w-[116px]">
-            <p className="text-left text-[16px] tracking-[2.4px] font-[var(--font-fanlste)]">{card.name}</p>
+            <p className="text-left text-[16px] tracking-[2.4px] font-fanlste">{card.name}</p>
             <div className="mt-[10px] flex items-center gap-[13px]">
-              <p className="text-[16px] tracking-[2.4px] font-[var(--font-fanlste)]">${card.price}</p>
-              <p className="text-[12px] tracking-[1.8px] text-[rgba(0,0,0,0.5)] line-through font-[var(--font-fanlste)]">${oldPrice}</p>
+              <p className="text-[16px] tracking-[2.4px] font-fanlste">${card.price}</p>
+              <p className="text-[12px] tracking-[1.8px] text-[rgba(0,0,0,0.5)] line-through font-fanlste">${oldPrice}</p>
             </div>
           </div>
           <div className="mb-[4px] flex w-[66px] items-center justify-between">
             <AppImage alt="Rating" className="h-[25px] w-[25px]" height={25} src="/home/catalog-star.svg" width={25} />
-            <p className="text-[16px] tracking-[2.4px] font-[var(--font-fanlste)]">{rating}</p>
+            <p className="text-[16px] tracking-[2.4px] font-fanlste">{rating}</p>
           </div>
         </div>
       </Link>
@@ -124,8 +124,8 @@ export default function CatalogueGrid() {
       <section className="xl:hidden mt-[56px]">
         <Reveal>
           <div className="mx-auto flex max-w-[1180px] flex-col items-center gap-[32px]">
-          <div className="backdrop-blur-[13.5px] bg-[rgba(165,186,255,0.5)] border border-[rgba(255,255,255,0.4)] border-solid rounded-[50px] px-[30px] py-[8px] w-max shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
-            <p className=" h-max items-center justify-center text-center text-[24px] sm:text-[40px] tracking-[4px] font-[var(--font-fanlste)] italic leading-[1]">Catalogue</p>
+          <div className="backdrop-blur-[13.5px] bg-[rgba(165,186,255,0.5)] border border-[rgba(255,255,255,0.4)] border-solid rounded-[50px] px-[24px] py-[6px] w-max shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
+            <p className="h-max items-center justify-center text-center text-[20px] sm:text-[26px] tracking-[2.5px] font-fanlste italic leading-[1]">Catalogue</p>
           </div>
           <div className="grid grid-cols-1 gap-[28px] sm:grid-cols-2">
             {mobilePages[activeMobileIndex]?.map((card) => <ProductCard card={card} key={card.id} />)}
@@ -133,19 +133,19 @@ export default function CatalogueGrid() {
           <div className="flex items-center gap-[41px]">
             <motion.button
               aria-label="Previous catalogue slide"
-              className="grid h-[40.60234832763672px] w-[36.90872573852539px] place-items-center"
+              className="grid h-[24px] w-[22px] place-items-center"
               onClick={goPrevMobile}
               type="button"
               whileHover={{ scale: prefersReducedMotion ? 1 : 1.08 }}
               whileTap={{ scale: prefersReducedMotion ? 1 : 0.94 }}
             >
-              <AppImage alt="Prev" className="h-[40.60234832763672px] w-[36.90872573852539px] rotate-180" height={41} src="/home/catalog-arrow.svg" width={37} />
+              <AppImage alt="Prev" className="h-[24px] w-[22px] rotate-180" height={41} src="/home/catalog-arrow.svg" width={37} />
             </motion.button>
             <div className="flex items-center gap-[10px]">
               {mobilePages.map((_, index) => (
                 <button
                   aria-label={`Go to catalogue slide ${index + 1}`}
-                  className={`h-[20px] w-[20px] rounded-full transition-all ${index === activeMobileIndex ? "bg-[#705cb2]" : "bg-[rgba(112,92,178,0.3)]"}`}
+                  className={`h-[10px] w-[10px] rounded-full transition-all ${index === activeMobileIndex ? "bg-[#705cb2]" : "bg-[rgba(112,92,178,0.3)]"}`}
                   key={`mobile-dot-${index}`}
                   onClick={() => setMobileIndex(index)}
                   type="button"
@@ -154,13 +154,13 @@ export default function CatalogueGrid() {
             </div>
             <motion.button
               aria-label="Next catalogue slide"
-              className="grid h-[40.60234832763672px] w-[36.90872573852539px] place-items-center"
+              className="grid h-[24px] w-[22px] place-items-center"
               onClick={goNextMobile}
               type="button"
               whileHover={{ scale: prefersReducedMotion ? 1 : 1.08 }}
               whileTap={{ scale: prefersReducedMotion ? 1 : 0.94 }}
             >
-              <AppImage alt="Next" className="h-[40.60234832763672px] w-[36.90872573852539px]" height={41} src="/home/catalog-arrow.svg" width={37} />
+              <AppImage alt="Next" className="h-[24px] w-[22px]" height={41} src="/home/catalog-arrow.svg" width={37} />
             </motion.button>
           </div>
           </div>
@@ -170,31 +170,31 @@ export default function CatalogueGrid() {
       {/* desktop */}
       <section className="hidden xl:block mt-[96px]">
         <Reveal>
-          <div className="mx-auto flex h-full w-full max-w-[1180px] flex-col items-center gap-[93px]">
+          <div className="mx-auto flex h-full w-full flex-col items-center gap-[60px]">
           <div className="backdrop-blur-[13.5px] bg-[rgba(165,186,255,0.5)] border border-[rgba(255,255,255,0.4)] border-solid rounded-[50px] px-[16px] py-[8px] w-[362px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
-            <p className="flex h-[42px] items-center justify-center text-center text-[40px] tracking-[4px] font-[var(--font-fanlste)] italic leading-none">
+            <p className="flex h-[42px] items-center justify-center text-center text-[40px] tracking-[4px] font-fanlste italic leading-none">
               Catalogue
             </p>
           </div>
-          <div className="flex w-full items-center justify-center gap-[36px]">
+          <div className="flex w-full items-center justify-center gap-[72px]">
             {desktopPages[activeDesktopIndex]?.map((card) => <ProductCard card={card} key={card.id} />)}
           </div>
           <div className="flex items-center gap-[41px]">
             <motion.button
               aria-label="Previous catalogue slide"
-              className="grid h-[40.60234832763672px] w-[36.90872573852539px] place-items-center"
+              className="grid h-[24px] w-[22px] place-items-center"
               onClick={goPrevDesktop}
               type="button"
               whileHover={{ scale: prefersReducedMotion ? 1 : 1.08 }}
               whileTap={{ scale: prefersReducedMotion ? 1 : 0.94 }}
             >
-              <AppImage alt="Prev" className="h-[40.60234832763672px] w-[36.90872573852539px] rotate-180" height={41} src="/home/catalog-arrow.svg" width={37} />
+              <AppImage alt="Prev" className="h-[24px] w-[22px] rotate-180" height={41} src="/home/catalog-arrow.svg" width={37} />
             </motion.button>
             <div className="flex items-center gap-[10px]">
               {desktopPages.map((_, index) => (
                 <button
                   aria-label={`Go to catalogue slide ${index + 1}`}
-                  className={`h-[20px] w-[20px] rounded-full transition-all ${index === activeDesktopIndex ? "bg-[#705cb2]" : "bg-[rgba(112,92,178,0.3)]"}`}
+                  className={`h-[10px] w-[10px] rounded-full transition-all ${index === activeDesktopIndex ? "bg-[#705cb2]" : "bg-[rgba(112,92,178,0.3)]"}`}
                   key={`desktop-dot-${index}`}
                   onClick={() => setDesktopIndex(index)}
                   type="button"
@@ -203,13 +203,13 @@ export default function CatalogueGrid() {
             </div>
             <motion.button
               aria-label="Next catalogue slide"
-              className="grid h-[40.60234832763672px] w-[36.90872573852539px] place-items-center"
+              className="grid h-[24px] w-[22px] place-items-center"
               onClick={goNextDesktop}
               type="button"
               whileHover={{ scale: prefersReducedMotion ? 1 : 1.08 }}
               whileTap={{ scale: prefersReducedMotion ? 1 : 0.94 }}
             >
-              <AppImage alt="Next" className="h-[40.60234832763672px] w-[36.90872573852539px]" height={41} src="/home/catalog-arrow.svg" width={37} />
+              <AppImage alt="Next" className="h-[24px] w-[22px]" height={41} src="/home/catalog-arrow.svg" width={37} />
             </motion.button>
           </div>
           </div>

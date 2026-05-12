@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
@@ -7,7 +7,9 @@ import InteractivePress from "@/components/motion/InteractivePress";
 import Reveal from "@/components/motion/Reveal";
 import { createAddressApi, deleteAddressApi, listAddressesApi, updateAddressApi, type AddressPayload } from "@/lib/api/addresses";
 import { ApiError } from "@/lib/api/client";
+import { getShippingCitiesApi, getShippingProvincesApi } from "@/lib/api/checkout";
 import type { UserAddress } from "@/lib/api/types";
+import type { ShippingCity, ShippingProvince } from "@/lib/api/types";
 import { useAuth } from "@/lib/auth-context";
 
 const EMPTY_FORM: AddressPayload = {
@@ -21,6 +23,22 @@ const EMPTY_FORM: AddressPayload = {
   is_default: false,
 };
 
+function normalizeLocationText(value: string) {
+  return value
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/kota|kabupaten|kab\.|city/g, "")
+    .replace(/[^a-z0-9]/g, "");
+}
+
+function formatCityLabel(city: ShippingCity) {
+  const type = city.type?.toLowerCase();
+  const prefix = type === "city" ? "Kota" : type === "kabupaten" || type === "regency" ? "Kabupaten" : city.type?.trim();
+
+  return prefix ? `${prefix} ${city.city_name}` : city.city_name;
+}
+
 export default function AddressCard() {
   const { token } = useAuth();
   const [addresses, setAddresses] = useState<UserAddress[]>([]);
@@ -29,6 +47,9 @@ export default function AddressCard() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [provinceOptions, setProvinceOptions] = useState<ShippingProvince[]>([]);
+  const [cityOptions, setCityOptions] = useState<ShippingCity[]>([]);
+  const [isLocationLoading, setIsLocationLoading] = useState(false);
 
   const hasAddresses = addresses.length > 0;
 
@@ -65,6 +86,106 @@ export default function AddressCard() {
     void loadAddresses();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
+
+  useEffect(() => {
+    if (!token) {
+      setProvinceOptions([]);
+      setCityOptions([]);
+      return;
+    }
+
+    let isMounted = true;
+
+    const loadProvinces = async () => {
+      setIsLocationLoading(true);
+      try {
+        const response = await getShippingProvincesApi();
+        if (!isMounted) {
+          return;
+        }
+        setProvinceOptions(response.data);
+      } catch {
+        if (!isMounted) {
+          return;
+        }
+        setProvinceOptions([]);
+      } finally {
+        if (isMounted) {
+          setIsLocationLoading(false);
+        }
+      }
+    };
+
+    void loadProvinces();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [token]);
+
+  useEffect(() => {
+    if (!form.province || provinceOptions.length === 0) {
+      setCityOptions([]);
+      return;
+    }
+
+    const matchedProvince =
+      provinceOptions.find((entry) => normalizeLocationText(entry.province) === normalizeLocationText(form.province)) ??
+      provinceOptions.find((entry) => normalizeLocationText(entry.province).includes(normalizeLocationText(form.province))) ??
+      null;
+
+    if (!matchedProvince) {
+      setCityOptions([]);
+      return;
+    }
+
+    let isMounted = true;
+
+    const loadCities = async () => {
+      setIsLocationLoading(true);
+      try {
+        const response = await getShippingCitiesApi(matchedProvince.province_id);
+        if (!isMounted) {
+          return;
+        }
+
+        setCityOptions(response.data);
+
+        const matchedCity =
+          response.data.find((entry) => normalizeLocationText(formatCityLabel(entry)) === normalizeLocationText(form.city)) ??
+          response.data.find((entry) => normalizeLocationText(entry.city_name) === normalizeLocationText(form.city)) ??
+          response.data.find((entry) => normalizeLocationText(formatCityLabel(entry)).includes(normalizeLocationText(form.city))) ??
+          null;
+
+        if (matchedCity) {
+          const nextCity = formatCityLabel(matchedCity);
+          if (nextCity !== form.city) {
+            setForm((previous) => ({ ...previous, city: nextCity }));
+          }
+        }
+      } catch {
+        if (!isMounted) {
+          return;
+        }
+        setCityOptions([]);
+      } finally {
+        if (isMounted) {
+          setIsLocationLoading(false);
+        }
+      }
+    };
+
+    const matchedProvinceName = matchedProvince.province;
+    if (matchedProvinceName !== form.province) {
+      setForm((previous) => ({ ...previous, province: matchedProvinceName }));
+    }
+
+    void loadCities();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [form.city, form.province, provinceOptions]);
 
   const resetForm = () => {
     setForm(EMPTY_FORM);
@@ -153,6 +274,29 @@ export default function AddressCard() {
     });
   };
 
+  const citySelectOptions = useMemo(() => {
+    if (!form.city) {
+      return cityOptions;
+    }
+
+    const currentCityNormalized = normalizeLocationText(form.city);
+    const hasCurrentCity = cityOptions.some((city) => normalizeLocationText(formatCityLabel(city)) === currentCityNormalized);
+
+    if (hasCurrentCity) {
+      return cityOptions;
+    }
+
+    return [
+      {
+        city_id: -1,
+        province_id: 0,
+        city_name: form.city,
+        type: undefined,
+      },
+      ...cityOptions,
+    ];
+  }, [cityOptions, form.city]);
+
   const handleSetDefault = async (addressId: number) => {
     if (!token) {
       return;
@@ -174,29 +318,48 @@ export default function AddressCard() {
   return (
     <Reveal className="w-full">
       <div className="flex w-full items-start justify-between">
-        <h2 className="font-[var(--font-satoshi)] text-[clamp(34px,6vw,48px)] font-normal leading-[normal] tracking-[7.2px] text-black">Address</h2>
-        <InteractivePress>
-          <button
-            className="mt-[10px] rounded-[10px] border border-black px-[10px] py-[6px] font-[var(--font-satoshi)] text-[12px] tracking-[1px] text-black"
-            onClick={resetForm}
-            type="button"
-          >
-            + NEW
-          </button>
-        </InteractivePress>
+        <h2 className="font-satoshi text-[clamp(34px,6vw,48px)] font-normal leading-[normal] tracking-[7.2px] text-black">Address</h2>
+        
       </div>
 
       <motion.div className="mt-[15px] w-full rounded-[20px] border border-black bg-white p-[16px] xl:min-h-[236px] xl:max-w-[548px]" whileHover={{ y: -3 }}>
         <div className="space-y-[10px]">
-          <p className="font-[var(--font-satoshi)] text-[13px] font-black tracking-[1.2px] text-black/70">{editingId ? "Edit Address" : "Tambah Address"}</p>
+          <p className="font-satoshi text-[13px] font-black tracking-[1.2px] text-black/70">{editingId ? "Edit Address" : "Tambah Address"}</p>
 
           <div className="grid grid-cols-1 gap-[8px]">
             <input className="rounded-[10px] border border-black/20 px-[10px] py-[8px] text-[13px]" onChange={(e) => setForm((prev) => ({ ...prev, recipient_name: e.target.value }))} placeholder="Recipient name*" value={form.recipient_name} />
             <input className="rounded-[10px] border border-black/20 px-[10px] py-[8px] text-[13px]" onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))} placeholder="Phone*" value={form.phone} />
             <input className="rounded-[10px] border border-black/20 px-[10px] py-[8px] text-[13px]" onChange={(e) => setForm((prev) => ({ ...prev, address_line: e.target.value }))} placeholder="Address line*" value={form.address_line} />
             <div className="grid grid-cols-2 gap-[8px]">
-              <input className="rounded-[10px] border border-black/20 px-[10px] py-[8px] text-[13px]" onChange={(e) => setForm((prev) => ({ ...prev, city: e.target.value }))} placeholder="City*" value={form.city} />
-              <input className="rounded-[10px] border border-black/20 px-[10px] py-[8px] text-[13px]" onChange={(e) => setForm((prev) => ({ ...prev, province: e.target.value }))} placeholder="Province*" value={form.province} />
+              <select
+                className="rounded-[10px] border border-black/20 px-[10px] py-[8px] text-[13px]"
+                disabled={isLocationLoading || provinceOptions.length === 0}
+                onChange={(e) => {
+                  const nextProvince = e.target.value;
+                  setForm((prev) => ({ ...prev, province: nextProvince, city: "" }));
+                }}
+                value={form.province}
+              >
+                <option value="">{isLocationLoading ? "Loading province..." : "Province*"}</option>
+                {provinceOptions.map((province) => (
+                  <option key={province.province_id} value={province.province}>
+                    {province.province}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="rounded-[10px] border border-black/20 px-[10px] py-[8px] text-[13px]"
+                disabled={!form.province || isLocationLoading || citySelectOptions.length === 0}
+                onChange={(e) => setForm((prev) => ({ ...prev, city: e.target.value }))}
+                value={form.city}
+              >
+                <option value="">{!form.province ? "Select province first" : isLocationLoading ? "Loading city..." : "City*"}</option>
+                {citySelectOptions.map((city) => (
+                  <option key={city.city_id} value={formatCityLabel(city)}>
+                    {formatCityLabel(city)}
+                  </option>
+                ))}
+              </select>
             </div>
             <input className="rounded-[10px] border border-black/20 px-[10px] py-[8px] text-[13px]" onChange={(e) => setForm((prev) => ({ ...prev, postal_code: e.target.value }))} placeholder="Postal code*" value={form.postal_code} />
             <textarea className="h-[70px] rounded-[10px] border border-black/20 px-[10px] py-[8px] text-[13px]" onChange={(e) => setForm((prev) => ({ ...prev, notes: e.target.value }))} placeholder="Notes" value={form.notes} />

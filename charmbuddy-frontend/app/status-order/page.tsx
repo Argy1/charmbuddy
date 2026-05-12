@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion, useReducedMotion } from "framer-motion";
 import { Suspense, useMemo, useEffect, useState } from "react";
@@ -52,11 +52,11 @@ function ItemCard({ item }: { item: ProductItem }) {
       <div className="flex min-h-[65px] items-center gap-[12px]">
         <AppImage alt={item.name} className="h-[65px] w-[111px] rounded-[5px] object-cover" fallbackSrc="/status-order/left-item-thumb.png" height={65} src={item.image} width={111} />
         <div className="flex min-h-[65px] min-w-0 flex-1 flex-col justify-between">
-          <div className="flex items-center justify-between gap-[10px] font-[var(--font-satoshi)] text-[16px] font-bold leading-[normal] tracking-[2px] text-black xl:text-[20px] xl:tracking-[3px]">
+          <div className="flex items-center justify-between gap-[10px] font-satoshi text-[16px] font-bold leading-[normal] tracking-[2px] text-black xl:text-[20px] xl:tracking-[3px]">
             <p className="truncate">{item.name}</p>
             <Money className="" value={item.price} />
           </div>
-          <p className="font-[var(--font-satoshi)] text-[13px] font-medium leading-[normal] tracking-[1.4px] text-[rgba(0,0,0,0.5)] xl:text-[14px] xl:tracking-[2.1px]">
+          <p className="font-satoshi text-[13px] font-medium leading-[normal] tracking-[1.4px] text-[rgba(0,0,0,0.5)] xl:text-[14px] xl:tracking-[2.1px]">
             Quantity: {item.qty}
           </p>
         </div>
@@ -75,11 +75,11 @@ function TimelineItem({ item, active, onClick }: { item: TimelineStatus; active:
           <AppImage alt="Status" className="h-[30px] w-[30px]" height={30} src="/status-order/timeline-check-b.svg" width={30} />
         </div>
         <div className="ml-[20px]">
-          <p className="font-[var(--font-satoshi)] text-[20px] font-bold leading-[normal] text-black xl:text-[24px]">{item.title}</p>
-          <p className="font-[var(--font-satoshi)] text-[16px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:text-[20px]">{item.desc}</p>
+          <p className="font-satoshi text-[20px] font-bold leading-[normal] text-black xl:text-[24px]">{item.title}</p>
+          <p className="font-satoshi text-[16px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:text-[20px]">{item.desc}</p>
         </div>
       </div>
-      <p className={`pl-[60px] font-[var(--font-satoshi)] text-[16px] font-medium leading-[normal] sm:pl-0 xl:text-[20px] ${active ? "text-black" : "text-[rgba(0,0,0,0.5)]"}`}>{item.date}</p>
+      <p className={`pl-[60px] font-satoshi text-[16px] font-medium leading-[normal] sm:pl-0 xl:text-[20px] ${active ? "text-black" : "text-[rgba(0,0,0,0.5)]"}`}>{item.date}</p>
     </motion.button>
   );
 }
@@ -106,14 +106,14 @@ function LeftCard({
       <div className="px-[24px] py-[28px] xl:px-[24px] xl:py-[38px]">
         <div className="flex items-start justify-between">
           <div className="min-h-[139px]">
-            <p className="font-[var(--font-satoshi)] text-[24px] font-bold leading-[normal] text-black xl:text-[32px]">Transaction ID - {transactionId}</p>
-            <div className="mt-[8px] space-y-[4px] font-[var(--font-satoshi)] text-[16px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:text-[20px]">
+            <p className="font-satoshi text-[24px] font-bold leading-[normal] text-black xl:text-[32px]">Transaction ID - {transactionId}</p>
+            <div className="mt-[8px] space-y-[4px] font-satoshi text-[16px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:text-[20px]">
               <p>{orderDate}</p>
               <p>{items[0]?.name ?? "Item"}</p>
               <p>Qty - {items[0]?.qty ?? 1}</p>
             </div>
           </div>
-          <Money className="font-[var(--font-satoshi)] text-[24px] font-bold leading-[normal] text-black xl:text-[32px]" value={total} />
+          <Money className="font-satoshi text-[24px] font-bold leading-[normal] text-black xl:text-[32px]" value={total} />
         </div>
 
         <div className="mt-[18px] space-y-[16px]">
@@ -122,13 +122,13 @@ function LeftCard({
           ))}
         </div>
 
-        <p className="mt-[18px] font-[var(--font-satoshi)] text-[13px] text-black/55">Menampilkan item aktual dari transaksi.</p>
+        <p className="mt-[18px] font-satoshi text-[13px] text-black/55">Menampilkan item aktual dari transaksi.</p>
 
         <div className="mt-[39px]">
           <AppImage alt="Line" className="h-[2.012430975181587px] w-full" height={2} src="/status-order/timeline-line-top.svg" width={500} />
           <div className="mt-[15px] flex items-center">
             <AppImage alt="Checklist" className="h-[50px] w-[50px]" height={50} src="/status-order/timeline-check-header.svg" width={50} />
-            <p className="ml-[12px] font-[var(--font-satoshi)] text-[20px] font-bold leading-[normal] text-black xl:text-[24px]">Delivery Progress</p>
+            <p className="ml-[12px] font-satoshi text-[20px] font-bold leading-[normal] text-black xl:text-[24px]">Delivery Progress</p>
           </div>
 
           <div className="relative mt-[15px] min-h-[527px]">
@@ -150,13 +150,13 @@ function ShippingCard({ routeInfo }: { routeInfo: RouteInfo }) {
     <section className="w-full max-w-[658px] rounded-[20px] border border-black bg-[rgba(255,255,255,0.5)] backdrop-blur-[14.7px] xl:min-h-[400px]">
       <div className="mx-auto mt-[28px] w-full max-w-[564px] px-[16px] pb-[24px] xl:mt-[35px] xl:px-0">
         <div className="flex min-h-[50px] items-center justify-between">
-          <p className="font-[var(--font-satoshi)] text-[24px] font-bold leading-[normal] text-black xl:text-[32px]">{routeInfo.from}</p>
+          <p className="font-satoshi text-[24px] font-bold leading-[normal] text-black xl:text-[32px]">{routeInfo.from}</p>
           <AppImage alt="Route" className="h-[50px] w-[50px]" height={50} src="/status-order/route-arrow.svg" width={50} />
-          <p className="font-[var(--font-satoshi)] text-[24px] font-bold leading-[normal] text-black xl:text-[32px]">{routeInfo.to}</p>
+          <p className="font-satoshi text-[24px] font-bold leading-[normal] text-black xl:text-[32px]">{routeInfo.to}</p>
         </div>
 
         <div className="mt-[20px] flex min-h-[89px] justify-between gap-[12px] xl:mt-[26px]">
-          <div className="max-w-[313px] space-y-[5px] font-[var(--font-satoshi)] text-[16px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:text-[20px]">
+          <div className="max-w-[313px] space-y-[5px] font-satoshi text-[16px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:text-[20px]">
             <p>{routeInfo.packageInfo}</p>
             <p>{routeInfo.category}</p>
             <div className="flex items-center gap-[5px]">
@@ -165,7 +165,7 @@ function ShippingCard({ routeInfo }: { routeInfo: RouteInfo }) {
               <p>{routeInfo.eta}</p>
             </div>
           </div>
-          <Money className="self-end font-[var(--font-satoshi)] text-[24px] font-bold leading-[normal] text-black xl:text-[32px]" value={routeInfo.total} />
+          <Money className="self-end font-satoshi text-[24px] font-bold leading-[normal] text-black xl:text-[32px]" value={routeInfo.total} />
         </div>
 
         <AppImage alt="Map" className="mt-[26px] h-[146px] w-full rounded-[10px] object-cover" height={146} src="/status-order/map-image.png" width={564} />
@@ -191,8 +191,8 @@ function OrderDetailsCard({
     <section className="w-full max-w-[658px] rounded-[20px] border border-black bg-[rgba(255,255,255,0.5)] backdrop-blur-[14.7px] xl:min-h-[400px]">
       <div className="mx-auto mt-[30px] w-full max-w-[622px] px-[16px] pb-[24px] xl:px-0">
         <div className="min-h-[95px] max-w-[260px]">
-          <p className="font-[var(--font-satoshi)] text-[24px] font-bold leading-[normal] text-black xl:text-[32px]">Order Details</p>
-          <p className="mt-[10px] font-[var(--font-satoshi)] text-[18px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:mt-[20px] xl:text-[24px]">Order ID: {orderId}</p>
+          <p className="font-satoshi text-[24px] font-bold leading-[normal] text-black xl:text-[32px]">Order Details</p>
+          <p className="mt-[10px] font-satoshi text-[18px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:mt-[20px] xl:text-[24px]">Order ID: {orderId}</p>
         </div>
 
         <div className="mt-[25px] h-[40px] w-full max-w-[586px]">
@@ -208,7 +208,7 @@ function OrderDetailsCard({
           </div>
         </div>
 
-        <div className="mt-[25px] flex h-[32px] w-full items-center justify-between gap-[8px] font-[var(--font-satoshi)] text-[20px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:text-[24px]">
+        <div className="mt-[25px] flex h-[32px] w-full items-center justify-between gap-[8px] font-satoshi text-[20px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:text-[24px]">
           {["Accepted", "Order Picked Up", "Delivered"].map((label, idx) => (
             <motion.button className={idx <= orderProgressStep ? "text-black" : "text-[rgba(0,0,0,0.5)]"} key={label} onClick={() => setOrderProgressStep(idx)} type="button" whileHover={prefersReducedMotion ? undefined : { y: -1 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}>
               {label}
@@ -216,14 +216,14 @@ function OrderDetailsCard({
           ))}
         </div>
 
-        <div className="mt-[32px] flex h-[32px] w-full items-center justify-between gap-[8px] font-[var(--font-satoshi)] text-[20px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:text-[24px]">
+        <div className="mt-[32px] flex h-[32px] w-full items-center justify-between gap-[8px] font-satoshi text-[20px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:text-[24px]">
           <p>Delivery Scheduled</p>
           <p>Payment Expected</p>
         </div>
 
         <div className="mt-[6px] flex h-[43px] w-full items-center justify-between gap-[8px]">
-          <p className="font-[var(--font-satoshi)] text-[20px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:text-[24px]">{new Date().toLocaleDateString("id-ID")}</p>
-          <Money className="font-[var(--font-satoshi)] text-[28px] font-bold leading-[normal] text-black xl:text-[32px]" value={total} />
+          <p className="font-satoshi text-[20px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:text-[24px]">{new Date().toLocaleDateString("id-ID")}</p>
+          <Money className="font-satoshi text-[28px] font-bold leading-[normal] text-black xl:text-[32px]" value={total} />
         </div>
       </div>
     </section>

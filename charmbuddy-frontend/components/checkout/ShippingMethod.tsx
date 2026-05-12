@@ -39,14 +39,14 @@ function ShippingCard({
           <div className="mt-[2px] flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-[15px] border border-black p-[6px]">
             {selected ? <AppImage alt="Radio" className="h-[10px] w-[10px]" height={10} src="/checkout/radio-inner-jne.svg" width={10} /> : null}
           </div>
-          <div className="min-w-0 font-[var(--font-satoshi)] leading-[normal]">
+          <div className="min-w-0 font-satoshi leading-[normal]">
             <p className="text-[16px] font-semibold tracking-[2px] text-black">{option.courier}</p>
             <p className="mt-[4px] text-[16px] font-medium tracking-[1.8px] text-[rgba(0,0,0,0.6)]">
               {option.service} | {option.eta}
             </p>
           </div>
         </div>
-        <p className="shrink-0 text-right font-[var(--font-satoshi)] text-[18px] font-bold leading-[normal] tracking-[2px] text-black sm:text-[20px]">
+        <p className="shrink-0 text-right font-satoshi text-[18px] font-bold leading-[normal] tracking-[2px] text-black sm:text-[20px]">
           ${option.cost}
         </p>
       </div>
@@ -69,7 +69,7 @@ export default function ShippingMethod({ options, selectedOptionKey, onSelect, i
     <Reveal>
       <section className="flex w-full flex-col items-start gap-[20px]">
         <div className="flex w-full max-w-[552px] flex-col items-start gap-[20px]">
-          <p className="w-full font-[var(--font-fanlste)] text-[24px] font-normal leading-[normal] tracking-[3.6px] text-black">Shipping Method</p>
+          <p className="w-full font-fanlste text-[24px] font-normal leading-[normal] tracking-[3.6px] text-black">Shipping Method</p>
           <AppImage alt="" className="h-[2px] w-full" height={2} src="/checkout/line-form.svg" width={552} />
         </div>
 
@@ -87,11 +87,11 @@ export default function ShippingMethod({ options, selectedOptionKey, onSelect, i
             ))}
             {options.length === 0 ? (
               <div className="flex flex-col gap-[8px] md:col-span-2">
-                <p className="font-[var(--font-satoshi)] text-[16px] tracking-[1.6px] text-[rgba(0,0,0,0.65)]">Opsi pengiriman belum tersedia.</p>
-                {errorMessage ? <p className="font-[var(--font-satoshi)] text-[14px] text-red-600">{errorMessage}</p> : null}
+                <p className="font-satoshi text-[16px] tracking-[1.6px] text-[rgba(0,0,0,0.65)]">Opsi pengiriman belum tersedia.</p>
+                {errorMessage ? <p className="font-satoshi text-[14px] text-red-600">{errorMessage}</p> : null}
                 {onRetry ? (
                   <button
-                    className="w-fit rounded-[999px] border border-black/30 bg-white px-[12px] py-[6px] font-[var(--font-satoshi)] text-[12px] font-bold tracking-[1px] text-black"
+                    className="w-fit rounded-[999px] border border-black/30 bg-white px-[12px] py-[6px] font-satoshi text-[12px] font-bold tracking-[1px] text-black"
                     onClick={onRetry}
                     type="button"
                   >

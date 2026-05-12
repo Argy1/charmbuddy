@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 
@@ -143,8 +143,8 @@ export default function AdminContentPage() {
   return (
     <div className="space-y-[12px]">
       <section className="rounded-[18px] border border-black/10 bg-white/70 p-[12px]">
-        <h1 className="font-[var(--font-fanlste)] text-[30px] tracking-[1px]">Content Pages Management</h1>
-        <p className="font-[var(--font-satoshi)] text-[14px] text-black/65">CRUD halaman konten (About, policy, info publik, dll).</p>
+        <h1 className="font-fanlste text-[30px] tracking-[1px]">Content Pages Management</h1>
+        <p className="font-satoshi text-[14px] text-black/65">CRUD halaman konten (About, policy, info publik, dll).</p>
       </section>
 
       <section className="rounded-[18px] border border-black/10 bg-white/75 p-[12px]">

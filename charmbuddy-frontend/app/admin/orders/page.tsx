@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 import { type FormEvent, useEffect, useState } from "react";
 
 import OrderActionPanel from "@/components/admin/OrderActionPanel";
 import OrderTable from "@/components/admin/OrderTable";
-import { adminApproveOrderApi, adminListOrdersApi, adminRejectOrderApi, adminShipOrderApi } from "@/lib/api/admin";
+import { adminFinishOrderApi, adminListOrdersApi, adminShipOrderApi } from "@/lib/api/admin";
 import { ApiError } from "@/lib/api/client";
 import type { AdminOrder } from "@/lib/api/types";
 import { useAuth } from "@/lib/auth-context";
@@ -15,7 +15,7 @@ type PaginationInfo = {
   total: number;
 };
 
-const statusOptions = ["", "Pending", "Paid", "Processed", "Shipped"];
+const statusOptions = ["", "Pending", "Paid", "Processed", "Shipped", "Finished"];
 
 export default function AdminOrdersPage() {
   const { token, isAuthResolved } = useAuth();
@@ -88,21 +88,12 @@ export default function AdminOrdersPage() {
     }
   };
 
-  const handleApprove = (order: AdminOrder) => {
+  const handleFinish = (order: AdminOrder) => {
     if (!token) {
       return;
     }
     void withSubmitting(async () => {
-      await adminApproveOrderApi(token, order.id);
-    });
-  };
-
-  const handleReject = (order: AdminOrder) => {
-    if (!token) {
-      return;
-    }
-    void withSubmitting(async () => {
-      await adminRejectOrderApi(token, order.id);
+      await adminFinishOrderApi(token, order.id);
     });
   };
 
@@ -126,13 +117,13 @@ export default function AdminOrdersPage() {
       <section className="rounded-[18px] border border-black/10 bg-white/70 p-[12px]">
         <form className="flex flex-col gap-[8px] sm:flex-row" onSubmit={handleSearchSubmit}>
           <input
-            className="h-[40px] flex-1 rounded-[10px] border border-black/20 bg-white px-[10px] font-[var(--font-satoshi)] text-[14px]"
+            className="h-[40px] flex-1 rounded-[10px] border border-black/20 bg-white px-[10px] font-satoshi text-[14px]"
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by order id/customer/tracking"
             value={search}
           />
           <select
-            className="h-[40px] rounded-[10px] border border-black/20 bg-white px-[10px] font-[var(--font-satoshi)] text-[14px]"
+            className="h-[40px] rounded-[10px] border border-black/20 bg-white px-[10px] font-satoshi text-[14px]"
             onChange={(e) => {
               setStatus(e.target.value);
               setPage(1);
@@ -145,13 +136,13 @@ export default function AdminOrdersPage() {
               </option>
             ))}
           </select>
-          <button className="h-[40px] rounded-[10px] bg-black px-[12px] font-[var(--font-satoshi)] text-[14px] text-white" type="submit">
+          <button className="h-[40px] rounded-[10px] bg-black px-[12px] font-satoshi text-[14px] text-white" type="submit">
             Search
           </button>
         </form>
 
         {pagination ? (
-          <p className="mt-[8px] font-[var(--font-satoshi)] text-[13px] text-black/65">
+          <p className="mt-[8px] font-satoshi text-[13px] text-black/65">
             Page {pagination.current_page} / {pagination.last_page} - Total {pagination.total} orders
           </p>
         ) : null}
@@ -159,16 +150,16 @@ export default function AdminOrdersPage() {
 
       {errorMessage ? (
         <section className="rounded-[14px] border border-red-200 bg-red-50 p-[12px]">
-          <p className="font-[var(--font-satoshi)] text-[14px] text-red-700">{errorMessage}</p>
+          <p className="font-satoshi text-[14px] text-red-700">{errorMessage}</p>
         </section>
       ) : null}
 
-      <OrderTable isLoading={isLoading} onApprove={handleApprove} onReject={handleReject} onShip={(order) => setShippingOrder(order)} orders={orders} />
+      <OrderTable isLoading={isLoading} onFinish={handleFinish} onShip={(order) => setShippingOrder(order)} orders={orders} />
 
       {pagination && pagination.last_page > 1 ? (
         <section className="flex items-center justify-end gap-[8px]">
           <button
-            className="rounded-[10px] border border-black/20 px-[10px] py-[6px] font-[var(--font-satoshi)] text-[13px] disabled:opacity-50"
+            className="rounded-[10px] border border-black/20 px-[10px] py-[6px] font-satoshi text-[13px] disabled:opacity-50"
             disabled={pagination.current_page <= 1}
             onClick={() => setPage((prev) => Math.max(1, prev - 1))}
             type="button"
@@ -176,7 +167,7 @@ export default function AdminOrdersPage() {
             Prev
           </button>
           <button
-            className="rounded-[10px] border border-black/20 px-[10px] py-[6px] font-[var(--font-satoshi)] text-[13px] disabled:opacity-50"
+            className="rounded-[10px] border border-black/20 px-[10px] py-[6px] font-satoshi text-[13px] disabled:opacity-50"
             disabled={pagination.current_page >= pagination.last_page}
             onClick={() => setPage((prev) => prev + 1)}
             type="button"

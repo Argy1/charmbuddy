@@ -32,6 +32,7 @@ export type User = {
   name: string;
   email: string;
   role: string;
+  avatar_path?: string | null;
 };
 
 export type Category = {
@@ -264,7 +265,7 @@ export type AdminPaginatedMeta = {
   };
 };
 
-export type AdminOrderStatus = "Pending" | "Paid" | "Processed" | "Shipped";
+export type AdminOrderStatus = "Pending" | "Paid" | "Processed" | "Shipped" | "Finished";
 export type AdminPaymentStatus = "Pending" | "Approved" | "Rejected";
 
 export type AdminProductPayload = {

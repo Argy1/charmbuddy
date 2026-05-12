@@ -110,6 +110,28 @@ class OrderAdminController extends Controller
         );
     }
 
+    public function finish(int $id): JsonResponse
+    {
+        $order = Order::query()->findOrFail($id);
+
+        if ($order->status !== 'Shipped') {
+            return $this->fail('Order belum dalam status Shipped.', 422);
+        }
+
+        $order->update(['status' => 'Finished']);
+        $this->orderStatusHistoryService->record(
+            $order->fresh(),
+            'Finished',
+            auth()->id(),
+            'Order finished by admin.'
+        );
+
+        return $this->success(
+            $order->fresh()->load(['user:id,name,email', 'payment', 'items.product']),
+            'Order berhasil diselesaikan.'
+        );
+    }
+
     public function ship(Request $request, int $id): JsonResponse
     {
         $validated = $request->validate([

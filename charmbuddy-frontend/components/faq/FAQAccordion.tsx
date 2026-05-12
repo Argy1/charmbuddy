@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
@@ -26,18 +26,18 @@ function FAQRow({ item, open, onClick }: { item: FAQItem; open: boolean; onClick
     >
       <div className="flex items-start justify-between gap-[12px] md:gap-[24px]">
         <div className="min-w-0 flex-1 text-left">
-          <p className="font-[var(--font-satoshi)] text-[20px] font-black leading-[normal] text-black md:text-[24px]">{item.question}</p>
+          <p className="font-satoshi text-[20px] font-black leading-[normal] text-black md:text-[24px]">{item.question}</p>
           <AnimatePresence initial={false}>
             {open && item.answer ? (
               <motion.div animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} initial={{ height: 0, opacity: 0 }} style={{ overflow: "hidden" }} transition={{ duration: prefersReducedMotion ? 0.15 : 0.35 }}>
-                <p className="mt-[16px] font-[var(--font-satoshi)] text-[18px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] md:mt-[24px] md:text-[24px]">
+                <p className="mt-[16px] font-satoshi text-[18px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] md:mt-[24px] md:text-[24px]">
                   {item.answer}
                 </p>
               </motion.div>
             ) : null}
           </AnimatePresence>
         </div>
-        <motion.img alt="Toggle" animate={{ rotate: open ? 180 : 0 }} className="mt-[2px] h-[26px] w-[26px] shrink-0 md:h-[30px] md:w-[30px]" src="/faq/arrow-down.svg" transition={{ duration: prefersReducedMotion ? 0.15 : 0.3 }} />
+        <motion.img alt="Toggle" animate={{ rotate: open ? 180 : 0 }} className="mt-[2px] h-[26px] w-[26px] shrink-0 md:h-[20px] md:w-[35px]" src="/faq/arrow-down.svg" transition={{ duration: prefersReducedMotion ? 0.15 : 0.3 }} />
       </div>
     </motion.button>
   );

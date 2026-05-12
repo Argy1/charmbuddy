@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
@@ -48,22 +48,22 @@ export default function ProductDetailPage() {
             >
               <AppImage
                 alt={product.name}
-                className="h-[500px] w-full rounded-[20px] object-cover"
+                className="h-[280px] w-full rounded-[20px] object-cover sm:h-[380px] lg:h-[500px]"
                 height={500}
                 src={resolveApiAsset(product.image_path, "/catalogue/product-image.png")}
                 width={500}
               />
             </motion.div>
 
-            <div className="flex flex-col gap-[20px]">
+            <div className="flex flex-col gap-[16px] sm:gap-[20px]">
               <h1 className="page-title">{product.name}</h1>
               <p className="section-title">${product.price}</p>
               <p className="body-lead max-w-[620px] text-[rgba(0,0,0,0.6)]">{product.description}</p>
 
-              <div className="mt-[8px] flex items-center gap-[16px]">
+              <div className="mt-[8px] flex flex-wrap items-center gap-[12px] sm:gap-[16px]">
                 <InteractivePress>
                   <button
-                    className="rounded-[50px] border border-black bg-black px-[24px] py-[10px] font-[var(--font-satoshi)] text-[20px] tracking-[3px] text-white"
+                    className="rounded-[50px] border border-black bg-black px-[20px] py-[10px] font-satoshi text-[16px] tracking-[2px] text-white sm:px-[24px] sm:text-[20px] sm:tracking-[3px]"
                     onClick={() =>
                       addItem({
                         id: String(product.id),
@@ -80,7 +80,7 @@ export default function ProductDetailPage() {
                   </button>
                 </InteractivePress>
                 <InteractivePress>
-                  <Link className="rounded-[50px] border border-black bg-white px-[24px] py-[10px] font-[var(--font-satoshi)] text-[20px] tracking-[3px] text-black" href={routes.cart}>
+                  <Link className="rounded-[50px] border border-black bg-white px-[20px] py-[10px] font-satoshi text-[16px] tracking-[2px] text-black sm:px-[24px] sm:text-[20px] sm:tracking-[3px]" href={routes.cart}>
                     Go to Cart
                   </Link>
                 </InteractivePress>

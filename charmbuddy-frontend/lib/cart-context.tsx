@@ -236,6 +236,9 @@ function resolveImagePath(path: string | null | undefined): string {
   if (path.startsWith("/")) {
     return `${API_ASSET_BASE}${path}`;
   }
+  if (path.startsWith("products/")) {
+    return `${API_ASSET_BASE}/${path}`;
+  }
   if (path.startsWith("storage/")) {
     return `${API_ASSET_BASE}/${path}`;
   }

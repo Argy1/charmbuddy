@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion, useReducedMotion } from "framer-motion";
 
@@ -15,21 +15,24 @@ export default function MatchMosaic() {
         <Reveal>
           <div className="mx-auto flex max-w-[1143px] flex-col gap-[26px]">
             <div className="w-full">
-              <p className="text-[48px] leading-[normal] text-black">
-                <span className="font-[var(--font-fanlste)]">Find Your Perfect </span>
-                <span className="font-[var(--font-fanlste)] italic">Match</span>
+              <p className="text-[34px] leading-[1.1] text-black sm:text-[40px]">
+                <span className="font-fanlste">Find Your Perfect </span>
+                <span className="font-fanlste italic">Match</span>
               </p>
-              <p className="mt-[24px] text-[28px] font-[500] font-[var(--font-satoshi)] text-black leading-[normal]">
+              <p className="mt-[16px] text-[16px] font-[500] font-satoshi text-black leading-[1.45]">
                 More than just an accessory, it&apos;s a piece of your personality. Find your bloom and wear what makes you smile
               </p>
-              <motion.button
-                className="mt-[24px] backdrop-blur-[2.5px] bg-[rgba(89,0,255,0.1)] border border-[rgba(255,255,255,0.4)] border-solid rounded-[50px] px-[15px] py-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+              <motion.a
+                className="mt-[20px] inline-block backdrop-blur-[2.5px] bg-[rgba(89,0,255,0.1)] border border-[rgba(255,255,255,0.4)] border-solid rounded-[50px] px-[14px] py-[8px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+                href="https://wa.me/6281230272733?text=Halo%20Saya%20ingin%20pesan%20merchandise%20kustom"
+                rel="noreferrer"
+                target="_blank"
                 whileHover={{ y: prefersReducedMotion ? 0 : -4 }}
                 whileTap={{ scale: prefersReducedMotion ? 1 : 0.96 }}
               >
-                <span className="font-[var(--font-satoshi)] font-[700] text-[24px]">Get </span>
-                <span className="font-[var(--font-fanlste)] italic text-[24px]">Styling</span>
-              </motion.button>
+                <span className="font-satoshi font-[700] text-[15px]">Get </span>
+                <span className="font-fanlste italic text-[15px]">Styling</span>
+              </motion.a>
             </div>
             <div className="grid grid-cols-2 gap-[18px]">
               <ParallaxY offset={[0, -12]}>
@@ -56,24 +59,27 @@ export default function MatchMosaic() {
       </section>
 
       <section className="hidden xl:block mt-[96px]">
-        <div className="mx-auto flex h-full w-full max-w-[1143px] items-end gap-[26px]">
-          <Reveal className="flex h-[773px] w-[448px] flex-col justify-between" delay={0.05}>
+        <div className="mx-auto flex h-full w-full items-end justify-center gap-[26px]">
+          <Reveal className="flex h-[773px] w-[448px] shrink-0 flex-col justify-between" delay={0.05}>
             <div className="flex h-[445px] flex-col justify-between">
-              <p className="text-[64px] leading-[normal] text-black">
-                <span className="font-[var(--font-fanlste)]">Find Your Perfect </span>
-                <span className="font-[var(--font-fanlste)] italic">Match</span>
+              <p className="text-[64px] leading-[1.05] text-black">
+                <span className="font-fanlste">Find Your Perfect </span>
+                <span className="font-fanlste italic">Match</span>
               </p>
-              <p className="text-[28px] font-[500] font-[var(--font-satoshi)] text-black leading-[normal]">
+              <p className="text-[28px] font-[500] font-satoshi text-black leading-[1.5] max-w-[400px]">
                 More than just an accessory, it&apos;s a piece of your personality. Find your bloom and wear what makes you smile
               </p>
-              <motion.button
-                className="backdrop-blur-[2.5px] bg-[rgba(89,0,255,0.1)] border border-[rgba(255,255,255,0.4)] border-solid rounded-[50px] px-[15px] py-[10px] w-[194px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+              <motion.a
+                className="inline-block backdrop-blur-[2.5px] bg-[rgba(89,0,255,0.1)] border border-[rgba(255,255,255,0.4)] border-solid rounded-[50px] px-[15px] py-[10px] w-[194px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] text-center"
+                href="https://wa.me/628123027273?text=Halo%20Saya%20ingin%20pesan%20merchandise%20kustom"
+                rel="noreferrer"
+                target="_blank"
                 whileHover={{ y: prefersReducedMotion ? 0 : -4 }}
                 whileTap={{ scale: prefersReducedMotion ? 1 : 0.96 }}
               >
-                <span className="font-[var(--font-satoshi)] font-[700] text-[24px]">Get </span>
-                <span className="font-[var(--font-fanlste)] italic text-[24px]">Styling</span>
-              </motion.button>
+                <span className="font-satoshi font-bold text-[24px]">Get </span>
+                <span className="font-fanlste italic text-[24px]">Styling</span>
+              </motion.a>
             </div>
             <div className="flex w-full gap-[18px]">
               <ParallaxY offset={[0, -12]}>

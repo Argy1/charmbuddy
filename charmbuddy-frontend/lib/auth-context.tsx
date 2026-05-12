@@ -2,13 +2,14 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-import { loginApi, logoutApi, meApi, registerApi } from "@/lib/api/auth";
+import { loginApi, logoutApi, meApi, registerApi, updateProfileApi } from "@/lib/api/auth";
 
 type AuthUser = {
   id: number;
   name: string;
   email: string;
   role: string;
+  avatar_path?: string | null;
 };
 
 type AuthContextValue = {
@@ -21,6 +22,7 @@ type AuthContextValue = {
   register: (name: string, email: string, password: string) => Promise<AuthUser>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  updateProfile: (payload: { name?: string; email?: string; current_password?: string; new_password?: string; avatar?: File | null }) => Promise<AuthUser>;
 };
 
 const USER_STORAGE_KEY = "cb_auth_user_v2";
@@ -166,6 +168,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
           const response = await meApi(token);
           setUser(response.data);
+        } finally {
+          setIsLoading(false);
+        }
+      },
+      updateProfile: async (payload) => {
+        if (!token) throw new Error("Not authenticated");
+        setIsLoading(true);
+        try {
+          const response = await updateProfileApi(token, payload);
+          setUser(response.data);
+          return response.data;
         } finally {
           setIsLoading(false);
         }

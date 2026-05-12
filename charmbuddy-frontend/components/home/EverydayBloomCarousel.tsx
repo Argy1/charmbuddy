@@ -1,5 +1,6 @@
-"use client";
+﻿"use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
@@ -8,18 +9,20 @@ import AppImage from "@/components/shared/AppImage";
 import { cinematicEase, durations } from "@/lib/motion";
 import { useProducts } from "@/lib/api/hooks";
 import { resolveApiAsset } from "@/lib/api/asset";
+import { routes } from "@/lib/routes";
 
 type CarouselItem = {
   id: string;
+  slug: string;
   title: string;
   subtitle: string;
   image: string;
 };
 
 const fallbackItems: CarouselItem[] = [
-  { id: "fallback-1", title: "Melted Rose", subtitle: "Necklace", image: "/home/carousel-object.png" },
-  { id: "fallback-2", title: "Twilight Bloom", subtitle: "Bracelet", image: "/home/mosaic-4.png" },
-  { id: "fallback-3", title: "Ocean Charm", subtitle: "Bag Charm", image: "/home/mosaic-5.png" },
+  { id: "fallback-1", slug: "diamond-necklace", title: "Melted Rose", subtitle: "Necklace", image: "/home/carousel-object.png" },
+  { id: "fallback-2", slug: "silver-bracelet", title: "Twilight Bloom", subtitle: "Bracelet", image: "/home/mosaic-4.png" },
+  { id: "fallback-3", slug: "heart-charm", title: "Ocean Charm", subtitle: "Bag Charm", image: "/home/mosaic-5.png" },
 ];
 
 export default function EverydayBloomCarousel() {
@@ -30,6 +33,7 @@ export default function EverydayBloomCarousel() {
       products.length > 0
         ? products.slice(0, 6).map((product) => ({
             id: String(product.id),
+            slug: product.slug,
             title: product.name,
             subtitle: product.category?.name ?? "Accessories",
             image: resolveApiAsset(product.image_path, "/home/carousel-object.png"),
@@ -39,6 +43,7 @@ export default function EverydayBloomCarousel() {
   );
   const [activeIndex, setActiveIndex] = useState(0);
   const activeItem = items[activeIndex] ?? fallbackItems[0];
+  const activeItemHref = routes.product(activeItem.slug);
   const goPrev = () => {
     setActiveIndex((prev) => (prev - 1 + items.length) % items.length);
   };
@@ -48,24 +53,24 @@ export default function EverydayBloomCarousel() {
 
   return (
     <>
-      <section className="xl:hidden mt-[48px]">
+      <section className="xl:hidden mt-[48px] -mx-[16px] md:-mx-[24px]">
         <Reveal>
-          <div className="flex-col sm:block backdrop-blur-[2.5px] bg-[rgba(112,92,178,0.3)] border border-[rgba(255,255,255,0.4)] border-solid rounded-[50px] p-[20px]">
-          <p className="text-center text-[40px] leading-[normal] text-black">
-            <span className="font-[var(--font-satoshi)]">Your Everyday </span>
-            <span className="font-[var(--font-fanlste)] italic">Bloom</span>
+          <div className="flex-col sm:block backdrop-blur-[2.5px] bg-[rgba(112,92,178,0.3)] border border-[rgba(255,255,255,0.4)] border-solid rounded-[32px] sm:rounded-[50px] p-[20px] sm:p-[24px]">
+          <p className="text-center text-[26px] leading-[1.15] text-black sm:text-[30px]">
+            <span className="font-satoshi">Your Everyday </span>
+            <span className="font-fanlste italic">Bloom</span>
           </p>
           <div className="mt-[12px] flex items-center justify-center sm:justify-between gap-[10px]">
             <motion.button
-              className="hidden sm:grid bg-[#8798FF] -translate-y-4.5 h-[56px] w-[56px] rounded-[50px] place-items-center"
+              className="hidden sm:grid bg-[#8798FF] -translate-y-4.5 h-[40px] w-[40px] rounded-full place-items-center"
               onClick={goPrev}
               type="button"
               whileHover={{ scale: prefersReducedMotion ? 1 : 1.08 }}
               whileTap={{ scale: prefersReducedMotion ? 1 : 0.94 }}
             >
-              <AppImage alt="Prev" className="h-[28px] w-[28px]" height={28} src="/home/carousel-arrow.svg" width={28} />
+              <AppImage alt="Prev" className="h-[18px] w-[18px]" height={18} src="/home/carousel-arrow.svg" width={18} />
             </motion.button>
-            <div className="flex flex-1 flex-col items-center justify-start max-w-[360px]">
+            <Link className="flex flex-1 flex-col items-center justify-start max-w-[360px]" href={activeItemHref}>
               <motion.div
                 animate={prefersReducedMotion ? undefined : { y: [0, -10, 0] }}
                 className="mx-auto mb-[22px] mt-[22px] h-auto w-full min-w-[220px]"
@@ -74,18 +79,18 @@ export default function EverydayBloomCarousel() {
                 <AppImage alt={activeItem.title} className="h-auto w-full" height={295} src={activeItem.image} width={220} />
               </motion.div>
               <div className="mx-auto mt-[-18px] max-w-[313px]">
-                <p className="text-center font-[var(--font-fanlste)] text-[24px] sm:text-[36px] tracking-[2.75px] underline">{activeItem.title}</p>
-                <p className="text-center font-[var(--font-fanlste)] text-[16px] sm:text-[22px] tracking-[4px]">{activeItem.subtitle}</p>
+                <p className="text-center font-fanlste text-[20px] sm:text-[24px] tracking-[2px] underline">{activeItem.title}</p>
+                <p className="text-center font-fanlste text-[14px] sm:text-[16px] tracking-[3px]">{activeItem.subtitle}</p>
               </div>
-            </div>
+            </Link>
             <motion.button
-              className="hidden sm:grid -translate-y-4.5 bg-[#8798FF] h-[56px] w-[56px] rounded-[50px] place-items-center"
+              className="hidden sm:grid -translate-y-4.5 bg-[#8798FF] h-[40px] w-[40px] rounded-full place-items-center"
               onClick={goNext}
               type="button"
               whileHover={{ scale: prefersReducedMotion ? 1 : 1.08 }}
               whileTap={{ scale: prefersReducedMotion ? 1 : 0.94 }}
             >
-              <AppImage alt="Next" className="h-[28px] w-[28px] rotate-180" height={28} src="/home/carousel-arrow.svg" width={28} />
+              <AppImage alt="Next" className="h-[18px] w-[18px] rotate-180" height={18} src="/home/carousel-arrow.svg" width={18} />
             </motion.button>
           </div>
           <div className="mt-[16px] flex items-center justify-center gap-[10px]">
@@ -105,26 +110,26 @@ export default function EverydayBloomCarousel() {
 
       <section className="hidden xl:block mt-[72px]">
         <Reveal>
-          <div className="mx-auto flex w-full max-w-[1111px] flex-col items-center gap-[72px]">
-          <p className="w-full text-center text-[64px] leading-[normal] text-black">
-            <span className="font-[var(--font-satoshi)]">Your Everyday </span>
-            <span className="font-[var(--font-fanlste)] italic">Bloom</span>
+          <div className="mx-auto flex w-full max-w-full flex-col items-center gap-[56px]">
+          <p className="w-full text-center text-[64px] leading-[1.1] text-black">
+            <span className="font-satoshi">Your Everyday </span>
+            <span className="font-fanlste italic">Bloom</span>
           </p>
 
           <div className="backdrop-blur-[2.5px] bg-[rgba(112,92,178,0.3)] border border-[rgba(255,255,255,0.4)] border-solid h-[717px] w-full rounded-[50px] px-[48px] py-[8px]">
             <div className="flex h-full w-full items-center justify-between">
               <motion.button
-                className="bg-[#8798FF] h-[70px] w-[70px] rounded-[50px] grid place-items-center"
+                className="bg-[#8798FF] h-[70px] w-[70px] rounded-full grid place-items-center shrink-0 z-10"
                 onClick={goPrev}
                 type="button"
                 whileHover={{ scale: prefersReducedMotion ? 1 : 1.08 }}
                 whileTap={{ scale: prefersReducedMotion ? 1 : 0.94 }}
               >
-                <AppImage alt="Prev" className="h-[40px] w-[40px]" height={40} src="/home/carousel-arrow.svg" width={40} />
+                <AppImage alt="Prev" className="h-[28px] w-[28px]" height={28} src="/home/carousel-arrow.svg" width={28} />
               </motion.button>
 
-              <div className="flex w-[792.00146484375px] flex-col items-center">
-                <div className="flex h-[400px] w-full items-end justify-center">
+              <Link className="flex flex-1 flex-col items-center" href={activeItemHref}>
+                <div className="flex h-[480px] w-full items-end justify-center">
                   <motion.div
                     animate={
                       prefersReducedMotion
@@ -145,19 +150,19 @@ export default function EverydayBloomCarousel() {
                   </motion.div>
                 </div>
                 <div className="mt-[2px] w-[373px]">
-                  <p className="mx-auto w-[313px] text-[55px] tracking-[2.75px] underline text-center font-[var(--font-fanlste)]">{activeItem.title}</p>
-                  <p className="mx-auto w-[200px] text-[30px] tracking-[4px] text-center font-[var(--font-fanlste)]">{activeItem.subtitle}</p>
+                  <p className="mx-auto w-full text-[55px] tracking-[2.75px] underline text-center font-fanlste">{activeItem.title}</p>
+                  <p className="mx-auto w-full text-[30px] tracking-[6px] text-center font-fanlste">{activeItem.subtitle}</p>
                 </div>
-              </div>
+              </Link>
 
               <motion.button
-                className="bg-[#8798FF] h-[70px] w-[70px] rounded-[50px] grid place-items-center"
+                className="bg-[#8798FF] h-[70px] w-[70px] rounded-full grid place-items-center shrink-0"
                 onClick={goNext}
                 type="button"
                 whileHover={{ scale: prefersReducedMotion ? 1 : 1.08 }}
                 whileTap={{ scale: prefersReducedMotion ? 1 : 0.94 }}
               >
-                <AppImage alt="Next" className="h-[40px] w-[40px] rotate-180" height={40} src="/home/carousel-arrow.svg" width={40} />
+                <AppImage alt="Next" className="h-[28px] w-[28px] rotate-180" height={28} src="/home/carousel-arrow.svg" width={28} />
               </motion.button>
             </div>
           </div>

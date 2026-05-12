@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -31,7 +31,7 @@ export default function HeaderTemplate() {
     }`;
 
   const navTextClass = (href: string) =>
-    `font-[var(--font-fanlste)] text-[18px] font-normal leading-[normal] tracking-[2px] ${
+    `font-fanlste text-[20px] font-bold leading-none tracking-[1.5px] ${
       isNavActive(href) ? "text-white" : "text-black"
     }`;
 
@@ -81,17 +81,17 @@ export default function HeaderTemplate() {
 
           <motion.div whileHover={{ scale: prefersReducedMotion ? 1 : 1.06 }} whileTap={{ scale: prefersReducedMotion ? 1 : 0.94 }}>
             <Link className={actionClass(routes.search)} href={routes.search}>
-              <AppImage alt="" className="h-[18px] w-[18px] object-contain" height={18} src="/home/header-search.svg" width={18} />
+              <AppImage alt="" className="h-[28px] w-[28px] object-contain" height={28} src="/home/header-search.svg" width={18} />
             </Link>
           </motion.div>
           <motion.div whileHover={{ scale: prefersReducedMotion ? 1 : 1.06 }} whileTap={{ scale: prefersReducedMotion ? 1 : 0.94 }}>
             <Link className={actionClass(routes.cart)} href={routes.cart}>
-              <AppImage alt="" className="h-[18px] w-[18px] object-contain" height={18} src="/home/header-cart.svg" width={18} />
+              <AppImage alt="" className="h-[28px] w-[28px] object-contain" height={28} src="/home/header-cart.svg" width={18} />
             </Link>
           </motion.div>
           <motion.div whileHover={{ scale: prefersReducedMotion ? 1 : 1.06 }} whileTap={{ scale: prefersReducedMotion ? 1 : 0.94 }}>
             <Link className={actionClass(routes.profile)} href={accountHref}>
-              <AppImage alt="" className="h-[18px] w-[18px] object-contain" height={18} src="/home/header-profile.svg" width={18} />
+              <AppImage alt="" className="h-[28px] w-[28px] object-contain" height={28} src="/home/header-profile.svg" width={18} />
             </Link>
           </motion.div>
         </div>

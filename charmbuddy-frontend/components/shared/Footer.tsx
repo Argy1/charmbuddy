@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
@@ -57,21 +57,21 @@ export default function Footer() {
               </Link>
             </motion.div>
             <div className="flex h-[35px] w-full items-center justify-center gap-[52px]">
-              <motion.a href="https://wa.me/" rel="noreferrer" target="_blank" whileHover={prefersReducedMotion ? undefined : { scale: 1.1, y: -1 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}>
+              <motion.a href="https://wa.me/6281230272733" rel="noreferrer" target="_blank" whileHover={prefersReducedMotion ? undefined : { scale: 1.1, y: -1 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}>
                 <AppImage alt="WhatsApp" className="h-[32px] w-[32px]" height={32} src="/home/footer-wa.svg" width={32} />
               </motion.a>
-              <motion.a href="https://instagram.com/" rel="noreferrer" target="_blank" whileHover={prefersReducedMotion ? undefined : { scale: 1.1, y: -1 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}>
+              <motion.a href="https://www.instagram.com/be.my.bloo?igsh=cDNrZnFucjZkaHB2" rel="noreferrer" target="_blank" whileHover={prefersReducedMotion ? undefined : { scale: 1.1, y: -1 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}>
                 <AppImage alt="Instagram" className="h-[35px] w-[35px]" height={35} src="/home/footer-ig.svg" width={35} />
               </motion.a>
             </div>
-            <div className="flex items-center gap-[16px] font-[var(--font-satoshi)] text-[18px] tracking-[2px] text-white">
+            <div className="flex items-center gap-[16px] font-satoshi text-[14px] tracking-[1.5px] text-white">
               <Link href={routes.catalogue}>Catalogue</Link>
               <Link href={routes.faq}>FAQ</Link>
               <Link href={routes.about}>About</Link>
             </div>
           </div>
 
-          <p className="w-full max-w-[351px] text-center text-[24px] font-normal leading-[normal] text-white" style={{ fontVariationSettings: "'opsz' 14" }}>
+          <p className="w-full max-w-[351px] text-center text-[13px] font-normal leading-[1.4] text-white/85" style={{ fontVariationSettings: "'opsz' 14" }}>
             Copyright (C) 2025 bloomy.com
           </p>
         </div>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 
@@ -112,8 +112,8 @@ export default function AdminFaqsPage() {
   return (
     <div className="space-y-[12px]">
       <section className="rounded-[18px] border border-black/10 bg-white/70 p-[12px]">
-        <h1 className="font-[var(--font-fanlste)] text-[30px] tracking-[1px]">FAQ Management</h1>
-        <p className="font-[var(--font-satoshi)] text-[14px] text-black/65">Kelola daftar pertanyaan yang tampil di halaman FAQ dan homepage.</p>
+        <h1 className="font-fanlste text-[30px] tracking-[1px]">FAQ Management</h1>
+        <p className="font-satoshi text-[14px] text-black/65">Kelola daftar pertanyaan yang tampil di halaman FAQ dan homepage.</p>
       </section>
 
       <section className="rounded-[18px] border border-black/10 bg-white/75 p-[12px]">

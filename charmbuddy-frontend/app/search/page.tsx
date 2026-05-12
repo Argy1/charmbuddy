@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -40,17 +40,17 @@ export default function SearchPage() {
             <h1 className="page-title">Search</h1>
             <motion.div className="mt-[16px] flex h-[66px] w-full max-w-[600px] items-center rounded-[50px] border border-black bg-white px-[20px]" whileHover={prefersReducedMotion ? undefined : { scale: 1.01 }}>
               <motion.input
-                className="w-full bg-transparent font-[var(--font-satoshi)] text-[20px] tracking-[2.4px] outline-none md:text-[24px] md:tracking-[3.6px]"
+                className="w-full bg-transparent font-satoshi text-[20px] tracking-[2.4px] outline-none md:text-[24px] md:tracking-[3.6px]"
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search product..."
                 value={query}
               />
             </motion.div>
 
-            {error ? <p className="mt-[20px] font-[var(--font-satoshi)] text-[18px] text-black/70">Produk utama belum bisa dimuat, menampilkan dummy sementara.</p> : null}
-            {isLoading ? <p className="mt-[20px] font-[var(--font-satoshi)] text-[18px] text-black/70">Loading products...</p> : null}
+            {error ? <p className="mt-[20px] font-satoshi text-[18px] text-black/70">Produk utama belum bisa dimuat, menampilkan dummy sementara.</p> : null}
+            {isLoading ? <p className="mt-[20px] font-satoshi text-[18px] text-black/70">Loading products...</p> : null}
             {!isLoading && !error && filtered.length === 0 ? (
-              <p className="mt-[20px] font-[var(--font-satoshi)] text-[18px] text-black/70">
+              <p className="mt-[20px] font-satoshi text-[18px] text-black/70">
                 {normalizedQuery.length > 0 ? "Produk tidak ditemukan untuk pencarian ini." : "Belum ada produk untuk ditampilkan."}
               </p>
             ) : null}
@@ -69,8 +69,8 @@ export default function SearchPage() {
                             width={500}
                           />
                           <div className="mt-[10px] flex items-center justify-between">
-                            <p className="font-[var(--font-fanlste)] text-[20px] tracking-[2.4px]">{product.name}</p>
-                            <p className="font-[var(--font-satoshi)] text-[20px] tracking-[2.4px]">${product.price}</p>
+                            <p className="font-fanlste text-[20px] tracking-[2.4px]">{product.name}</p>
+                            <p className="font-satoshi text-[20px] tracking-[2.4px]">${product.price}</p>
                           </div>
                         </Link>
                       </InteractivePress>
@@ -85,8 +85,8 @@ export default function SearchPage() {
                   <Link className="block rounded-[20px] border border-black bg-white p-[12px]" href={routes.catalogue} key={item.sku}>
                     <AppImage alt={item.name} className="h-[220px] w-full rounded-[10px] object-cover" height={220} src={item.image} width={500} />
                     <div className="mt-[10px] flex items-center justify-between">
-                      <p className="font-[var(--font-fanlste)] text-[20px] tracking-[2.4px]">{item.name}</p>
-                      <p className="font-[var(--font-satoshi)] text-[20px] tracking-[2.4px]">${item.price}</p>
+                      <p className="font-fanlste text-[20px] tracking-[2.4px]">{item.name}</p>
+                      <p className="font-satoshi text-[20px] tracking-[2.4px]">${item.price}</p>
                     </div>
                   </Link>
                 ))}

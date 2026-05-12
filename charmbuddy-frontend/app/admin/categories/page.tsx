@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -121,8 +121,8 @@ export default function AdminCategoriesPage() {
   return (
     <div className="space-y-[12px]">
       <section className="rounded-[18px] border border-black/10 bg-white/70 p-[12px]">
-        <h1 className="font-[var(--font-fanlste)] text-[30px] tracking-[1px]">Category Management</h1>
-        <p className="font-[var(--font-satoshi)] text-[14px] text-black/65">Kelola kategori dan subkategori produk.</p>
+        <h1 className="font-fanlste text-[30px] tracking-[1px]">Category Management</h1>
+        <p className="font-satoshi text-[14px] text-black/65">Kelola kategori dan subkategori produk.</p>
       </section>
 
       <section className="rounded-[18px] border border-black/10 bg-white/75 p-[12px]">
@@ -151,19 +151,19 @@ export default function AdminCategoriesPage() {
 
       {errorMessage ? (
         <section className="rounded-[14px] border border-red-200 bg-red-50 p-[12px]">
-          <p className="font-[var(--font-satoshi)] text-[14px] text-red-700">{errorMessage}</p>
+          <p className="font-satoshi text-[14px] text-red-700">{errorMessage}</p>
         </section>
       ) : null}
 
       <section className="rounded-[18px] border border-black/10 bg-white/75 p-[12px]">
-        {isLoading ? <p className="font-[var(--font-satoshi)] text-[14px] text-black/65">Loading categories...</p> : null}
-        {!isLoading && categories.length === 0 ? <p className="font-[var(--font-satoshi)] text-[14px] text-black/65">Belum ada kategori.</p> : null}
+        {isLoading ? <p className="font-satoshi text-[14px] text-black/65">Loading categories...</p> : null}
+        {!isLoading && categories.length === 0 ? <p className="font-satoshi text-[14px] text-black/65">Belum ada kategori.</p> : null}
         <div className="space-y-[8px]">
           {categories.map((category) => (
             <div className="flex items-center justify-between rounded-[10px] border border-black/10 bg-white px-[10px] py-[8px]" key={category.id}>
               <div>
-                <p className="font-[var(--font-satoshi)] text-[14px] font-bold">{category.name}</p>
-                <p className="font-[var(--font-satoshi)] text-[12px] text-black/60">Parent: {category.parent_id ?? "-"}</p>
+                <p className="font-satoshi text-[14px] font-bold">{category.name}</p>
+                <p className="font-satoshi text-[12px] text-black/60">Parent: {category.parent_id ?? "-"}</p>
               </div>
               <div className="flex gap-[8px]">
                 <button className="text-[12px] font-bold text-[#2d44cf]" onClick={() => beginEdit(category)} type="button">

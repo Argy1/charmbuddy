@@ -34,16 +34,16 @@ function Field({
 }) {
   return (
     <div className={className}>
-      <p className="w-full font-[var(--font-satoshi)] text-[20px] font-medium leading-[normal] tracking-[3px] text-black">{label}</p>
+      <p className="w-full font-satoshi text-[20px] font-medium leading-[normal] tracking-[3px] text-black">{label}</p>
       <div className={`flex h-[55px] w-full items-center rounded-[10px] border bg-white px-[26px] py-[11px] ${error ? "border-red-500" : "border-[rgba(0,0,0,0.5)]"}`}>
         <input
           aria-invalid={error ? "true" : "false"}
-          className="w-full bg-transparent font-[var(--font-satoshi)] text-[20px] font-medium leading-[normal] tracking-[3px] text-black outline-none"
+          className="w-full bg-transparent font-satoshi text-[20px] font-medium leading-[normal] tracking-[3px] text-black outline-none"
           onChange={(event) => onChange(field, event.target.value)}
           value={value}
         />
       </div>
-      {error ? <p className="mt-[6px] font-[var(--font-satoshi)] text-[13px] tracking-[1px] text-red-600">{error}</p> : null}
+      {error ? <p className="mt-[6px] font-satoshi text-[13px] tracking-[1px] text-red-600">{error}</p> : null}
     </div>
   );
 }
@@ -52,8 +52,8 @@ export default function CheckoutForm({ value, onChange, errors = {} }: CheckoutF
   return (
     <Reveal>
       <section className="flex h-auto w-full flex-col items-start gap-[20px] xl:h-[593px] xl:w-[788px]">
-        <div className="flex w-[552px] flex-col items-start gap-[20px]">
-          <p className="w-full font-[var(--font-fanlste)] text-[24px] font-normal leading-[normal] tracking-[3.6px] text-black">Check Out Your Items</p>
+        <div className="flex w-full max-w-[552px] flex-col items-start gap-[20px]">
+          <p className="w-full font-fanlste text-[24px] font-normal leading-[normal] tracking-[3.6px] text-black">Check Out Your Items</p>
           <AppImage alt="" className="h-[2px] w-full" height={2} src="/checkout/line-form.svg" width={552} />
         </div>
 
@@ -72,11 +72,11 @@ export default function CheckoutForm({ value, onChange, errors = {} }: CheckoutF
             <Field className="flex h-[107px] w-full flex-col gap-[10px]" error={errors.address} field="address" label="Address*" onChange={onChange} value={value.address} />
           </div>
 
-          <div className="flex h-[147px] w-full flex-col gap-[10px]">
-            <p className="w-full font-[var(--font-satoshi)] text-[20px] font-medium leading-[normal] tracking-[3px] text-black">Description*</p>
-            <div className="flex h-[110px] w-full items-start rounded-[10px] border border-black bg-white px-[26px] py-[11px] xl:w-[783px]">
+          <div className="flex w-full flex-col gap-[10px]">
+            <p className="w-full font-satoshi text-[20px] font-medium leading-[normal] tracking-[3px] text-black">Description*</p>
+            <div className="flex h-[110px] w-full items-start rounded-[10px] border border-black bg-white px-[26px] py-[11px]">
               <textarea
-                className="h-full w-full resize-none bg-transparent font-[var(--font-satoshi)] text-[20px] font-medium leading-[normal] tracking-[3px] text-black outline-none"
+                className="h-full w-full resize-none bg-transparent font-satoshi text-[16px] font-medium leading-[normal] tracking-[2px] text-black outline-none sm:text-[20px] sm:tracking-[3px]"
                 onChange={(event) => onChange("description", event.target.value)}
                 value={value.description}
               />

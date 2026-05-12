@@ -266,6 +266,13 @@ export async function adminShipOrderApi(token: string, orderId: number, tracking
   });
 }
 
+export async function adminFinishOrderApi(token: string, orderId: number) {
+  return apiRequest<AdminOrder>(`/admin/orders/${orderId}/finish`, {
+    token,
+    method: "PUT",
+  });
+}
+
 export async function adminListPaymentsApi(token: string, query: PaymentListQuery = {}) {
   return apiRequest<AdminPayment[]>("/admin/payments", { token, query });
 }

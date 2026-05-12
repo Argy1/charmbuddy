@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -37,16 +37,16 @@ export default function AdminTopbar({ title, onMenuClick }: AdminTopbarProps) {
             <span className="block h-[2px] w-[16px] rounded bg-black" />
           </span>
         </motion.button>
-        <h1 className="font-[var(--font-fanlste)] text-[clamp(28px,6vw,42px)] leading-[1] tracking-[1.8px]">{title}</h1>
+        <h1 className="font-fanlste text-[clamp(28px,6vw,42px)] leading-[1] tracking-[1.8px]">{title}</h1>
       </div>
 
       <div className="flex items-center gap-[8px] md:gap-[12px]">
         <div className="hidden rounded-[12px] bg-white/70 px-[12px] py-[8px] md:block">
-          <p className="font-[var(--font-satoshi)] text-[14px] tracking-[1px] text-black/70">Signed in as</p>
-          <p className="font-[var(--font-satoshi)] text-[16px] font-[700] tracking-[1px] text-black">{user?.name ?? "Admin"}</p>
+          <p className="font-satoshi text-[14px] tracking-[1px] text-black/70">Signed in as</p>
+          <p className="font-satoshi text-[16px] font-[700] tracking-[1px] text-black">{user?.name ?? "Admin"}</p>
         </div>
         <motion.button
-          className="rounded-[10px] bg-black px-[12px] py-[8px] font-[var(--font-satoshi)] text-[13px] tracking-[1px] text-white md:px-[16px]"
+          className="rounded-[10px] bg-black px-[12px] py-[8px] font-satoshi text-[13px] tracking-[1px] text-white md:px-[16px]"
           onClick={() => void handleLogout()}
           type="button"
           whileHover={prefersReducedMotion ? undefined : { y: -1 }}

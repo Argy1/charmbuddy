@@ -1,4 +1,4 @@
-import type { MouseEvent } from "react";
+﻿import type { MouseEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import AppImage from "@/components/shared/AppImage";
 
@@ -20,8 +20,8 @@ function UploadFeedback({ selectedFileName, errorMessage, className = "" }: { se
 
   return (
     <div className={`rounded-[10px] border bg-white/80 px-[10px] py-[8px] ${className}`}>
-      {selectedFileName ? <p className="font-[var(--font-satoshi)] text-[12px] tracking-[0.8px] text-green-700">File siap diupload: {selectedFileName}</p> : null}
-      {errorMessage ? <p className="font-[var(--font-satoshi)] text-[12px] tracking-[0.8px] text-red-600">{errorMessage}</p> : null}
+      {selectedFileName ? <p className="font-satoshi text-[12px] tracking-[0.8px] text-green-700">File siap diupload: {selectedFileName}</p> : null}
+      {errorMessage ? <p className="font-satoshi text-[12px] tracking-[0.8px] text-red-600">{errorMessage}</p> : null}
     </div>
   );
 }
@@ -30,7 +30,7 @@ function PaymentRow() {
   return (
     <div className="flex h-[65px] w-[353px] items-center justify-between">
       <AppImage alt="Transfer Bank" className="h-[65px] w-[111px] rounded-[5px] object-cover" height={65} src="/payment-method/thumbnail.png" width={111} />
-      <p className="w-[132px] font-[var(--font-satoshi)] text-[16px] font-bold leading-[normal] tracking-[2.4px] text-black">Transfer Bank</p>
+      <p className="w-[132px] font-satoshi text-[16px] font-bold leading-[normal] tracking-[2.4px] text-black">Transfer Bank</p>
       <div className="flex h-[20px] w-[20px] items-center justify-between rounded-[15px] border border-black p-[6px]">
         <AppImage alt="Selected" className="h-[10px] w-[10px]" height={10} src="/payment-method/radio-dot.svg" width={10} />
       </div>
@@ -40,7 +40,7 @@ function PaymentRow() {
 
 function InstructionLeft() {
   return (
-    <ol className="w-full list-decimal whitespace-pre-wrap pl-[30px] font-[var(--font-satoshi)] text-[20px] font-bold leading-[normal] tracking-[3px] text-black md:w-[353px]">
+    <ol className="w-full list-decimal whitespace-pre-wrap pl-[30px] font-satoshi text-[20px] font-bold leading-[normal] tracking-[3px] text-black md:w-[353px]">
       <li>
         Silakan transfer ke rekening <span className="font-black">[Bank]</span> <span className="font-black">[Nomor Rekening]</span> a.n <span className="font-black">[Nama]</span>.
       </li>
@@ -51,7 +51,7 @@ function InstructionLeft() {
 
 function InstructionRight() {
   return (
-    <ol className="w-full list-decimal whitespace-pre-wrap pl-[30px] font-[var(--font-satoshi)] text-[20px] font-bold leading-[normal] tracking-[3px] text-black md:w-[349px]" start={3}>
+    <ol className="w-full list-decimal whitespace-pre-wrap pl-[30px] font-satoshi text-[20px] font-bold leading-[normal] tracking-[3px] text-black md:w-[349px]" start={3}>
       <li>
         Pastikan bukti ter-upload, lalu klik &quot;<span className="font-black">Done</span>&quot; agar pesanan segera diproses.
       </li>
@@ -65,10 +65,10 @@ function UploadBox({ onBrowse, selectedFileName }: { onBrowse?: () => void; sele
       <div className="flex w-[121px] flex-col items-start gap-[34px]">
         <div className="flex h-[61px] w-full flex-col items-center gap-[10px]">
           <AppImage alt="Camera" className="h-[24px] w-[24px]" height={24} src="/payment-method/camera.svg" width={24} />
-          <p className="w-full text-center font-[var(--font-satoshi)] text-[20px] font-bold leading-[normal] tracking-[3px] text-[rgba(0,0,0,0.5)]">{selectedFileName ? "Selected" : "Drop Here"}</p>
+          <p className="w-full text-center font-satoshi text-[20px] font-bold leading-[normal] tracking-[3px] text-[rgba(0,0,0,0.5)]">{selectedFileName ? "Selected" : "Drop Here"}</p>
         </div>
         <button className="flex h-[43px] w-full items-center justify-center rounded-[50px] bg-black px-[16px] py-[8px]" onClick={onBrowse} type="button">
-          <p className="font-[var(--font-satoshi)] text-[20px] font-bold leading-[normal] tracking-[3px] text-white">Browse</p>
+          <p className="font-satoshi text-[20px] font-bold leading-[normal] tracking-[3px] text-white">Browse</p>
         </button>
       </div>
     </div>
@@ -115,7 +115,7 @@ export default function PaymentMethodModal({ open = true, asPage = false, onDone
           >
           <div className="flex flex-col gap-[20px] px-[20px] py-[23px] md:px-[40px] xl:hidden">
             <div className="flex w-full flex-col items-center gap-[10px]">
-              <p className="w-full text-center font-[var(--font-fanlste)] text-[24px] font-normal leading-[normal] tracking-[3.6px] text-black">Payment Method</p>
+              <p className="w-full text-center font-fanlste text-[24px] font-normal leading-[normal] tracking-[3.6px] text-black">Payment Method</p>
               <AppImage alt="" className="h-[1.565px] w-full" height={2} src="/payment-method/divider-line.svg" width={432} />
             </div>
 
@@ -125,14 +125,14 @@ export default function PaymentMethodModal({ open = true, asPage = false, onDone
             <InstructionRight />
 
             <motion.button className="flex h-[43px] w-[121px] items-center justify-center rounded-[50px] bg-black px-[16px] py-[8px] disabled:opacity-60" disabled={isUploading} onClick={onDone} type="button" whileHover={prefersReducedMotion ? undefined : { y: -2, scale: 1.04 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}>
-              <p className="font-[var(--font-satoshi)] text-[20px] font-bold leading-[normal] tracking-[3px] text-white">{isUploading ? "Uploading..." : "Done"}</p>
+              <p className="font-satoshi text-[20px] font-bold leading-[normal] tracking-[3px] text-white">{isUploading ? "Uploading..." : "Done"}</p>
             </motion.button>
             <UploadFeedback errorMessage={errorMessage} selectedFileName={selectedFileName} />
           </div>
 
           <div className="relative hidden h-[650px] w-[900px] xl:block">
             <div className="absolute left-[212px] top-[23px] flex h-[40.565px] w-[432px] flex-col items-center gap-[10px]">
-              <p className="w-full text-center font-[var(--font-fanlste)] text-[24px] font-normal leading-[normal] tracking-[3.6px] text-black">Payment Method</p>
+              <p className="w-full text-center font-fanlste text-[24px] font-normal leading-[normal] tracking-[3.6px] text-black">Payment Method</p>
               <AppImage alt="" className="h-[1.565px] w-full" height={2} src="/payment-method/divider-line.svg" width={432} />
             </div>
 
@@ -148,7 +148,7 @@ export default function PaymentMethodModal({ open = true, asPage = false, onDone
                 <InstructionRight />
               </div>
               <motion.button className="absolute left-[425px] top-[135px] flex h-[43px] w-[121px] items-center justify-center rounded-[50px] bg-black px-[16px] py-[8px] disabled:opacity-60" disabled={isUploading} onClick={onDone} type="button" whileHover={prefersReducedMotion ? undefined : { y: -2, scale: 1.04 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}>
-                <p className="font-[var(--font-satoshi)] text-[20px] font-bold leading-[normal] tracking-[3px] text-white">{isUploading ? "Uploading..." : "Done"}</p>
+                <p className="font-satoshi text-[20px] font-bold leading-[normal] tracking-[3px] text-white">{isUploading ? "Uploading..." : "Done"}</p>
               </motion.button>
               <div className="absolute left-0 top-[178px]">
                 <UploadBox onBrowse={onBrowse} selectedFileName={selectedFileName} />

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
@@ -40,12 +40,12 @@ function CheckoutSuccessPageContent() {
           </motion.p>
           <div className="mt-[24px] flex items-center justify-center gap-[12px]">
             <InteractivePress>
-              <Link className="rounded-[50px] bg-black px-[20px] py-[10px] font-[var(--font-satoshi)] text-[20px] tracking-[3px] text-white" href={trackOrderHref}>
+              <Link className="rounded-[50px] bg-black px-[20px] py-[10px] font-satoshi text-[20px] tracking-[3px] text-white" href={trackOrderHref}>
                 Track Order
               </Link>
             </InteractivePress>
             <InteractivePress>
-              <Link className="rounded-[50px] border border-black bg-white px-[20px] py-[10px] font-[var(--font-satoshi)] text-[20px] tracking-[3px] text-black" href={routes.orderHistory}>
+              <Link className="rounded-[50px] border border-black bg-white px-[20px] py-[10px] font-satoshi text-[20px] tracking-[3px] text-black" href={routes.orderHistory}>
                 Order History
               </Link>
             </InteractivePress>

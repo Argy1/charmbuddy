@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
@@ -35,7 +35,7 @@ export default function ProductCard({ className = "", product }: ProductCardProp
           </motion.div>
         </div>
         <div className="flex flex-1 items-center justify-between px-[5px] py-[13px]">
-          <div className="flex w-[116px] flex-col gap-[13px] font-[var(--font-fanlste)] not-italic leading-[normal]">
+          <div className="flex w-[116px] flex-col gap-[13px] font-fanlste not-italic leading-[normal]">
             <p className="w-full text-center text-[16px] tracking-[2.4px] text-black">{product.name}</p>
             <div className="flex w-full items-center gap-[13px] whitespace-nowrap">
               <p className="text-[16px] tracking-[2.4px] text-black">${product.price}</p>
@@ -44,7 +44,7 @@ export default function ProductCard({ className = "", product }: ProductCardProp
           </div>
           <div className="flex w-[59px] items-center justify-between">
             <AppImage alt="Rating" className="h-[25px] w-[25px]" height={25} src="/catalogue/product-star.svg" width={25} />
-            <p className="font-[var(--font-fanlste)] text-[16px] tracking-[2.4px] text-black">{rating}</p>
+            <p className="font-fanlste text-[16px] tracking-[2.4px] text-black">{rating}</p>
           </div>
         </div>
       </Link>

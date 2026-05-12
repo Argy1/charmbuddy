@@ -14,6 +14,9 @@
 @theme inline {
   --color-primary: var(--primary);
   --color-tint: var(--tint);
+  --font-fanlste: var(--font-fanlste);
+  --font-satoshi: var(--font-satoshi);
+  --font-dmsans: var(--font-dmsans);
 }
 
 html,
@@ -22,54 +25,75 @@ body {
   min-height: 100%;
 }
 
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 body {
   margin: 0;
-  font-family: var(--font-dmsans), sans-serif;
+  font-family: var(--font-satoshi), var(--font-dmsans), system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
   color: #000;
   background: #edf1ff;
+  min-height: 100vh;
 }
 
 .page-title {
   font-family: var(--font-fanlste), serif;
-  font-size: clamp(40px, 6vw, 64px);
-  line-height: 1;
-  letter-spacing: clamp(2.6px, 0.4vw, 4px);
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.05;
+  letter-spacing: clamp(1.5px, 0.25vw, 2.5px);
 }
 
 .section-title {
   font-family: var(--font-satoshi), sans-serif;
-  font-size: clamp(32px, 5vw, 48px);
-  line-height: 1.05;
-  letter-spacing: clamp(3px, 0.45vw, 7.2px);
+  font-size: clamp(22px, 3.2vw, 36px);
+  line-height: 1.1;
+  letter-spacing: clamp(1px, 0.2vw, 2px);
 }
 
 .body-lead {
   font-family: var(--font-satoshi), sans-serif;
-  font-size: clamp(18px, 2.4vw, 24px);
-  line-height: 1.35;
-  letter-spacing: clamp(1px, 0.2vw, 3.6px);
+  font-size: clamp(15px, 1.6vw, 18px);
+  line-height: 1.45;
+  letter-spacing: 0.4px;
 }
 
 .bloo-bg {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  background: #edf1ff;
+  background: linear-gradient(
+    180deg,
+    #b3c4ff 0%,
+    #c8d4ff 8%,
+    #d8e2ff 20%,
+    #edf1ff 44%,
+    #edf1ff 56%,
+    #e5eaff 70%,
+    #d0dcff 85%,
+    #b8c8ff 100%
+  );
 }
 
 .bloo-bg::before {
   content: "";
   position: absolute;
   left: 50%;
-  top: -8vh;
-  width: 100vw;
-  min-width: 1200px;
-  height: 75vh;
-  min-height: 620px;
+  top: -6vh;
+  width: 110vw;
+  min-width: 900px;
+  height: 55vh;
+  min-height: 400px;
   transform: translateX(-50%);
-  z-index: -2;
-  background-image: linear-gradient(-26.499796666184665deg, rgb(135, 152, 255) 49.351%, rgb(165, 186, 255) 51.842%);
-  filter: blur(250px);
+  z-index: 0;
+  background-image: radial-gradient(ellipse at 50% 10%, rgba(135, 152, 255, 0.3) 0%, rgba(165, 186, 255, 0.15) 50%, transparent 75%);
+  filter: blur(60px);
+  pointer-events: none;
 }
 
 .bloo-bg::after {
@@ -78,14 +102,15 @@ body {
   left: 50%;
   top: 0;
   width: 100vw;
-  min-width: 1200px;
-  height: 72vh;
-  min-height: 580px;
+  min-width: 900px;
+  height: 55vh;
+  min-height: 420px;
   transform: translateX(-50%);
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
   background-image: url("/home/bg-noise-top.png");
   background-position: top left;
   background-size: cover;
   mix-blend-mode: soft-light;
+  opacity: 0.35;
 }

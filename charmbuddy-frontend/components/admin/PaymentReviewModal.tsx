@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -27,13 +27,13 @@ export default function PaymentReviewModal({ open, payment, isSubmitting, onClos
             initial={{ y: 24, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="font-[var(--font-fanlste)] text-[30px] tracking-[1px]">Review Payment</h3>
-            <p className="mt-[8px] font-[var(--font-satoshi)] text-[14px] text-black/70">Payment #{payment.id} - Order #{payment.order_id}</p>
-            <p className="font-[var(--font-satoshi)] text-[14px] text-black/70">Customer: {payment.user?.name ?? "-"}</p>
-            <p className="font-[var(--font-satoshi)] text-[14px] text-black/70">Amount: ${Number(payment.amount).toFixed(2)}</p>
+            <h3 className="font-fanlste text-[30px] tracking-[1px]">Review Payment</h3>
+            <p className="mt-[8px] font-satoshi text-[14px] text-black/70">Payment #{payment.id} - Order #{payment.order_id}</p>
+            <p className="font-satoshi text-[14px] text-black/70">Customer: {payment.user?.name ?? "-"}</p>
+            <p className="font-satoshi text-[14px] text-black/70">Amount: ${Number(payment.amount).toFixed(2)}</p>
 
             <div className="mt-[12px]">
-              <p className="mb-[6px] font-[var(--font-satoshi)] text-[13px] tracking-[1px] text-black/70">Payment Proof</p>
+              <p className="mb-[6px] font-satoshi text-[13px] tracking-[1px] text-black/70">Payment Proof</p>
               {payment.payment_proof_path ? (
                 <AppImage
                   alt="Payment proof"
@@ -44,19 +44,19 @@ export default function PaymentReviewModal({ open, payment, isSubmitting, onClos
                 />
               ) : (
                 <div className="rounded-[12px] border border-dashed border-black/20 p-[12px]">
-                  <p className="font-[var(--font-satoshi)] text-[14px] text-black/60">Belum ada bukti pembayaran.</p>
+                  <p className="font-satoshi text-[14px] text-black/60">Belum ada bukti pembayaran.</p>
                 </div>
               )}
             </div>
 
             <div className="mt-[12px] flex items-center justify-end gap-[8px]">
-              <button className="rounded-[10px] border border-black/20 px-[12px] py-[8px] font-[var(--font-satoshi)] text-[14px]" onClick={onClose} type="button">
+              <button className="rounded-[10px] border border-black/20 px-[12px] py-[8px] font-satoshi text-[14px]" onClick={onClose} type="button">
                 Cancel
               </button>
-              <button className="rounded-[10px] bg-red-500 px-[12px] py-[8px] font-[var(--font-satoshi)] text-[14px] text-white disabled:opacity-60" disabled={isSubmitting} onClick={() => void onReject()} type="button">
+              <button className="rounded-[10px] bg-red-500 px-[12px] py-[8px] font-satoshi text-[14px] text-white disabled:opacity-60" disabled={isSubmitting} onClick={() => void onReject()} type="button">
                 Reject
               </button>
-              <button className="rounded-[10px] bg-black px-[12px] py-[8px] font-[var(--font-satoshi)] text-[14px] text-white disabled:opacity-60" disabled={isSubmitting} onClick={() => void onApprove()} type="button">
+              <button className="rounded-[10px] bg-black px-[12px] py-[8px] font-satoshi text-[14px] text-white disabled:opacity-60" disabled={isSubmitting} onClick={() => void onApprove()} type="button">
                 Approve
               </button>
             </div>
