@@ -1,6 +1,6 @@
 import type { ApiResponse, ApiSuccess } from "@/lib/api/types";
 
-const FALLBACK_API_BASE_URL = "http://127.0.0.1:8001/api";
+const FALLBACK_API_BASE_URL = "http://127.0.0.1:8000/api";
 
 export const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL ?? FALLBACK_API_BASE_URL).replace(/\/+$/, "");
 
@@ -60,13 +60,22 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
     requestBody = JSON.stringify(body);
   }
 
-  const response = await fetch(buildUrl(path, query), {
-    method,
-    headers,
-    body: requestBody,
-    signal,
-    cache: "no-store",
-  });
+  let response: Response;
+  try {
+    response = await fetch(buildUrl(path, query), {
+      method,
+      headers,
+      body: requestBody,
+      signal,
+      cache: "no-store",
+    });
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw error;
+    }
+
+    throw new ApiError(`Tidak bisa terhubung ke API di ${API_BASE_URL}. Pastikan backend Laravel berjalan dan NEXT_PUBLIC_API_BASE_URL sudah benar.`, 0);
+  }
 
   let parsed: ApiResponse<T> | null = null;
   try {

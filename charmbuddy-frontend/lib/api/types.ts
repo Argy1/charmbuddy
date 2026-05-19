@@ -60,22 +60,6 @@ export type ContentPage = {
   updated_at?: string;
 };
 
-export type OrderStatusHistory = {
-  id: number;
-  order_id: number;
-  status: string;
-  note: string | null;
-  changed_by: number | null;
-  meta: Record<string, unknown> | null;
-  created_at: string;
-  updated_at: string;
-  changedBy?: {
-    id: number;
-    name: string;
-    email: string;
-  } | null;
-};
-
 export type PromoCode = {
   id: number;
   code: string;
@@ -265,7 +249,7 @@ export type AdminPaginatedMeta = {
   };
 };
 
-export type AdminOrderStatus = "Pending" | "Paid" | "Processed" | "Shipped" | "Finished";
+export type AdminOrderStatus = "Pending" | "Paid" | "Processed" | "Shipped" | "Finished" | "Failed" | "Cancelled";
 export type AdminPaymentStatus = "Pending" | "Approved" | "Rejected";
 
 export type AdminProductPayload = {
@@ -297,11 +281,19 @@ export type AdminOrderItem = {
 
 export type AdminOrder = {
   id: number;
+  order_number?: string | null;
   user_id: number;
   cart_id: number | null;
+  first_name?: string | null;
+  last_name?: string | null;
+  email?: string | null;
+  phone?: string | null;
   total_price: string | number;
+  total?: string | number | null;
+  subtotal?: string | number | null;
   shipping_cost: string | number;
   shipping_address: string;
+  address?: string | null;
   courier_service: string;
   status: AdminOrderStatus;
   payment_proof_path: string | null;
@@ -329,8 +321,11 @@ export type AdminPayment = {
 export type AdminSummary = {
   total_orders: number;
   pending_payments: number;
+  approved_payments?: number;
+  failed_payments?: number;
   paid_orders: number;
   shipped_orders: number;
+  finished_orders?: number;
   revenue: number;
   low_stock_count: number;
   range: {
@@ -359,6 +354,7 @@ export type AdminSalesReport = {
   summary: {
     total_transactions: number;
     paid_transactions: number;
+    failed_transactions?: number;
     pending_transactions: number;
     gross_revenue: number;
     total_shipping: number;

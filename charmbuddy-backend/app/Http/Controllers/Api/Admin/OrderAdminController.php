@@ -35,8 +35,12 @@ class OrderAdminController extends Controller
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($inner) use ($search) {
                     $inner->where('id', 'like', '%'.$search.'%')
+                        ->orWhere('order_number', 'like', '%'.$search.'%')
                         ->orWhere('tracking_number', 'like', '%'.$search.'%')
                         ->orWhere('shipping_address', 'like', '%'.$search.'%')
+                        ->orWhere('first_name', 'like', '%'.$search.'%')
+                        ->orWhere('last_name', 'like', '%'.$search.'%')
+                        ->orWhere('email', 'like', '%'.$search.'%')
                         ->orWhereHas('user', function ($userQuery) use ($search) {
                             $userQuery->where('name', 'like', '%'.$search.'%')
                                 ->orWhere('email', 'like', '%'.$search.'%');

@@ -33,6 +33,12 @@ class PaymentAdminController extends Controller
                 $query->where(function ($inner) use ($search) {
                     $inner->where('id', 'like', '%'.$search.'%')
                         ->orWhere('order_id', 'like', '%'.$search.'%')
+                        ->orWhereHas('order', function ($orderQuery) use ($search) {
+                            $orderQuery->where('order_number', 'like', '%'.$search.'%')
+                                ->orWhere('first_name', 'like', '%'.$search.'%')
+                                ->orWhere('last_name', 'like', '%'.$search.'%')
+                                ->orWhere('email', 'like', '%'.$search.'%');
+                        })
                         ->orWhereHas('user', function ($userQuery) use ($search) {
                             $userQuery->where('name', 'like', '%'.$search.'%')
                                 ->orWhere('email', 'like', '%'.$search.'%');

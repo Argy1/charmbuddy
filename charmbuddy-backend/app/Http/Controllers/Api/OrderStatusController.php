@@ -137,7 +137,7 @@ class OrderStatusController extends Controller
 
         return match ($normalized) {
             'paid', 'processed' => 'paid',
-            'shipped', 'sent' => 'sent',
+            'shipped', 'sent', 'finished' => 'sent',
             default => 'pending',
         };
     }
@@ -149,7 +149,7 @@ class OrderStatusController extends Controller
         return match ($normalized) {
             'paid' => 'paid',
             'processed' => 'processed',
-            'shipped', 'sent' => 'sent',
+            'shipped', 'sent', 'finished' => 'sent',
             default => 'pending',
         };
     }
@@ -186,30 +186,47 @@ class OrderStatusController extends Controller
     private function buildTimelineFromHistories(Order $order): array
     {
         $histories = $order->statusHistories;
-        if ($histories->isEmpty()) {
-            $timelineState = $this->resolveTimelineState((string) $order->status);
+        $timelineState = $this->resolveTimelineState((string) $order->status);
 
+        if ($histories->isEmpty()) {
             return $this->buildTimeline($timelineState);
         }
 
-        return $histories->map(function ($history) {
-            $normalized = strtolower(trim((string) $history->status));
+        $historiesByStep = $histories->reduce(function (array $carry, $history) {
+            $stepId = $this->timelineStepId((string) $history->status);
+            $carry[$stepId] = $history;
 
-            $label = match ($normalized) {
-                'paid' => ['id' => 'paid', 'title' => 'Payment Confirmed', 'desc' => 'Pembayaran dikonfirmasi'],
-                'processed' => ['id' => 'processed', 'title' => 'Order Processed', 'desc' => 'Pesanan disiapkan'],
-                'shipped', 'sent' => ['id' => 'sent', 'title' => 'Order Sent', 'desc' => 'Pesanan dalam pengiriman'],
-                default => ['id' => 'pending', 'title' => 'Order Received', 'desc' => 'Pesanan diterima'],
-            };
+            return $carry;
+        }, []);
 
-            return [
-                'id' => $label['id'].'-'.$history->id,
-                'title' => $label['title'],
-                'desc' => $history->note ?: $label['desc'],
-                'active' => true,
-                'at' => optional($history->created_at)->toISOString(),
-            ];
-        })->values()->all();
+        return collect($this->buildTimeline($timelineState))
+            ->map(function (array $step) use ($historiesByStep) {
+                $history = $historiesByStep[$step['id']] ?? null;
+
+                if (! $history) {
+                    return $step;
+                }
+
+                return [
+                    ...$step,
+                    'desc' => $history->note ?: $step['desc'],
+                    'at' => optional($history->created_at)->toISOString(),
+                ];
+            })
+            ->values()
+            ->all();
+    }
+
+    private function timelineStepId(string $status): string
+    {
+        $normalized = strtolower(trim($status));
+
+        return match ($normalized) {
+            'paid' => 'paid',
+            'processed' => 'processed',
+            'shipped', 'sent', 'finished' => 'sent',
+            default => 'pending',
+        };
     }
 
     private function serializeOrder(Order $order): array

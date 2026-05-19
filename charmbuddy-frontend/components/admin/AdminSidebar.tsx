@@ -17,7 +17,6 @@ const items = [
   { href: routes.admin.vouchers, label: "Vouchers", icon: "VC" },
   { href: routes.admin.faqs, label: "FAQs", icon: "FQ" },
   { href: routes.admin.content, label: "Content", icon: "CM" },
-  { href: routes.admin.orderStatuses, label: "Order Statuses", icon: "OS" },
   { href: routes.admin.reports, label: "Reports", icon: "RP" },
   { href: routes.admin.inventory, label: "Inventory", icon: "IV" },
   { href: routes.admin.orders, label: "Orders", icon: "OR" },

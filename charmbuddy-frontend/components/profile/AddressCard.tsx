@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 
-import InteractivePress from "@/components/motion/InteractivePress";
 import Reveal from "@/components/motion/Reveal";
 import { createAddressApi, deleteAddressApi, listAddressesApi, updateAddressApi, type AddressPayload } from "@/lib/api/addresses";
 import { ApiError } from "@/lib/api/client";

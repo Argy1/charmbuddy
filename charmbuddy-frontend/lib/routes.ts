@@ -22,7 +22,6 @@ export const routes = {
     vouchers: "/admin/vouchers",
     faqs: "/admin/faqs",
     content: "/admin/content",
-    orderStatuses: "/admin/order-statuses",
     reports: "/admin/reports",
     inventory: "/admin/inventory",
   },

@@ -40,8 +40,11 @@ export default function KpiCards({ summary, isLoading }: KpiCardsProps) {
     <section className="grid grid-cols-1 gap-[10px] sm:grid-cols-2 xl:grid-cols-3">
       <KpiCard label="Total Orders" value={String(summary.total_orders)} />
       <KpiCard label="Pending Payments" value={String(summary.pending_payments)} />
-      <KpiCard label="Paid Orders" value={String(summary.paid_orders)} />
+      <KpiCard label="Approved Payments" value={String(summary.approved_payments ?? summary.paid_orders)} />
+      <KpiCard label="Failed Payments" value={String(summary.failed_payments ?? 0)} />
+      <KpiCard label="Successful Orders" value={String(summary.paid_orders)} />
       <KpiCard label="Shipped Orders" value={String(summary.shipped_orders)} />
+      <KpiCard label="Finished Orders" value={String(summary.finished_orders ?? 0)} />
       <KpiCard label="Revenue" value={`$${Number(summary.revenue).toFixed(2)}`} />
       <KpiCard label="Low Stock Items" value={String(summary.low_stock_count)} />
     </section>

@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 
+import { getOrderCustomerName } from "@/components/admin/customerDisplay";
 import type { AdminOrder } from "@/lib/api/types";
 
 type OrderTableProps = {
@@ -70,7 +71,7 @@ export default function OrderTable({ orders, isLoading, onShip, onFinish }: Orde
             {orders.map((order) => (
               <tr className="border-b border-black/5" key={order.id}>
                 <td className="px-[12px] py-[10px] font-satoshi text-[14px]">#{order.id}</td>
-                <td className="px-[12px] py-[10px] font-satoshi text-[14px]">{order.user?.name ?? "-"}</td>
+                <td className="px-[12px] py-[10px] font-satoshi text-[14px]">{getOrderCustomerName(order)}</td>
                 <td className="px-[12px] py-[10px] font-satoshi text-[14px]">${Number(order.total_price).toFixed(2)}</td>
                 <td className="px-[12px] py-[10px]"><StatusBadge status={order.status} /></td>
                 <td className="px-[12px] py-[10px] font-satoshi text-[14px]">{order.tracking_number ?? "-"}</td>
@@ -105,7 +106,7 @@ export default function OrderTable({ orders, isLoading, onShip, onFinish }: Orde
               <p className="font-fanlste text-[22px]">#{order.id}</p>
               <StatusBadge status={order.status} />
             </div>
-            <p className="mt-[8px] font-satoshi text-[14px] text-black/70">{order.user?.name ?? "-"}</p>
+            <p className="mt-[8px] font-satoshi text-[14px] text-black/70">{getOrderCustomerName(order)}</p>
             <p className="font-satoshi text-[14px] text-black/70">${Number(order.total_price).toFixed(2)}</p>
             <p className="font-satoshi text-[14px] text-black/70">Tracking: {order.tracking_number ?? "-"}</p>
             <div className="mt-[10px] flex flex-wrap gap-[6px]">

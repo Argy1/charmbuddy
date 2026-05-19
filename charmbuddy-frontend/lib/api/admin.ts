@@ -1,5 +1,5 @@
 import { API_BASE_URL, apiRequest } from "@/lib/api/client";
-import type { AdminOrder, AdminPayment, AdminProductPayload, AdminSalesReport, AdminStockMovement, AdminSummary, Category, ContentPage, FaqEntry, OrderStatusHistory, Product, PromoCode } from "@/lib/api/types";
+import type { AdminOrder, AdminPayment, AdminProductPayload, AdminSalesReport, AdminStockMovement, AdminSummary, Category, ContentPage, FaqEntry, Product, PromoCode } from "@/lib/api/types";
 
 type ProductListQuery = {
   search?: string;
@@ -386,42 +386,3 @@ export async function adminExportSalesReportPrintHtmlApi(
   return response.text();
 }
 
-export async function adminListOrderStatusHistoriesApi(
-  token: string,
-  orderId: number,
-  query?: { search?: string; status?: string; page?: number; per_page?: number },
-) {
-  return apiRequest<OrderStatusHistory[]>(`/admin/orders/${orderId}/statuses`, { token, query });
-}
-
-export async function adminCreateOrderStatusHistoryApi(
-  token: string,
-  orderId: number,
-  payload: { status: string; note?: string | null; meta?: Record<string, unknown> | null; sync_order_status?: boolean },
-) {
-  return apiRequest<OrderStatusHistory>(`/admin/orders/${orderId}/statuses`, {
-    token,
-    method: "POST",
-    body: payload,
-  });
-}
-
-export async function adminUpdateOrderStatusHistoryApi(
-  token: string,
-  orderId: number,
-  historyId: number,
-  payload: { status?: string; note?: string | null; meta?: Record<string, unknown> | null; sync_order_status?: boolean },
-) {
-  return apiRequest<OrderStatusHistory>(`/admin/orders/${orderId}/statuses/${historyId}`, {
-    token,
-    method: "PUT",
-    body: payload,
-  });
-}
-
-export async function adminDeleteOrderStatusHistoryApi(token: string, orderId: number, historyId: number) {
-  return apiRequest<null>(`/admin/orders/${orderId}/statuses/${historyId}`, {
-    token,
-    method: "DELETE",
-  });
-}

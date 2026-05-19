@@ -74,7 +74,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           const response = await getCartApi(token);
           setItems(mapApiCartToItems(response.data));
         } catch (error) {
-          console.error(error);
+          logCartApiError(error);
         }
         return;
       }
@@ -113,7 +113,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
               const response = await addCartItemApi(token, { product_id: item.productId, qty });
               updateFromServer(response.data);
             } catch (error) {
-              console.error(error);
+              logCartApiError(error);
             }
           })();
           return;
@@ -138,7 +138,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
               const response = await updateCartItemApi(token, Number(id), { qty: current.qty + 1 });
               updateFromServer(response.data);
             } catch (error) {
-              console.error(error);
+              logCartApiError(error);
             }
           })();
           return;
@@ -162,7 +162,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
                 updateFromServer(response.data);
               }
             } catch (error) {
-              console.error(error);
+              logCartApiError(error);
             }
           })();
           return;
@@ -181,7 +181,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
               const response = await removeCartItemApi(token, Number(id));
               updateFromServer(response.data);
             } catch (error) {
-              console.error(error);
+              logCartApiError(error);
             }
           })();
           return;
@@ -196,7 +196,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
               const response = await clearCartApi(token);
               updateFromServer(response.data);
             } catch (error) {
-              console.error(error);
+              logCartApiError(error);
             }
           })();
           return;
@@ -255,6 +255,15 @@ function mapApiCartToItems(cart: ApiCart): CartItem[] {
     price: Number(line.product?.price ?? 0),
     image: resolveImagePath(line.product?.image_path),
   }));
+}
+
+function logCartApiError(error: unknown) {
+  if (process.env.NODE_ENV !== "development") {
+    return;
+  }
+
+  const message = error instanceof Error ? error.message : String(error);
+  console.warn(`Cart API sync skipped: ${message}`);
 }
 
 export function useCart() {

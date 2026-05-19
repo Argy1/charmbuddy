@@ -23,22 +23,6 @@ type CheckoutSummaryProps = {
   errorMessage?: string;
 };
 
-function QtyControl({ qty }: { qty: number }) {
-  const prefersReducedMotion = useReducedMotion();
-
-  return (
-    <div className="flex h-[24px] w-[83px] items-center gap-[13px]">
-      <motion.button className="h-[24px] w-[24px] rounded-[5px] bg-[rgba(149,178,254,0.7)] p-[4px]" type="button" whileHover={prefersReducedMotion ? undefined : { scale: 1.06 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.93 }}>
-        <AppImage alt="Plus" className="h-full w-full" height={24} src="/checkout/icon-plus.svg" width={24} />
-      </motion.button>
-      <p className="font-satoshi text-[14px] font-bold leading-[normal] tracking-[2.1px] text-black">{qty}</p>
-      <motion.button className="h-[24px] w-[24px] rounded-[5px] bg-[rgba(149,178,254,0.7)] p-[4px]" type="button" whileHover={prefersReducedMotion ? undefined : { scale: 1.06 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.93 }}>
-        <AppImage alt="Minus" className="h-full w-full" height={24} src="/checkout/icon-minus.svg" width={24} />
-      </motion.button>
-    </div>
-  );
-}
-
 export default function CheckoutSummary({
   shippingCost,
   discountAmount,

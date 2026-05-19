@@ -12,7 +12,6 @@ const navItems = [
   { href: routes.admin.vouchers, label: "Vouchers" },
   { href: routes.admin.faqs, label: "FAQs" },
   { href: routes.admin.content, label: "Content" },
-  { href: routes.admin.orderStatuses, label: "Statuses" },
   { href: routes.admin.reports, label: "Reports" },
   { href: routes.admin.inventory, label: "Inventory" },
   { href: routes.admin.orders, label: "Orders" },

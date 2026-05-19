@@ -3,7 +3,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 
 import Reveal from "@/components/motion/Reveal";
-import AppImage from "@/components/shared/AppImage";
 
 type TestimonialItem = {
   name: string;

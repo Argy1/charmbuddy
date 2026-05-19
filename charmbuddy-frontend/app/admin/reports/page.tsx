@@ -7,7 +7,7 @@ import { ApiError } from "@/lib/api/client";
 import type { AdminSalesReport } from "@/lib/api/types";
 import { useAuth } from "@/lib/auth-context";
 
-const statusOptions = ["", "Pending", "Paid", "Processed", "Shipped"];
+const statusOptions = ["", "Pending", "Paid", "Processed", "Shipped", "Finished"];
 
 export default function AdminReportsPage() {
   const { token, isAuthResolved } = useAuth();
@@ -157,6 +157,7 @@ export default function AdminReportsPage() {
       <section className="grid grid-cols-1 gap-[10px] sm:grid-cols-2 xl:grid-cols-3">
         <Card label="Total Transactions" value={String(report?.summary.total_transactions ?? 0)} />
         <Card label="Paid Transactions" value={String(report?.summary.paid_transactions ?? 0)} />
+        <Card label="Failed Transactions" value={String(report?.summary.failed_transactions ?? 0)} />
         <Card label="Pending Transactions" value={String(report?.summary.pending_transactions ?? 0)} />
         <Card label="Gross Revenue" value={`$${Number(report?.summary.gross_revenue ?? 0).toFixed(2)}`} />
         <Card label="Total Shipping" value={`$${Number(report?.summary.total_shipping ?? 0).toFixed(2)}`} />

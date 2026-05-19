@@ -5,7 +5,6 @@ use App\Http\Controllers\Api\Admin\CategoryAdminController;
 use App\Http\Controllers\Api\Admin\ContentPageAdminController;
 use App\Http\Controllers\Api\Admin\FaqAdminController;
 use App\Http\Controllers\Api\Admin\OrderAdminController;
-use App\Http\Controllers\Api\Admin\OrderStatusHistoryAdminController;
 use App\Http\Controllers\Api\Admin\PaymentAdminController;
 use App\Http\Controllers\Api\Admin\PromoCodeAdminController;
 use App\Http\Controllers\Api\Admin\ProductAdminController;
@@ -144,10 +143,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/orders/{id}/reject', [OrderAdminController::class, 'reject']);
         Route::put('/orders/{id}/ship', [OrderAdminController::class, 'ship']);
         Route::put('/orders/{id}/finish', [OrderAdminController::class, 'finish']);
-        Route::get('/orders/{id}/statuses', [OrderStatusHistoryAdminController::class, 'index']);
-        Route::post('/orders/{id}/statuses', [OrderStatusHistoryAdminController::class, 'store']);
-        Route::put('/orders/{id}/statuses/{historyId}', [OrderStatusHistoryAdminController::class, 'update']);
-        Route::delete('/orders/{id}/statuses/{historyId}', [OrderStatusHistoryAdminController::class, 'destroy']);
 
         Route::get('/payments', [PaymentAdminController::class, 'index']);
         Route::get('/payments/{id}', [PaymentAdminController::class, 'show']);
@@ -155,4 +150,3 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/payments/{id}/reject', [PaymentAdminController::class, 'reject']);
     });
 });
-

@@ -50,9 +50,16 @@ export default function AdminOverviewPage() {
       return;
     }
 
-    void loadOverview();
+    const refresh = () => {
+      void loadOverview(range.from || undefined, range.to || undefined);
+    };
+
+    refresh();
+    const intervalId = window.setInterval(refresh, 30000);
+
+    return () => window.clearInterval(intervalId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthResolved, token]);
+  }, [isAuthResolved, token, range.from, range.to]);
 
   return (
     <div className="space-y-[14px]">

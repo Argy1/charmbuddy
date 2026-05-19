@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class SalesReportService
 {
+    private const SUCCESSFUL_ORDER_STATUSES = ['paid', 'processed', 'shipped', 'finished'];
+
     public function build(?string $from, ?string $to, ?string $status = null): array
     {
         [$fromDate, $toDate] = $this->resolveRange($from, $to);
@@ -21,13 +23,15 @@ class SalesReportService
             $shippingCost = (float) ($order->shipping_cost ?? 0);
             $discountAmount = (float) ($order->discount_amount ?? 0);
             $subtotal = (float) ($order->subtotal ?? max(0, $total - $shippingCost + $discountAmount));
+            $customerName = $this->resolveCustomerName($order);
+            $customerEmail = trim((string) ($order->email ?? '')) ?: ($order->user?->email ?? '');
 
             return [
                 'order_id' => $order->id,
                 'order_number' => $order->order_number ?? ('ORD-'.$order->id),
                 'order_date' => optional($order->created_at)->toISOString(),
-                'customer_name' => $order->user?->name ?? trim(($order->first_name ?? '').' '.($order->last_name ?? '')),
-                'customer_email' => $order->user?->email ?? $order->email,
+                'customer_name' => $customerName,
+                'customer_email' => $customerEmail,
                 'status' => (string) ($order->status ?? 'Pending'),
                 'payment_status' => (string) ($order->payment?->status ?? 'Pending'),
                 'items_count' => (int) $order->items->sum(function ($item) {
@@ -41,18 +45,19 @@ class SalesReportService
             ];
         })->values();
 
-        $paidRows = $rows->filter(function (array $row) {
-            return in_array(strtolower($row['status']), ['paid', 'processed', 'shipped'], true);
-        });
+        $successfulRows = $rows->filter(fn (array $row) => $this->isSuccessfulTransaction($row));
+        $failedRows = $rows->filter(fn (array $row) => $this->isFailedTransaction($row));
+        $pendingRows = $rows->reject(fn (array $row) => $this->isSuccessfulTransaction($row) || $this->isFailedTransaction($row));
 
         return [
             'summary' => [
                 'total_transactions' => $rows->count(),
-                'paid_transactions' => $paidRows->count(),
-                'pending_transactions' => $rows->count() - $paidRows->count(),
-                'gross_revenue' => (float) $paidRows->sum('total_amount'),
-                'total_shipping' => (float) $rows->sum('shipping_cost'),
-                'total_discount' => (float) $rows->sum('discount_amount'),
+                'paid_transactions' => $successfulRows->count(),
+                'failed_transactions' => $failedRows->count(),
+                'pending_transactions' => $pendingRows->count(),
+                'gross_revenue' => (float) $successfulRows->sum('total_amount'),
+                'total_shipping' => (float) $successfulRows->sum('shipping_cost'),
+                'total_discount' => (float) $successfulRows->sum('discount_amount'),
             ],
             'range' => [
                 'from' => $fromDate?->toDateString(),
@@ -128,5 +133,27 @@ class SalesReportService
         $normalized = trim((string) $status);
 
         return $normalized !== '' ? $normalized : null;
+    }
+
+    private function resolveCustomerName(Order $order): string
+    {
+        $checkoutName = trim((string) ($order->first_name ?? '').' '.(string) ($order->last_name ?? ''));
+
+        return $checkoutName !== '' ? $checkoutName : ($order->user?->name ?? 'Customer');
+    }
+
+    private function isSuccessfulTransaction(array $row): bool
+    {
+        if (strtolower((string) $row['payment_status']) === 'approved') {
+            return true;
+        }
+
+        return in_array(strtolower((string) $row['status']), self::SUCCESSFUL_ORDER_STATUSES, true);
+    }
+
+    private function isFailedTransaction(array $row): bool
+    {
+        return in_array(strtolower((string) $row['payment_status']), ['rejected', 'failed', 'cancelled', 'canceled'], true)
+            || in_array(strtolower((string) $row['status']), ['failed', 'cancelled', 'canceled'], true);
     }
 }

@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { type FormEvent, useState } from "react";
 
+import { getOrderCustomerName } from "@/components/admin/customerDisplay";
 import type { AdminOrder } from "@/lib/api/types";
 
 type OrderActionPanelProps = {
@@ -33,7 +34,7 @@ export default function OrderActionPanel({ open, order, isSubmitting, onClose, o
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className="font-fanlste text-[30px] tracking-[1px]">Ship Order</h3>
-            <p className="mt-[8px] font-satoshi text-[14px] text-black/70">Order #{order.id} - {order.user?.name ?? "Customer"}</p>
+            <p className="mt-[8px] font-satoshi text-[14px] text-black/70">Order #{order.id} - {getOrderCustomerName(order)}</p>
             <p className="font-satoshi text-[14px] text-black/70">Status sekarang: {order.status}</p>
             <form className="mt-[12px] space-y-[10px]" onSubmit={handleSubmit}>
               <label className="flex flex-col gap-[6px]">

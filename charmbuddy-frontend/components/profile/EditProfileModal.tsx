@@ -28,6 +28,7 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  /* eslint-disable react-hooks/set-state-in-effect -- Modal form state is intentionally reset when the modal opens and when avatar preview files change. */
   useEffect(() => {
     setMounted(true);
 
@@ -57,6 +58,7 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
       URL.revokeObjectURL(previewUrl);
     };
   }, [avatarFile, user?.avatar_path]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   if (!mounted) {
     return null;

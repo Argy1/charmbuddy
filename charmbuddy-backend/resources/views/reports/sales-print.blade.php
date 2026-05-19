@@ -23,6 +23,7 @@
   <div class="summary">
     <div class="box">Total Transaksi: {{ $report['summary']['total_transactions'] ?? 0 }}</div>
     <div class="box">Paid: {{ $report['summary']['paid_transactions'] ?? 0 }}</div>
+    <div class="box">Failed: {{ $report['summary']['failed_transactions'] ?? 0 }}</div>
     <div class="box">Pending: {{ $report['summary']['pending_transactions'] ?? 0 }}</div>
     <div class="box">Gross Revenue: {{ number_format((float) ($report['summary']['gross_revenue'] ?? 0), 2, '.', '') }}</div>
     <div class="box">Total Shipping: {{ number_format((float) ($report['summary']['total_shipping'] ?? 0), 2, '.', '') }}</div>
