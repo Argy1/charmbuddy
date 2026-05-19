@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 
 import { resolveApiAsset } from "@/lib/api/asset";
 import { listOrdersApi, uploadPaymentProofApi } from "@/lib/api/orders";
@@ -34,7 +34,7 @@ const statusLabelMap: Record<string, string> = {
   sent: "Sent",
 };
 
-export default function OrderHistoryPage() {
+function OrderHistoryPageContent() {
   const isAllowed = useRequireAuth();
   const { isAuthResolved, token } = useAuth();
   const router = useRouter();
@@ -218,6 +218,14 @@ export default function OrderHistoryPage() {
         <Footer />
       </div>
     </div>
+  );
+}
+
+export default function OrderHistoryPage() {
+  return (
+    <Suspense fallback={null}>
+      <OrderHistoryPageContent />
+    </Suspense>
   );
 }
 
