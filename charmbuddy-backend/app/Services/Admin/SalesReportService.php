@@ -89,22 +89,38 @@ class SalesReportService
         $rows = array_map(function (array $row) {
             return [
                 $row['order_id'],
-                $row['order_number'],
+                $this->csvSafe($row['order_number']),
                 $row['order_date'],
-                $row['customer_name'],
-                $row['customer_email'],
-                $row['status'],
-                $row['payment_status'],
+                $this->csvSafe($row['customer_name']),
+                $this->csvSafe($row['customer_email']),
+                $this->csvSafe($row['status']),
+                $this->csvSafe($row['payment_status']),
                 $row['items_count'],
                 number_format((float) $row['subtotal'], 2, '.', ''),
                 number_format((float) $row['shipping_cost'], 2, '.', ''),
                 number_format((float) $row['discount_amount'], 2, '.', ''),
                 number_format((float) $row['total_amount'], 2, '.', ''),
-                $row['tracking_number'],
+                $this->csvSafe($row['tracking_number']),
             ];
         }, $payload['rows'] ?? []);
 
         return [$header, ...$rows];
+    }
+
+    /**
+     * Neutralise CSV formula injection (OWASP: A03 Injection).
+     * Spreadsheet apps treat cells starting with =, +, -, @, \t, \r as formulas.
+     * Prefixing with a tab character disables formula execution.
+     */
+    private function csvSafe(mixed $value): string
+    {
+        $str = (string) ($value ?? '');
+
+        if ($str !== '' && in_array($str[0], ['=', '+', '-', '@', "\t", "\r"], true)) {
+            return "\t" . $str;
+        }
+
+        return $str;
     }
 
     private function baseQuery(?Carbon $fromDate, ?Carbon $toDate, ?string $status): Builder

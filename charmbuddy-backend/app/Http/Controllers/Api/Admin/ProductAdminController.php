@@ -64,7 +64,7 @@ class ProductAdminController extends Controller
             'stock' => ['required', 'integer', 'min:0'],
             'weight' => ['required', 'integer', 'min:0'],
             'image_path' => ['nullable', 'string', 'max:2048'],
-            'image' => ['nullable', 'image', 'max:4096'],
+            'image' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
         ]);
 
         $product = DB::transaction(function () use ($request, $validated) {
@@ -127,7 +127,7 @@ class ProductAdminController extends Controller
             'stock' => ['sometimes', 'integer', 'min:0'],
             'weight' => ['sometimes', 'integer', 'min:0'],
             'image_path' => ['nullable', 'string', 'max:2048'],
-            'image' => ['nullable', 'image', 'max:4096'],
+            'image' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
         ]);
 
         $updated = DB::transaction(function () use ($request, $validated, $product) {

@@ -25,9 +25,8 @@ use App\Http\Controllers\Api\ShippingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::prefix('auth')->group(function () {
+// Strict throttle for auth endpoints: 10 attempts per minute per IP
+Route::middleware('throttle:10,1')->prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
 });
@@ -39,7 +38,8 @@ Route::prefix('products')->group(function () {
 
 Route::get('/categories', [CategoryController::class, 'index']);
 
-Route::prefix('shipping')->group(function () {
+// Rate-limit shipping endpoints: prevents abuse of the upstream RajaOngkir API
+Route::middleware('throttle:30,1')->prefix('shipping')->group(function () {
     Route::get('/provinces', [ShippingController::class, 'provinces']);
     Route::get('/cities', [ShippingController::class, 'cities']);
     Route::post('/cost', [ShippingController::class, 'cost']);

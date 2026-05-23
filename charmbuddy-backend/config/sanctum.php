@@ -47,7 +47,9 @@ return [
     |
     */
 
-    'expiration' => null,
+    // Tokens expire after this many minutes (null = never).
+    // Default: 10 080 min = 7 days. Override via SANCTUM_TOKEN_EXPIRATION in .env.
+    'expiration' => env('SANCTUM_TOKEN_EXPIRATION', 10080),
 
     /*
     |--------------------------------------------------------------------------

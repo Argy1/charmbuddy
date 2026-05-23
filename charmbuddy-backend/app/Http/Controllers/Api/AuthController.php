@@ -21,9 +21,12 @@ class AuthController extends Controller
     {
         // 1. Validasi Input dari Frontend
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8', // Minimal 8 karakter
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email:rfc|max:255|unique:users',
+            // Min 8 chars, must contain at least one letter and one number
+            'password' => ['required', 'string', 'min:8', 'regex:/^(?=.*[A-Za-z])(?=.*\d).+$/'],
+        ], [
+            'password.regex' => 'Password harus mengandung minimal satu huruf dan satu angka.',
         ]);
 
         if ($validator->fails()) {
@@ -43,6 +46,7 @@ class AuthController extends Controller
         ]);
 
         // 3. Buat Token (Tiket Masuk)
+        $this->pruneTokens($user);
         $token = $user->createToken('auth_token')->plainTextToken;
 
         // 4. Kirim Balasan JSON ke Frontend
@@ -61,7 +65,21 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        // 1. Cek Credentials (Email & Password)
+        // 1. Validasi keberadaan field sebelum Auth::attempt()
+        $validator = Validator::make($request->all(), [
+            'email'    => 'required|string|email|max:255',
+            'password' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ada kesalahan input data.',
+                'errors'  => $validator->errors(),
+            ], 422);
+        }
+
+        // 2. Cek Credentials (Email & Password)
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 'success' => false,
@@ -73,8 +91,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->firstOrFail();
 
         // 3. Buat Token Baru
-        // (Opsional: Hapus token lama biar gak numpuk)
-        // $user->tokens()->delete();
+        $this->pruneTokens($user);
         $token = $user->createToken('auth_token')->plainTextToken;
 
         // 4. Kirim Balasan
@@ -100,7 +117,7 @@ class AuthController extends Controller
             'email'            => 'sometimes|string|email|max:255|unique:users,email,' . $user->id,
             'avatar'           => 'sometimes|file|image|mimes:jpg,jpeg,png,webp|max:2048',
             'current_password' => 'required_with:new_password|string',
-            'new_password'     => 'sometimes|string|min:8',
+            'new_password'     => ['sometimes', 'string', 'min:8', 'regex:/^(?=.*[A-Za-z])(?=.*\d).+$/'],
         ]);
 
         if ($validator->fails()) {
@@ -140,6 +157,32 @@ class AuthController extends Controller
             'message' => 'Profil berhasil diperbarui.',
             'data'    => $user,
         ]);
+    }
+
+    /**
+     * Delete expired tokens and cap the total per user to prevent unbounded growth.
+     */
+    private function pruneTokens(\App\Models\User $user): void
+    {
+        $expirationMinutes = config('sanctum.expiration');
+
+        // Remove tokens that are past their expiration
+        if ($expirationMinutes) {
+            $user->tokens()
+                ->where('created_at', '<', now()->subMinutes($expirationMinutes))
+                ->delete();
+        }
+
+        // Keep at most 5 active tokens per user (delete oldest beyond limit)
+        $maxTokens = 5;
+        $count = $user->tokens()->count();
+        if ($count >= $maxTokens) {
+            $user->tokens()
+                ->oldest()
+                ->limit($count - $maxTokens + 1)
+                ->get()
+                ->each->delete();
+        }
     }
 
     /**
