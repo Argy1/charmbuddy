@@ -36,8 +36,10 @@ class SecurityHeaders
         // Prevent other sites from embedding API responses (spectre/side-channel attacks)
         $response->headers->set('Cross-Origin-Resource-Policy', 'same-site');
 
-        // Force HTTPS when running under TLS
-        if ($request->isSecure()) {
+        // Force HTTPS when running under TLS. Railway/Vercel-style proxies may
+        // forward HTTPS via headers before Laravel sees the request as secure.
+        $forwardedProto = strtolower((string) $request->header('X-Forwarded-Proto', ''));
+        if ($request->isSecure() || $forwardedProto === 'https' || app()->environment('production')) {
             $response->headers->set(
                 'Strict-Transport-Security',
                 'max-age=31536000; includeSubDomains; preload'

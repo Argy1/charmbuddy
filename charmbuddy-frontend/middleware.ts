@@ -6,7 +6,7 @@ import type { NextRequest } from "next/server";
  * Content-Security-Policy header.  Using 'nonce-…' + 'strict-dynamic'
  * means the browser only executes scripts that carry the matching nonce
  * attribute, which eliminates the need for 'unsafe-inline' / 'unsafe-eval'
- * in script-src and eliminates those OWASP ZAP findings.
+ * in script-src.
  */
 export function middleware(request: NextRequest) {
   // Cryptographically random nonce — unique per request
@@ -27,8 +27,10 @@ export function middleware(request: NextRequest) {
     "default-src 'self'",
     // nonce + strict-dynamic: no unsafe-inline / unsafe-eval needed
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
-    // Tailwind utilities and Framer Motion inject inline styles at runtime
-    "style-src 'self' 'unsafe-inline'",
+    "style-src 'self'",
+    "style-src-elem 'self'",
+    // Framer Motion and Next/Image rely on style attributes for runtime layout/animation.
+    "style-src-attr 'unsafe-inline'",
     `img-src 'self' data: blob: ${apiOrigin}${devImgSources}`,
     "font-src 'self' data:",
     `connect-src 'self' ${apiBase} ${apiOrigin}${devConnectSources}`,

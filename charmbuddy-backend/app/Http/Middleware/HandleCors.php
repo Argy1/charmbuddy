@@ -33,6 +33,19 @@ class HandleCors
         ];
     }
 
+    private function removeCorsHeaders(Response $response): void
+    {
+        foreach ([
+            'Access-Control-Allow-Origin',
+            'Access-Control-Allow-Methods',
+            'Access-Control-Allow-Headers',
+            'Access-Control-Allow-Credentials',
+            'Access-Control-Max-Age',
+        ] as $header) {
+            $response->headers->remove($header);
+        }
+    }
+
     public function handle(Request $request, Closure $next): Response
     {
         $origin = (string) $request->header('Origin', '');
@@ -53,6 +66,8 @@ class HandleCors
             foreach ($this->corsHeaders($origin) as $key => $value) {
                 $response->headers->set($key, $value);
             }
+        } else {
+            $this->removeCorsHeaders($response);
         }
 
         // Always set Vary: Origin so reverse proxies know responses differ by origin

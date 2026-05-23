@@ -15,8 +15,12 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Trust reverse proxies (load balancers, Vercel, Cloudflare, etc.) so that
         // $request->ip() returns the real client IP and throttle works correctly.
-        // Set TRUSTED_PROXIES=* in .env when deployed behind a CDN/LB.
-        $trustedProxies = env('TRUSTED_PROXIES', '127.0.0.1,::1');
+        // Production hosts such as Railway terminate TLS before Laravel, so trust
+        // forwarded headers by default there. Local development stays restricted.
+        $trustedProxies = env(
+            'TRUSTED_PROXIES',
+            env('APP_ENV') === 'production' ? '*' : '127.0.0.1,::1'
+        );
         $middleware->trustProxies(
             at: $trustedProxies,
             headers: \Illuminate\Http\Request::HEADER_X_FORWARDED_FOR

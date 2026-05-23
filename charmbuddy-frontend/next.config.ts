@@ -11,6 +11,13 @@ const fallbackPatterns: NonNullable<NextConfig["images"]>["remotePatterns"] = [
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 const remotePatterns = [...fallbackPatterns];
+const siteOrigin =
+  process.env.NEXT_PUBLIC_SITE_ORIGIN ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.NODE_ENV === "production"
+      ? "https://charmbuddy.vercel.app"
+      : "http://localhost:3000");
 
 if (apiBaseUrl) {
   try {
@@ -57,6 +64,8 @@ const securityHeaders = [
   // Prevent other origins from embedding these pages
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
   { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
+  // Avoid wildcard CORS on document responses while keeping same-origin use normal.
+  { key: "Access-Control-Allow-Origin", value: siteOrigin },
 ];
 
 // ---------------------------------------------------------------------------
@@ -64,6 +73,7 @@ const securityHeaders = [
 // ---------------------------------------------------------------------------
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
   images: {
     remotePatterns,
   },

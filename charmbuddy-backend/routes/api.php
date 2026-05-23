@@ -26,9 +26,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Strict throttle for auth endpoints: 10 attempts per minute per IP
-Route::middleware('throttle:10,1')->prefix('auth')->group(function () {
+Route::middleware('throttle:10,1')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+
+    Route::prefix('auth')->group(function () {
+        Route::post('/register', [AuthController::class, 'register']);
+        Route::post('/login', [AuthController::class, 'login']);
+    });
 });
 
 Route::prefix('products')->group(function () {
