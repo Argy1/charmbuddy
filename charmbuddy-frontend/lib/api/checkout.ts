@@ -28,7 +28,6 @@ type RajaOngkirCostResult = {
 const COURIERS = ["jne", "tiki", "pos"] as const;
 const DEFAULT_ORIGIN_ID = Number(process.env.NEXT_PUBLIC_SHIPPING_ORIGIN_ID ?? 501);
 const DEFAULT_WEIGHT_GRAMS = 1000;
-const USE_DUMMY_SHIPPING = process.env.NEXT_PUBLIC_USE_DUMMY_SHIPPING === "true";
 
 function toNumber(value: unknown, fallback = 0) {
   const parsed = Number(value);
@@ -132,122 +131,24 @@ function normalizeCities(payload: unknown): ShippingCity[] {
     });
 }
 
-function getDummyProvinces(): ShippingProvince[] {
-  return [
-    { province_id: 6, province: "DKI Jakarta" },
-    { province_id: 3, province: "Banten" },
-    { province_id: 12, province: "Jawa Barat" },
-    { province_id: 8, province: "Jawa Tengah" },
-  ];
-}
-
-function getDummyCities(provinceId?: number): ShippingCity[] {
-  const cityMap: Record<number, ShippingCity[]> = {
-    6: [
-      { city_id: 154, province_id: 6, city_name: "Jakarta Pusat", type: "city" },
-      { city_id: 155, province_id: 6, city_name: "Jakarta Selatan", type: "city" },
-      { city_id: 156, province_id: 6, city_name: "Jakarta Barat", type: "city" },
-      { city_id: 157, province_id: 6, city_name: "Jakarta Timur", type: "city" },
-      { city_id: 158, province_id: 6, city_name: "Jakarta Utara", type: "city" },
-      { city_id: 159, province_id: 6, city_name: "Kota Jakarta Timur", type: "city" },
-    ],
-    3: [
-      { city_id: 152, province_id: 3, city_name: "Kota Tangerang", type: "city" },
-      { city_id: 153, province_id: 3, city_name: "Serang", type: "city" },
-    ],
-    12: [
-      { city_id: 165, province_id: 12, city_name: "Bandung", type: "city" },
-      { city_id: 167, province_id: 12, city_name: "Bogor", type: "city" },
-    ],
-  };
-
-  return cityMap[provinceId ?? 0] ?? [];
-}
-
-function getDummyShippingOptions(): ShippingOption[] {
-  return [
-    { courier: "dummy JNE", service: "OKE", eta: "1-2 hari", cost: 25000 },
-    { courier: "dummy JNE", service: "REG", eta: "3-5 hari", cost: 18000 },
-    { courier: "dummy TIKI", service: "ONS", eta: "1-2 hari", cost: 27500 },
-    { courier: "dummy TIKI", service: "REG", eta: "3-4 hari", cost: 16500 },
-    { courier: "cek env.local kalo mau hit api aslinya", service: "REGULAR", eta: "3-7 hari", cost: 14000 },
-  ];
-}
-
-function fallbackProvinces(): ShippingProvince[] {
-  return getDummyProvinces();
-}
-
-function fallbackCities(provinceId?: number): ShippingCity[] {
-  return getDummyCities(provinceId);
-}
-
 export async function getShippingProvincesApi() {
-  if (USE_DUMMY_SHIPPING) {
-    return {
-      success: true,
-      message: "[DUMMY] Provinces loaded.",
-      data: getDummyProvinces(),
-    };
-  }
+  const response = await apiRequest<unknown>("/shipping/provinces");
 
-  try {
-    const response = await apiRequest<unknown>("/shipping/provinces");
-
-    if (!response.data || (Array.isArray(response.data) && response.data.length === 0)) {
-      return {
-        ...response,
-        data: fallbackProvinces(),
-        message: `${response.message} [FALLBACK] Provinces loaded from local data.`,
-      };
-    }
-
-    return {
-      ...response,
-      data: normalizeProvinces(response.data),
-    };
-  } catch {
-    return {
-      success: true,
-      message: "[FALLBACK] Provinces loaded from local data.",
-      data: fallbackProvinces(),
-    };
-  }
+  return {
+    ...response,
+    data: normalizeProvinces(response.data),
+  };
 }
 
 export async function getShippingCitiesApi(provinceId: number) {
-  if (USE_DUMMY_SHIPPING) {
-    return {
-      success: true,
-      message: "[DUMMY] Cities loaded.",
-      data: getDummyCities(provinceId),
-    };
-  }
+  const response = await apiRequest<unknown>("/shipping/cities", {
+    query: { province_id: provinceId },
+  });
 
-  try {
-    const response = await apiRequest<unknown>("/shipping/cities", {
-      query: { province_id: provinceId },
-    });
-
-    if (!response.data || (Array.isArray(response.data) && response.data.length === 0)) {
-      return {
-        ...response,
-        data: fallbackCities(provinceId),
-        message: `${response.message} [FALLBACK] Cities loaded from local data.`,
-      };
-    }
-
-    return {
-      ...response,
-      data: normalizeCities(response.data),
-    };
-  } catch {
-    return {
-      success: true,
-      message: "[FALLBACK] Cities loaded from local data.",
-      data: fallbackCities(provinceId),
-    };
-  }
+  return {
+    ...response,
+    data: normalizeCities(response.data),
+  };
 }
 
 export async function getShippingOptionsApi(token: string, payload: ShippingCostPayload = {}): Promise<ApiSuccess<ShippingOptionsPayload>> {
@@ -257,19 +158,6 @@ export async function getShippingOptionsApi(token: string, payload: ShippingCost
     throw new ApiError("Destination ongkir wajib berasal dari alamat user.", 422);
   }
   const destination = payload.destination_id;
-
-  // Return dummy shipping options for testing when API is rate-limited
-  if (USE_DUMMY_SHIPPING) {
-    const dummyOptions = getDummyShippingOptions();
-    return {
-      success: true,
-      message: "[DUMMY] Shipping options loaded.",
-      data: {
-        weight_grams: weight,
-        options: dummyOptions,
-      },
-    };
-  }
 
   const options: ShippingOption[] = [];
   const failureMessages: string[] = [];

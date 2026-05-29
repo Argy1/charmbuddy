@@ -26,6 +26,20 @@ class SecurityHeadersTest extends TestCase
             ->assertHeader('Access-Control-Allow-Credentials', 'true');
     }
 
+    public function test_preflight_allows_private_network_for_configured_origin(): void
+    {
+        $this->withHeaders([
+            'Origin' => 'https://charmbuddy.vercel.app',
+            'Access-Control-Request-Method' => 'POST',
+            'Access-Control-Request-Headers' => 'content-type, authorization',
+            'Access-Control-Request-Private-Network' => 'true',
+        ])
+            ->options('/api/login')
+            ->assertNoContent()
+            ->assertHeader('Access-Control-Allow-Origin', 'https://charmbuddy.vercel.app')
+            ->assertHeader('Access-Control-Allow-Private-Network', 'true');
+    }
+
     public function test_hsts_is_set_when_forwarded_proto_is_https(): void
     {
         $this->withHeader('X-Forwarded-Proto', 'https')

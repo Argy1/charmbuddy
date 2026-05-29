@@ -59,6 +59,9 @@ class HandleCors
         // Short-circuit preflight before hitting the application stack
         if ($request->isMethod('OPTIONS')) {
             $headers = $originAllowed ? $this->corsHeaders($origin) : [];
+            if ($originAllowed && $request->header('Access-Control-Request-Private-Network') === 'true') {
+                $headers['Access-Control-Allow-Private-Network'] = 'true';
+            }
             // Always include Vary: Origin on preflight so proxies cache per-origin
             $headers['Vary'] = 'Origin';
 
