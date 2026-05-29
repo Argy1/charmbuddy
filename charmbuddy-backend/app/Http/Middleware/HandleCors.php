@@ -10,16 +10,21 @@ class HandleCors
 {
     private function allowedOrigins(): array
     {
-        $default = implode(',', [
+        $defaultOrigins = [
             'http://localhost:3000',
             'http://localhost:3001',
             'http://127.0.0.1:3000',
             'http://127.0.0.1:3001',
-        ]);
+            'https://charmbuddy.vercel.app',
+        ];
 
-        return array_values(array_filter(
-            array_map('trim', explode(',', env('CORS_ALLOWED_ORIGINS', $default)))
-        ));
+        $configuredOrigins = array_filter(
+            array_map('trim', explode(',', (string) env('CORS_ALLOWED_ORIGINS', '')))
+        );
+
+        return array_values(array_unique(array_filter(
+            array_merge($defaultOrigins, $configuredOrigins)
+        )));
     }
 
     private function corsHeaders(string $origin): array
