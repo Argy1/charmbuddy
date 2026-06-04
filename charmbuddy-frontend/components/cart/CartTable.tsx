@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import Reveal from "@/components/motion/Reveal";
 import AppImage from "@/components/shared/AppImage";
 import { useCart } from "@/lib/cart-context";
+import { formatRupiah } from "@/lib/currency";
 
 function QtyControl({ qty, onInc, onDec }: { qty: number; onInc: () => void; onDec: () => void }) {
   const prefersReducedMotion = useReducedMotion();
@@ -65,7 +66,7 @@ export default function CartTable() {
                     <p className="font-fanlste text-[14px] leading-[normal] tracking-[2px] text-black sm:text-[15px] sm:tracking-[2.2px]">{item.name}</p>
                     <div className="flex flex-wrap items-center justify-between gap-[6px]">
                       <QtyControl onDec={() => decrement(item.id)} onInc={() => increment(item.id)} qty={item.qty} />
-                      <p className="font-satoshi text-[17px] leading-[normal] tracking-[2.5px] text-black sm:text-[20px]">${item.price.toFixed(2)}</p>
+                      <p className="font-satoshi text-[17px] leading-[normal] tracking-[2.5px] text-black sm:text-[20px]">{formatRupiah(item.price)}</p>
                     </div>
                   </div>
                   <motion.button className="shrink-0 self-start rounded-[5px] bg-[rgba(149,178,254,0.7)] p-[4px]" onClick={() => removeItem(item.id)} type="button" whileHover={prefersReducedMotion ? undefined : { scale: 1.06 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.92 }}>
@@ -79,7 +80,7 @@ export default function CartTable() {
                     <p className="font-fanlste text-[16px] leading-[normal] tracking-[2.4px] text-black">{item.name}</p>
                   </div>
                   <QtyControl onDec={() => decrement(item.id)} onInc={() => increment(item.id)} qty={item.qty} />
-                  <p className="font-satoshi text-[24px] leading-[normal] tracking-[3.6px] text-black">${item.price.toFixed(2)}</p>
+                  <p className="font-satoshi text-[24px] leading-[normal] tracking-[3.6px] text-black">{formatRupiah(item.price)}</p>
                 </div>
               </div>
               <motion.button className="hidden h-[24px] w-[24px] shrink-0 rounded-[5px] bg-[rgba(149,178,254,0.7)] p-[4px] xl:grid xl:place-items-center" onClick={() => removeItem(item.id)} type="button" whileHover={prefersReducedMotion ? undefined : { scale: 1.06 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.92 }}>

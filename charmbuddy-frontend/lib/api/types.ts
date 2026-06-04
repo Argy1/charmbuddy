@@ -312,6 +312,8 @@ export type AdminPayment = {
   amount: string | number;
   status: AdminPaymentStatus;
   payment_proof_path: string | null;
+  proof_path?: string | null;
+  proof_url?: string | null;
   created_at: string;
   updated_at: string;
   user?: AdminUserSummary;

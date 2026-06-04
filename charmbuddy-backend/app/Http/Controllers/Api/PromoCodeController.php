@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Services\PromoCodeService;
+use App\Support\Currency;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -34,7 +35,7 @@ class PromoCodeController extends Controller
         }
 
         $subtotal = (float) $cart->items->sum(function ($item) {
-            return (float) ($item->product?->price ?? 0) * (int) $item->quantity;
+            return Currency::normalizeLegacyRupiah($item->product?->price ?? 0) * (int) $item->quantity;
         });
 
         $result = $this->promoCodeService->resolve($validated['code'], $subtotal);

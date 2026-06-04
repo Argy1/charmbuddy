@@ -8,6 +8,7 @@ import PaymentMethodModal from "@/components/modals/PaymentMethodModal";
 import AmbientBackdrop from "@/components/motion/AmbientBackdrop";
 import Footer from "@/components/shared/Footer";
 import HeaderTemplate from "@/components/shared/HeaderTemplate";
+import RouteLoadingState from "@/components/shared/RouteLoadingState";
 import { uploadPaymentProofApi } from "@/lib/api/orders";
 import { ApiError } from "@/lib/api/client";
 import { useAuth } from "@/lib/auth-context";
@@ -30,7 +31,7 @@ function PaymentMethodPageContent() {
   const orderId = Number(orderParam);
 
   if (!isAllowed) {
-    return null;
+    return <RouteLoadingState label="Memuat metode pembayaran..." />;
   }
 
   const handleBrowse = () => {
@@ -106,7 +107,7 @@ function PaymentMethodPageContent() {
 
 export default function PaymentMethodPage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<RouteLoadingState label="Memuat metode pembayaran..." />}>
       <PaymentMethodPageContent />
     </Suspense>
   );

@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 
 import type { ShippingOption } from "@/lib/api/types";
+import { formatRupiah, formatRupiahRaw } from "@/lib/currency";
 
 type MobileReviewCardProps = {
   totalItems: number;
@@ -45,11 +46,11 @@ export default function MobileReviewCard({
 
       <div className="space-y-[8px] rounded-[14px] border border-black/15 bg-white/85 px-[10px] py-[10px]">
         <Row label="Items" value={`${totalItems}x`} />
-        <Row label="Subtotal" value={`$${subtotal.toFixed(2)}`} />
-        <Row label="Discount" value={`-$${discountAmount.toFixed(2)}`} />
-        <Row label="Shipping" value={`+$${shippingCost.toFixed(2)}`} />
+        <Row label="Subtotal" value={formatRupiah(subtotal)} />
+        <Row label="Discount" value={`-${formatRupiahRaw(discountAmount)}`} />
+        <Row label="Shipping" value={`+${formatRupiahRaw(shippingCost)}`} />
         <div className="h-[1px] w-full bg-black/15" />
-        <Row label="Total" strong value={`$${finalTotal.toFixed(2)}`} />
+        <Row label="Total" strong value={formatRupiahRaw(finalTotal)} />
       </div>
 
       <div className="mt-[10px] rounded-[12px] border border-black/15 bg-white/85 px-[10px] py-[9px]">

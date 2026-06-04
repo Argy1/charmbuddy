@@ -7,6 +7,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import Reveal from "@/components/motion/Reveal";
 import AppImage from "@/components/shared/AppImage";
 import { useCart } from "@/lib/cart-context";
+import { formatRupiah } from "@/lib/currency";
 import { routes } from "@/lib/routes";
 
 const DISCOUNT_DRAFT_KEY = "cb_discount_code_draft";
@@ -88,7 +89,7 @@ export default function CartSummary() {
                     <div className="flex min-w-0 flex-1 flex-col justify-between gap-[6px]">
                       <div className="flex w-full items-start justify-between gap-[8px] font-satoshi text-[15px] font-bold leading-[normal] tracking-[2px] text-black sm:text-[18px] sm:tracking-[2.7px]">
                         <p className="min-w-0 flex-1 break-words">{item.name}</p>
-                        <p className="shrink-0">${item.price.toFixed(2)}</p>
+                        <p className="shrink-0">{formatRupiah(item.price)}</p>
                       </div>
                       <div className="flex w-full items-center justify-between gap-[8px]">
                         <p className="font-satoshi text-[12px] font-medium leading-[normal] tracking-[1.8px] text-[rgba(0,0,0,0.5)] sm:text-[14px] sm:tracking-[2.1px]">Qty: {item.qty}</p>
@@ -111,11 +112,11 @@ export default function CartSummary() {
             <div className="flex w-full flex-col gap-[7px] font-satoshi text-[24px] leading-[normal] tracking-[3.6px] text-black">
                 <div className="flex w-full items-center justify-between">
                   <p>Subtotal</p>
-                  <p>${subtotal.toFixed(2)}</p>
+                  <p>{formatRupiah(subtotal)}</p>
                 </div>
                 <div className="flex w-full items-center justify-between">
                   <p>Total</p>
-                  <p>${subtotal.toFixed(2)}</p>
+                  <p>{formatRupiah(subtotal)}</p>
                 </div>
               </div>
               <motion.div whileHover={{ y: -2, scale: 1.03 }} whileTap={{ scale: 0.96 }}>

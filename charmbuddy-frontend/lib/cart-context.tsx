@@ -5,6 +5,7 @@ import { API_BASE_URL } from "@/lib/api/client";
 import { addCartItemApi, clearCartApi, getCartApi, mergeCartApi, removeCartItemApi, updateCartItemApi } from "@/lib/api/cart";
 import type { Cart as ApiCart } from "@/lib/api/types";
 import { useAuth } from "@/lib/auth-context";
+import { normalizeLegacyRupiah } from "@/lib/currency";
 
 export type CartItem = {
   id: string; // cart line id (server) or generated key (guest)
@@ -43,7 +44,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (raw) {
         const parsed = JSON.parse(raw) as CartItem[];
         if (Array.isArray(parsed)) {
-          setItems(parsed);
+          setItems(parsed.map((item) => ({ ...item, price: normalizeLegacyRupiah(item.price) })));
         }
       }
     } catch {
@@ -107,6 +108,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       totalItems: items.reduce((acc, item) => acc + item.qty, 0),
       subtotal: items.reduce((acc, item) => acc + item.qty * item.price, 0),
       addItem: (item, qty = 1) => {
+        const normalizedItem = { ...item, price: normalizeLegacyRupiah(item.price) };
+
         if (isLoggedIn && token && item.productId > 0) {
           void (async () => {
             try {
@@ -124,7 +127,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             if (existing) {
               return prev.map((p) => (p.id === existing.id ? { ...p, qty: p.qty + qty } : p));
             }
-            return [...prev, { ...item, qty }];
+            return [...prev, { ...normalizedItem, qty }];
         });
       },
       increment: (id) => {
@@ -218,7 +221,7 @@ function readGuestItems(): CartItem[] {
     }
     const parsed = JSON.parse(raw) as CartItem[];
     if (Array.isArray(parsed)) {
-      return parsed;
+      return parsed.map((item) => ({ ...item, price: normalizeLegacyRupiah(item.price) }));
     }
     return [];
   } catch {
@@ -252,7 +255,7 @@ function mapApiCartToItems(cart: ApiCart): CartItem[] {
     slug: line.product?.slug ?? `product-${line.product_id}`,
     name: line.product?.name ?? "Unknown Product",
     qty: line.qty ?? (line as unknown as { quantity?: number }).quantity ?? 0,
-    price: Number(line.product?.price ?? 0),
+    price: normalizeLegacyRupiah(line.product?.price ?? 0),
     image: resolveImagePath(line.product?.image_path),
   }));
 }

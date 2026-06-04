@@ -7,6 +7,7 @@ import AppImage from "@/components/shared/AppImage";
 import { listCategoriesApi } from "@/lib/api/categories";
 import { springs } from "@/lib/motion";
 import type { Category } from "@/lib/api/types";
+import { denormalizeRupiahFilterValue, formatRupiah } from "@/lib/currency";
 
 const PRICE_MIN = 0;
 const PRICE_MAX = 300;
@@ -60,6 +61,7 @@ function flattenCategories(categories: Category[]): FlatCategory[] {
 export default function FilterSidebar({ mobile = false, filters, onChange, onReset }: FilterSidebarProps) {
   const prefersReducedMotion = useReducedMotion();
   const [categories, setCategories] = useState<FlatCategory[]>([]);
+  const [categoryError, setCategoryError] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(true);
   const [priceOpen, setPriceOpen] = useState(true);
   const sliderMin = Math.max(PRICE_MIN, Math.min(filters.minPrice ?? PRICE_MIN, filters.maxPrice ?? PRICE_MAX));
@@ -76,15 +78,14 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
         if (!isMounted) {
           return;
         }
+        setCategoryError(false);
         setCategories(flattenCategories(response.data).slice(0, 8));
       } catch {
-        setCategories([
-          { id: 1, name: "Necklace" },
-          { id: 2, name: "Bracelet" },
-          { id: 3, name: "Bag Charm" },
-          { id: 4, name: "Phonestrap" },
-          { id: 5, name: "Crochet Stuff" },
-        ]);
+        if (!isMounted) {
+          return;
+        }
+        setCategoryError(true);
+        setCategories([]);
       }
     };
 
@@ -138,6 +139,7 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
             </button>
             <div className={`${categoryOpen ? "flex" : "hidden"} flex-col gap-[11px]`}>
               <CategoryRow label="All Categories" onClick={() => onChange({ categoryId: null })} selected={filters.categoryId === null} />
+              {categoryError ? <p className="font-satoshi text-[13px] text-black/60">Kategori belum bisa dimuat.</p> : null}
               {categories.slice(0, 5).map((category) => (
                 <CategoryRow key={category.id} label={category.name} onClick={() => onChange({ categoryId: category.id })} selected={filters.categoryId === category.id} />
               ))}
@@ -190,8 +192,8 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
                   value={sliderMax}
                 />
                 <div className="absolute left-0 top-[32px] flex w-full items-center justify-between text-[14px] font-[500] text-black">
-                  <span>${sliderMin}</span>
-                  <span>${sliderMax}</span>
+                  <span>{formatRupiah(sliderMin)}</span>
+                  <span>{formatRupiah(sliderMax)}</span>
                 </div>
               </div>
 
@@ -204,8 +206,8 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
                       onChange({ minPrice: null });
                       return;
                     }
-                    const parsed = Number(value);
-                    if (!Number.isFinite(parsed)) {
+                    const parsed = denormalizeRupiahFilterValue(value);
+                    if (parsed === null) {
                       onChange({ minPrice: null });
                       return;
                     }
@@ -223,8 +225,8 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
                       onChange({ maxPrice: null });
                       return;
                     }
-                    const parsed = Number(value);
-                    if (!Number.isFinite(parsed)) {
+                    const parsed = denormalizeRupiahFilterValue(value);
+                    if (parsed === null) {
                       onChange({ maxPrice: null });
                       return;
                     }
@@ -239,10 +241,10 @@ export default function FilterSidebar({ mobile = false, filters, onChange, onRes
               <div className="flex w-[240px] flex-col gap-[8px]">
                 <p className="font-satoshi text-[14px] font-[500] leading-[20px] text-[#0a0a0a]">Quick Select:</p>
                 <div className="grid grid-cols-2 gap-y-[8px] gap-x-[40px]">
-                  <QuickButton active={filters.minPrice === null && filters.maxPrice === 50} label="Under $50" onClick={() => onChange({ minPrice: null, maxPrice: 50 })} />
-                  <QuickButton active={filters.minPrice === 50 && filters.maxPrice === 100} label="$50-$100" onClick={() => onChange({ minPrice: 50, maxPrice: 100 })} />
-                  <QuickButton active={filters.minPrice === 100 && filters.maxPrice === 150} label="$100-$150" onClick={() => onChange({ minPrice: 100, maxPrice: 150 })} />
-                  <QuickButton active={filters.minPrice === 150 && filters.maxPrice === null} label="$150+" onClick={() => onChange({ minPrice: 150, maxPrice: null })} />
+                  <QuickButton active={filters.minPrice === null && filters.maxPrice === 50} label="< Rp50rb" onClick={() => onChange({ minPrice: null, maxPrice: 50 })} />
+                  <QuickButton active={filters.minPrice === 50 && filters.maxPrice === 100} label="Rp50-100rb" onClick={() => onChange({ minPrice: 50, maxPrice: 100 })} />
+                  <QuickButton active={filters.minPrice === 100 && filters.maxPrice === 150} label="Rp100-150rb" onClick={() => onChange({ minPrice: 100, maxPrice: 150 })} />
+                  <QuickButton active={filters.minPrice === 150 && filters.maxPrice === null} label="Rp150rb+" onClick={() => onChange({ minPrice: 150, maxPrice: null })} />
                 </div>
               </div>
             </div>

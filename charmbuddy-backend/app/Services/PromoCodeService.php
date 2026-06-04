@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\PromoCode;
+use App\Support\Currency;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 
@@ -60,7 +61,7 @@ class PromoCodeService
             ]);
         }
 
-        $minSubtotal = (float) ($promo->min_subtotal ?? 0);
+        $minSubtotal = Currency::normalizeLegacyRupiah($promo->min_subtotal ?? 0);
         if ($minSubtotal > 0 && $subtotal < $minSubtotal) {
             throw ValidationException::withMessages([
                 'code' => 'Subtotal belum memenuhi minimum untuk kode diskon ini.',
@@ -69,9 +70,9 @@ class PromoCodeService
 
         $rawDiscount = $promo->type === 'percentage'
             ? ($subtotal * ((float) $promo->value / 100))
-            : (float) $promo->value;
+            : Currency::normalizeLegacyRupiah($promo->value);
 
-        $maxDiscount = (float) ($promo->max_discount_amount ?? 0);
+        $maxDiscount = Currency::normalizeLegacyRupiah($promo->max_discount_amount ?? 0);
         $discountAmount = $maxDiscount > 0 ? min($rawDiscount, $maxDiscount) : $rawDiscount;
         $discountAmount = max(0, min($discountAmount, $subtotal));
 
@@ -79,7 +80,7 @@ class PromoCodeService
             'promo' => $promo,
             'code' => $promo->code,
             'type' => $promo->type,
-            'value' => (float) $promo->value,
+            'value' => $promo->type === 'percentage' ? (float) $promo->value : Currency::normalizeLegacyRupiah($promo->value),
             'discount_amount' => round($discountAmount, 2),
             'subtotal' => round($subtotal, 2),
             'total_after_discount' => round(max(0, $subtotal - $discountAmount), 2),

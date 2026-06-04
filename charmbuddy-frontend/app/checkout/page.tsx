@@ -18,13 +18,15 @@ import AmbientBackdrop from "@/components/motion/AmbientBackdrop";
 import Reveal from "@/components/motion/Reveal";
 import Footer from "@/components/shared/Footer";
 import HeaderTemplate from "@/components/shared/HeaderTemplate";
+import RouteLoadingState from "@/components/shared/RouteLoadingState";
 import { listAddressesApi } from "@/lib/api/addresses";
 import { getCartApi } from "@/lib/api/cart";
 import { checkoutApi, getShippingCitiesApi, getShippingOptionsApi, getShippingProvincesApi, validateDiscountCodeApi } from "@/lib/api/checkout";
 import { ApiError } from "@/lib/api/client";
-import type { DiscountValidation, ShippingOption, UserAddress } from "@/lib/api/types";
+import type { DiscountValidation, ShippingCity, ShippingOption, ShippingProvince, UserAddress } from "@/lib/api/types";
 import { useAuth } from "@/lib/auth-context";
 import { useCart } from "@/lib/cart-context";
+import { formatRupiahRaw } from "@/lib/currency";
 import { routes } from "@/lib/routes";
 import { useRequireAuth } from "@/lib/use-require-auth";
 
@@ -47,6 +49,7 @@ const CHECKOUT_STEPS: Array<{ id: CheckoutStep; label: string }> = [
 const DISCOUNT_DRAFT_KEY = "cb_discount_code_draft";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DEFAULT_ORIGIN_ID = Number(process.env.NEXT_PUBLIC_SHIPPING_ORIGIN_ID ?? 501);
+const MANUAL_ADDRESS_VALUE = "manual";
 
 type DiscountFeedback = {
   type: "success" | "error";
@@ -125,6 +128,12 @@ export default function CheckoutPage() {
   const [formErrors, setFormErrors] = useState<CheckoutValidationErrors>({});
   const [addresses, setAddresses] = useState<UserAddress[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+  const [isManualAddress, setIsManualAddress] = useState(false);
+  const [shippingProvinces, setShippingProvinces] = useState<ShippingProvince[]>([]);
+  const [shippingCities, setShippingCities] = useState<ShippingCity[]>([]);
+  const [manualProvinceId, setManualProvinceId] = useState<number | null>(null);
+  const [manualCityId, setManualCityId] = useState<number | null>(null);
+  const [isManualLocationLoading, setIsManualLocationLoading] = useState(false);
   const [isAddressLoading, setIsAddressLoading] = useState(false);
   const [shippingOptions, setShippingOptions] = useState<ShippingOption[]>([]);
   const [selectedShipping, setSelectedShipping] = useState<ShippingOption | null>(null);
@@ -198,12 +207,14 @@ export default function CheckoutPage() {
 
         const defaultAddress = loadedAddresses.find((entry) => entry.is_default) ?? loadedAddresses[0] ?? null;
         setSelectedAddressId(defaultAddress?.id ?? null);
+        setIsManualAddress(!defaultAddress);
       } catch {
         if (!isMounted) {
           return;
         }
         setAddresses([]);
         setSelectedAddressId(null);
+        setIsManualAddress(true);
       } finally {
         if (isMounted) {
           setIsAddressLoading(false);
@@ -218,13 +229,77 @@ export default function CheckoutPage() {
     };
   }, [token]);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadProvinces = async () => {
+      setIsManualLocationLoading(true);
+      try {
+        const response = await getShippingProvincesApi();
+        if (isMounted) {
+          setShippingProvinces(response.data);
+        }
+      } catch {
+        if (isMounted) {
+          setShippingProvinces([]);
+        }
+      } finally {
+        if (isMounted) {
+          setIsManualLocationLoading(false);
+        }
+      }
+    };
+
+    void loadProvinces();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!manualProvinceId) {
+      setShippingCities([]);
+      setManualCityId(null);
+      return;
+    }
+
+    let isMounted = true;
+
+    const loadCities = async () => {
+      setIsManualLocationLoading(true);
+      try {
+        const response = await getShippingCitiesApi(manualProvinceId);
+        if (isMounted) {
+          setShippingCities(response.data);
+          setManualCityId(null);
+        }
+      } catch {
+        if (isMounted) {
+          setShippingCities([]);
+          setManualCityId(null);
+        }
+      } finally {
+        if (isMounted) {
+          setIsManualLocationLoading(false);
+        }
+      }
+    };
+
+    void loadCities();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [manualProvinceId]);
+
   const selectedAddress = useMemo(
     () => addresses.find((entry) => entry.id === selectedAddressId) ?? null,
     [addresses, selectedAddressId],
   );
 
   useEffect(() => {
-    if (!selectedAddress) {
+    if (!selectedAddress || isManualAddress) {
       return;
     }
 
@@ -238,7 +313,7 @@ export default function CheckoutPage() {
       address: `${selectedAddress.address_line}, ${selectedAddress.city}, ${selectedAddress.province} ${selectedAddress.postal_code}`.trim(),
       description: selectedAddress.notes ?? prev.description,
     }));
-  }, [selectedAddress]);
+  }, [isManualAddress, selectedAddress]);
 
   const loadShippingOptions = useCallback(async () => {
     if (!token) {
@@ -248,44 +323,55 @@ export default function CheckoutPage() {
       return;
     }
 
-    if (!selectedAddress) {
-      setShippingOptions([]);
-      setSelectedShipping(null);
-      setShippingError("Pilih alamat tersimpan terlebih dahulu untuk hitung ongkir.");
-      return;
-    }
-
     setIsShippingLoading(true);
     setShippingError(null);
 
     try {
       let destinationId: number | null = null;
 
-      const provinceResponse = await getShippingProvincesApi();
-      const normalizedTargetProvince = normalizeLocationText(selectedAddress.province);
-      const matchedProvince =
-        provinceResponse.data.find((entry) => normalizeLocationText(entry.province) === normalizedTargetProvince) ??
-        provinceResponse.data.find((entry) => normalizeLocationText(entry.province).includes(normalizedTargetProvince)) ??
-        null;
+      if (isManualAddress) {
+        if (!manualCityId) {
+          setShippingOptions([]);
+          setSelectedShipping(null);
+          setShippingError("Pilih provinsi dan kota/kabupaten untuk memuat opsi pengiriman.");
+          return;
+        }
 
-      if (!matchedProvince) {
-        throw new Error(`Provinsi "${selectedAddress.province}" tidak ditemukan di data RajaOngkir.`);
+        destinationId = manualCityId;
+      } else {
+        if (!selectedAddress) {
+          setShippingOptions([]);
+          setSelectedShipping(null);
+          setShippingError("Pilih alamat tersimpan atau isi alamat manual untuk hitung ongkir.");
+          return;
+        }
+
+        const provinceResponse = await getShippingProvincesApi();
+        const normalizedTargetProvince = normalizeLocationText(selectedAddress.province);
+        const matchedProvince =
+          provinceResponse.data.find((entry) => normalizeLocationText(entry.province) === normalizedTargetProvince) ??
+          provinceResponse.data.find((entry) => normalizeLocationText(entry.province).includes(normalizedTargetProvince)) ??
+          null;
+
+        if (!matchedProvince) {
+          throw new Error(`Provinsi "${selectedAddress.province}" tidak ditemukan di data RajaOngkir.`);
+        }
+
+        const cityResponse = await getShippingCitiesApi(matchedProvince.province_id);
+        const normalizedTargetCity = normalizeLocationText(selectedAddress.city);
+        const matchedCity =
+          cityResponse.data.find((entry) => normalizeLocationText(entry.city_name) === normalizedTargetCity) ??
+          cityResponse.data.find((entry) => normalizeLocationText(`${entry.type ?? ""}${entry.city_name}`) === normalizedTargetCity) ??
+          cityResponse.data.find((entry) => normalizeLocationText(entry.city_name).includes(normalizedTargetCity)) ??
+          cityResponse.data[0] ??
+          null;
+
+        if (!matchedCity) {
+          throw new Error(`Kota "${selectedAddress.city}" tidak ditemukan di provinsi terpilih.`);
+        }
+
+        destinationId = matchedCity.city_id;
       }
-
-      const cityResponse = await getShippingCitiesApi(matchedProvince.province_id);
-      const normalizedTargetCity = normalizeLocationText(selectedAddress.city);
-      const matchedCity =
-        cityResponse.data.find((entry) => normalizeLocationText(entry.city_name) === normalizedTargetCity) ??
-        cityResponse.data.find((entry) => normalizeLocationText(`${entry.type ?? ""}${entry.city_name}`) === normalizedTargetCity) ??
-        cityResponse.data.find((entry) => normalizeLocationText(entry.city_name).includes(normalizedTargetCity)) ??
-        cityResponse.data[0] ?? // Fallback to first city if no match found
-        null;
-
-      if (!matchedCity) {
-        throw new Error(`Kota "${selectedAddress.city}" tidak ditemukan di provinsi terpilih.`);
-      }
-
-      destinationId = matchedCity.city_id;
 
       const cartResponse = await getCartApi(token);
       const weightGrams = Math.max(
@@ -337,7 +423,7 @@ export default function CheckoutPage() {
     } finally {
       setIsShippingLoading(false);
     }
-  }, [selectedAddress, token, trackCheckoutEvent]);
+  }, [isManualAddress, manualCityId, selectedAddress, token, trackCheckoutEvent]);
 
   useEffect(() => {
     void loadShippingOptions();
@@ -423,10 +509,21 @@ export default function CheckoutPage() {
   };
 
   const handleAddressSelection = (addressIdRaw: string) => {
+    if (addressIdRaw === MANUAL_ADDRESS_VALUE) {
+      setIsManualAddress(true);
+      setSelectedAddressId(null);
+      setShippingOptions([]);
+      setSelectedShipping(null);
+      setShippingError("Pilih provinsi dan kota/kabupaten untuk memuat opsi pengiriman.");
+      setCheckoutError(null);
+      return;
+    }
+
     const addressId = Number(addressIdRaw);
     if (!Number.isFinite(addressId)) {
       return;
     }
+    setIsManualAddress(false);
     setSelectedAddressId(addressId);
     setCheckoutError(null);
   };
@@ -585,7 +682,7 @@ export default function CheckoutPage() {
     if (uiState.currentStep === "voucher") {
       return "Continue to Review";
     }
-    return isSubmitting ? "Processing..." : `Pay $${finalTotal.toFixed(2)}`;
+    return isSubmitting ? "Processing..." : `Pay ${formatRupiahRaw(finalTotal)}`;
   }, [finalTotal, isSubmitting, uiState.currentStep]);
 
   const mobilePrimaryDisabled = useMemo(() => {
@@ -603,8 +700,59 @@ export default function CheckoutPage() {
 
   const mobileSecondaryLabel = uiState.currentStep === "address" ? undefined : "Back";
 
+  const renderManualLocationControls = () =>
+    isManualAddress ? (
+      <section className="w-full rounded-[14px] border border-white/70 bg-[rgba(255,255,255,0.6)] px-[14px] py-[12px] backdrop-blur-[12px]">
+        <p className="font-satoshi text-[13px] font-black tracking-[1.2px] text-black/70">Lokasi Ongkir Manual</p>
+        <div className="mt-[8px] grid grid-cols-1 gap-[8px] sm:grid-cols-2">
+          <select
+            className="h-[42px] w-full rounded-[10px] border border-black/20 bg-white px-[10px] font-satoshi text-[13px] tracking-[0.8px] text-black"
+            disabled={isManualLocationLoading && shippingProvinces.length === 0}
+            onChange={(event) => {
+              const nextProvinceId = Number(event.target.value);
+              setManualProvinceId(Number.isFinite(nextProvinceId) && nextProvinceId > 0 ? nextProvinceId : null);
+              setManualCityId(null);
+              setShippingOptions([]);
+              setSelectedShipping(null);
+              setShippingError("Pilih kota/kabupaten untuk memuat opsi pengiriman.");
+            }}
+            value={manualProvinceId ?? ""}
+          >
+            <option value="">Pilih provinsi</option>
+            {shippingProvinces.map((province) => (
+              <option key={province.province_id} value={province.province_id}>
+                {province.province}
+              </option>
+            ))}
+          </select>
+          <select
+            className="h-[42px] w-full rounded-[10px] border border-black/20 bg-white px-[10px] font-satoshi text-[13px] tracking-[0.8px] text-black"
+            disabled={!manualProvinceId || isManualLocationLoading}
+            onChange={(event) => {
+              const nextCityId = Number(event.target.value);
+              setManualCityId(Number.isFinite(nextCityId) && nextCityId > 0 ? nextCityId : null);
+              setShippingOptions([]);
+              setSelectedShipping(null);
+              setShippingError(nextCityId ? null : "Pilih kota/kabupaten untuk memuat opsi pengiriman.");
+            }}
+            value={manualCityId ?? ""}
+          >
+            <option value="">Pilih kota/kabupaten</option>
+            {shippingCities.map((city) => (
+              <option key={city.city_id} value={city.city_id}>
+                {city.type ? `${city.type} ${city.city_name}` : city.city_name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <p className="mt-[6px] font-satoshi text-[12px] tracking-[0.8px] text-black/60">
+          {isManualLocationLoading ? "Memuat data lokasi..." : "Provinsi dan kota dipakai hanya untuk menghitung ongkir."}
+        </p>
+      </section>
+    ) : null;
+
   if (!isAllowed) {
-    return null;
+    return <RouteLoadingState label="Memuat checkout..." />;
   }
 
   return (
@@ -640,8 +788,9 @@ export default function CheckoutPage() {
               <select
                 className="mt-[8px] h-[42px] w-full rounded-[10px] border border-black/20 bg-white px-[10px] font-satoshi text-[13px] tracking-[0.8px] text-black"
                 onChange={(event) => handleAddressSelection(event.target.value)}
-                value={selectedAddressId ?? ""}
+                value={isManualAddress ? MANUAL_ADDRESS_VALUE : selectedAddressId ?? ""}
               >
+                <option value={MANUAL_ADDRESS_VALUE}>Isi alamat baru/manual</option>
                 {addresses.map((address) => (
                   <option key={address.id} value={address.id}>
                     {formatAddressLabel(address)}
@@ -650,6 +799,7 @@ export default function CheckoutPage() {
               </select>
             </section>
           ) : null}
+          {renderManualLocationControls()}
 
           {uiState.currentStep === "address" ? <MobileAddressStep errors={uiState.validationErrors} onChange={handleFieldChange} value={form} /> : null}
           {uiState.currentStep === "shipping" ? (
@@ -698,8 +848,9 @@ export default function CheckoutPage() {
                 <select
                   className="mt-[8px] h-[42px] w-full rounded-[10px] border border-black/20 bg-white px-[12px] font-satoshi text-[14px] tracking-[0.8px] text-black"
                   onChange={(event) => handleAddressSelection(event.target.value)}
-                  value={selectedAddressId ?? ""}
+                  value={isManualAddress ? MANUAL_ADDRESS_VALUE : selectedAddressId ?? ""}
                 >
+                  <option value={MANUAL_ADDRESS_VALUE}>Isi alamat baru/manual</option>
                   {addresses.map((address) => (
                     <option key={address.id} value={address.id}>
                       {formatAddressLabel(address)}
@@ -713,10 +864,11 @@ export default function CheckoutPage() {
                 <p className="font-satoshi text-[13px] tracking-[1px] text-black/70">
                   {isAddressLoading
                     ? "Memuat alamat tersimpan..."
-                    : "Alamat tersimpan belum tersedia. Tambahkan alamat dulu agar ongkir bisa dihitung."}
+                    : "Alamat tersimpan belum tersedia. Isi alamat manual dan pilih lokasi ongkir."}
                 </p>
               </section>
             )}
+            {renderManualLocationControls()}
             <CheckoutForm errors={formErrors} onChange={handleFieldChange} value={form} />
             <ShippingMethod
               errorMessage={shippingError ?? undefined}

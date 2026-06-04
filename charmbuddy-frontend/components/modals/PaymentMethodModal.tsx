@@ -28,7 +28,7 @@ function UploadFeedback({ selectedFileName, errorMessage, className = "" }: { se
 
 function PaymentRow() {
   return (
-    <div className="flex h-[65px] w-[353px] items-center justify-between">
+    <div className="flex h-[65px] w-full max-w-[353px] items-center justify-between">
       <AppImage alt="Transfer Bank" className="h-[65px] w-[111px] rounded-[5px] object-cover" height={65} src="/payment-method/thumbnail.png" width={111} />
       <p className="w-[132px] font-satoshi text-[16px] font-bold leading-[normal] tracking-[2.4px] text-black">Transfer Bank</p>
       <div className="flex h-[20px] w-[20px] items-center justify-between rounded-[15px] border border-black p-[6px]">
@@ -130,30 +130,28 @@ export default function PaymentMethodModal({ open = true, asPage = false, onDone
             <UploadFeedback errorMessage={errorMessage} selectedFileName={selectedFileName} />
           </div>
 
-          <div className="relative hidden h-[650px] w-[900px] xl:block">
-            <div className="absolute left-[212px] top-[23px] flex h-[40.565px] w-[432px] flex-col items-center gap-[10px]">
+          <div className="hidden w-full max-w-[900px] px-[56px] py-[23px] xl:block">
+            <div className="mx-auto flex w-full max-w-[432px] flex-col items-center gap-[10px]">
               <p className="w-full text-center font-fanlste text-[24px] font-normal leading-[normal] tracking-[3.6px] text-black">Payment Method</p>
               <AppImage alt="" className="h-[1.565px] w-full" height={2} src="/payment-method/divider-line.svg" width={432} />
             </div>
 
-            <div className="absolute left-[75px] top-[97.5px]">
+            <div className="mt-[33px]">
               <PaymentRow />
             </div>
 
-            <div className="absolute left-[75px] top-[196px] h-[428px] w-[774px]">
-              <div className="absolute left-0 top-0 w-[353px]">
+            <div className="mt-[34px] grid grid-cols-[minmax(0,353px)_minmax(0,349px)] gap-[72px]">
+              <div className="flex flex-col gap-[24px]">
                 <InstructionLeft />
-              </div>
-              <div className="absolute left-[425px] top-0 w-[349px]">
-                <InstructionRight />
-              </div>
-              <motion.button className="absolute left-[425px] top-[135px] flex h-[43px] w-[121px] items-center justify-center rounded-[50px] bg-black px-[16px] py-[8px] disabled:opacity-60" disabled={isUploading} onClick={onDone} type="button" whileHover={prefersReducedMotion ? undefined : { y: -2, scale: 1.04 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}>
-                <p className="font-satoshi text-[20px] font-bold leading-[normal] tracking-[3px] text-white">{isUploading ? "Uploading..." : "Done"}</p>
-              </motion.button>
-              <div className="absolute left-0 top-[178px]">
                 <UploadBox onBrowse={onBrowse} selectedFileName={selectedFileName} />
               </div>
-              <UploadFeedback className="absolute left-[425px] top-[190px] w-[310px] border-black/15" errorMessage={errorMessage} selectedFileName={selectedFileName} />
+              <div className="flex flex-col gap-[28px] pt-[2px]">
+                <InstructionRight />
+                <motion.button className="flex h-[43px] w-[121px] items-center justify-center rounded-[50px] bg-black px-[16px] py-[8px] disabled:opacity-60" disabled={isUploading} onClick={onDone} type="button" whileHover={prefersReducedMotion ? undefined : { y: -2, scale: 1.04 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}>
+                  <p className="font-satoshi text-[20px] font-bold leading-[normal] tracking-[3px] text-white">{isUploading ? "Uploading..." : "Done"}</p>
+                </motion.button>
+                <UploadFeedback className="w-full max-w-[310px] border-black/15" errorMessage={errorMessage} selectedFileName={selectedFileName} />
+              </div>
             </div>
           </div>
           </motion.div>

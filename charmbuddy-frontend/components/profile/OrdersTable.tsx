@@ -8,6 +8,7 @@ import { listOrdersApi } from "@/lib/api/orders";
 import type { Order } from "@/lib/api/types";
 import { useAuth } from "@/lib/auth-context";
 import Reveal from "@/components/motion/Reveal";
+import { formatRupiahRaw } from "@/lib/currency";
 import { routes } from "@/lib/routes";
 
 export default function OrdersTable() {
@@ -79,7 +80,7 @@ export default function OrdersTable() {
                     <p className="truncate">{order.address}</p>
                     <p>{new Date(order.created_at).toLocaleDateString("id-ID")}</p>
                     <p>{order.shipping_courier}</p>
-                    <p>${order.total.toFixed(2)}</p>
+                    <p>{formatRupiahRaw(order.total)}</p>
                     <p className="uppercase">{order.status}</p>
                   </button>
                 ))

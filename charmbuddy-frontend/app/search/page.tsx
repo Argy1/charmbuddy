@@ -11,15 +11,14 @@ import Footer from "@/components/shared/Footer";
 import HeaderTemplate from "@/components/shared/HeaderTemplate";
 import { resolveApiAsset } from "@/lib/api/asset";
 import { useProducts } from "@/lib/api/hooks";
+import { formatRupiah } from "@/lib/currency";
 import { routes } from "@/lib/routes";
-import { productUploadManifest } from "@/lib/static/product-upload-manifest";
 
 export default function SearchPage() {
   const prefersReducedMotion = useReducedMotion();
   const [query, setQuery] = useState("");
   const { products, isLoading, error } = useProducts({ search: query, per_page: 60 });
   const normalizedQuery = query.trim().toLowerCase();
-  const fallbackProducts = productUploadManifest.slice(0, 6);
   const filtered = useMemo(
     () =>
       products.filter((product) =>
@@ -47,7 +46,7 @@ export default function SearchPage() {
               />
             </motion.div>
 
-            {error ? <p className="mt-[20px] font-satoshi text-[18px] text-black/70">Produk utama belum bisa dimuat, menampilkan dummy sementara.</p> : null}
+            {error ? <p className="mt-[20px] font-satoshi text-[18px] text-black/70">Produk belum bisa dimuat. Coba refresh halaman atau gunakan kata kunci lain.</p> : null}
             {isLoading ? <p className="mt-[20px] font-satoshi text-[18px] text-black/70">Loading products...</p> : null}
             {!isLoading && !error && filtered.length === 0 ? (
               <p className="mt-[20px] font-satoshi text-[18px] text-black/70">
@@ -70,26 +69,13 @@ export default function SearchPage() {
                           />
                           <div className="mt-[10px] flex items-center justify-between">
                             <p className="font-fanlste text-[20px] tracking-[2.4px]">{product.name}</p>
-                            <p className="font-satoshi text-[20px] tracking-[2.4px]">${product.price}</p>
+                            <p className="font-satoshi text-[20px] tracking-[2.4px]">{formatRupiah(product.price)}</p>
                           </div>
                         </Link>
                       </InteractivePress>
                     </motion.div>
                   ))}
                 </AnimatePresence>
-              </div>
-            ) : null}
-            {!isLoading && error ? (
-              <div className="mt-[24px] grid grid-cols-1 gap-[20px] sm:grid-cols-2 lg:grid-cols-3">
-                {fallbackProducts.map((item) => (
-                  <Link className="block rounded-[20px] border border-black bg-white p-[12px]" href={routes.catalogue} key={item.sku}>
-                    <AppImage alt={item.name} className="h-[220px] w-full rounded-[10px] object-cover" height={220} src={item.image} width={500} />
-                    <div className="mt-[10px] flex items-center justify-between">
-                      <p className="font-fanlste text-[20px] tracking-[2.4px]">{item.name}</p>
-                      <p className="font-satoshi text-[20px] tracking-[2.4px]">${item.price}</p>
-                    </div>
-                  </Link>
-                ))}
               </div>
             ) : null}
           </section>

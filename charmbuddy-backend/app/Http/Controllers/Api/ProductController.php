@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Support\ApiResponse;
+use App\Support\Currency;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,8 +24,9 @@ class ProductController extends Controller
         $category = $request->query('category', $request->query('category_id'));
         $categoryId = is_numeric($category) ? (int) $category : null;
         $sort = trim((string) $request->query('sort', 'newest'));
-        $minPrice = $request->filled('min_price') ? (float) $request->query('min_price') : null;
-        $maxPrice = $request->filled('max_price') ? (float) $request->query('max_price') : null;
+        $minPrice = $request->filled('min_price') ? (int) round(Currency::normalizeLegacyRupiah($request->query('min_price'))) : null;
+        $maxPrice = $request->filled('max_price') ? (int) round(Currency::normalizeLegacyRupiah($request->query('max_price'))) : null;
+        $normalizedPriceSql = '(CASE WHEN CAST(price AS REAL) > 0 AND CAST(price AS REAL) < 1000 THEN CAST(price AS REAL) * 1000 ELSE CAST(price AS REAL) END)';
 
         $products = Product::query()
             ->select(['id', 'category_id', 'slug', 'name', 'description', 'price', 'stock', 'weight', 'image_path', 'created_at'])
@@ -50,19 +52,19 @@ class ProductController extends Controller
                     }
                 });
             })
-            ->when($minPrice !== null, function ($query) use ($minPrice) {
-                $query->where('price', '>=', $minPrice);
+            ->when($minPrice !== null, function ($query) use ($minPrice, $normalizedPriceSql) {
+                $query->whereRaw($normalizedPriceSql.' >= ?', [$minPrice]);
             })
-            ->when($maxPrice !== null, function ($query) use ($maxPrice) {
-                $query->where('price', '<=', $maxPrice);
+            ->when($maxPrice !== null, function ($query) use ($maxPrice, $normalizedPriceSql) {
+                $query->whereRaw($normalizedPriceSql.' <= ?', [$maxPrice]);
             });
 
         if ($sort === 'oldest') {
             $products->oldest();
         } elseif ($sort === 'price_asc') {
-            $products->orderBy('price');
+            $products->orderByRaw($normalizedPriceSql.' asc');
         } elseif ($sort === 'price_desc') {
-            $products->orderByDesc('price');
+            $products->orderByRaw($normalizedPriceSql.' desc');
         } else {
             $products->latest();
         }

@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 
 import type { VoucherUIState } from "@/components/checkout/mobile/types";
+import { formatRupiahRaw } from "@/lib/currency";
 
 type MobileVoucherCardProps = {
   code: string;
@@ -68,7 +69,7 @@ export default function MobileVoucherCard({
       {state === "applied" && appliedCode ? (
         <div className="mt-[10px] flex items-center justify-between rounded-[12px] border border-green-700/20 bg-green-50 px-[10px] py-[8px]">
           <p className="font-satoshi text-[12px] font-bold tracking-[1px] text-green-700">
-            {appliedCode} aktif, potongan ${discountAmount.toFixed(2)}
+            {appliedCode} aktif, potongan {formatRupiahRaw(discountAmount)}
           </p>
           <button 
             className="font-satoshi text-[11px] font-black tracking-[1px] text-red-600" 

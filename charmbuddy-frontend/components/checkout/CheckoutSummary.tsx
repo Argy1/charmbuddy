@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import Reveal from "@/components/motion/Reveal";
 import AppImage from "@/components/shared/AppImage";
 import { useCart } from "@/lib/cart-context";
+import { formatRupiah, formatRupiahRaw } from "@/lib/currency";
 
 type CheckoutSummaryProps = {
   shippingCost: number;
@@ -53,9 +54,9 @@ export default function CheckoutSummary({
 
   return (
     <Reveal>
-      <aside className="flex h-auto w-full items-center rounded-[20px] border border-[#747272] bg-[rgba(255,255,255,0.4)] px-[26px] py-[20px] backdrop-blur-[20.4px] xl:h-[769px] xl:w-[500px]">
-        <div className="flex h-auto w-full flex-col items-end gap-[28px] xl:h-[720.116px] xl:w-[432px]">
-          <div className="flex w-full flex-col items-start gap-[24px] xl:h-[416.565px] xl:gap-[173px]">
+      <aside className="flex h-auto w-full rounded-[20px] border border-[#747272] bg-[rgba(255,255,255,0.4)] px-[26px] py-[20px] backdrop-blur-[20.4px] xl:w-[500px]">
+        <div className="flex h-auto w-full flex-col gap-[28px] xl:w-[432px]">
+          <div className="flex w-full flex-col items-start gap-[18px]">
             <div className="flex w-full flex-col items-start gap-[20px]">
               <div className="flex w-full flex-col items-start gap-[16px]">
                 <p className="w-full font-fanlste text-[24px] font-normal leading-[normal] tracking-[3.6px] text-black">Your Cart</p>
@@ -71,7 +72,7 @@ export default function CheckoutSummary({
                         <div className="flex min-w-0 flex-1 flex-col justify-between gap-[6px]">
                           <div className="flex w-full items-start justify-between gap-[8px] font-satoshi text-[15px] font-bold leading-[normal] tracking-[2px] text-black sm:text-[18px] sm:tracking-[2.7px]">
                             <p className="min-w-0 flex-1 break-words">{item.name}</p>
-                            <p className="shrink-0">${item.price.toFixed(2)}</p>
+                            <p className="shrink-0">{formatRupiah(item.price)}</p>
                           </div>
                           <div className="flex w-full items-center justify-between gap-[8px]">
                             <p className="font-satoshi text-[12px] font-medium leading-[normal] tracking-[1.8px] text-[rgba(0,0,0,0.5)] sm:text-[14px] sm:tracking-[2.1px]">Qty: {item.qty}</p>
@@ -136,32 +137,32 @@ export default function CheckoutSummary({
             ) : null}
           </div>
 
-          <div className="flex h-[275.551px] w-full flex-col items-start gap-[20px]">
-            <div className="flex h-[38.565px] w-full flex-col items-start gap-[10px]">
-              <div className="flex h-[27px] w-full items-start justify-between font-satoshi text-[20px] font-black leading-[normal] tracking-[3px] text-black">
-                <p className="w-[131px]">Subtotal</p>
-                <p className="w-[71px]">${subtotal.toFixed(2)}</p>
+          <div className="flex w-full flex-col items-start gap-[20px]">
+            <div className="flex w-full flex-col items-start gap-[10px]">
+              <div className="flex w-full items-start justify-between gap-[12px] font-satoshi text-[20px] font-black leading-[normal] tracking-[3px] text-black">
+                <p>Subtotal</p>
+                <p className="text-right">{formatRupiah(subtotal)}</p>
               </div>
               <AppImage alt="" className="h-[1.565px] w-full" height={2} src="/checkout/line-summary.svg" width={432} />
             </div>
 
-            <div className="flex h-[131px] w-full flex-col items-start justify-between font-satoshi text-[15px] font-bold leading-[normal] tracking-[2.25px] text-[rgba(0,0,0,0.5)]">
+            <div className="flex w-full flex-col items-start gap-[16px] font-satoshi text-[15px] font-bold leading-[normal] tracking-[2.25px] text-[rgba(0,0,0,0.5)]">
               <div className="flex w-full items-start justify-between">
                 <p className="w-max">Items</p>
                 <p className="w-max">{totalItems}x</p>
               </div>
               <div className="flex w-full items-start justify-between">
                 <p className="w-max">Discount</p>
-                <p className="w-max">-${discountAmount.toFixed(2)}</p>
+                <p className="w-max">-{formatRupiahRaw(discountAmount)}</p>
               </div>
               <div className="flex w-full items-start justify-between">
                 <p className="w-max">Delivery Services</p>
-                <p className="w-max">+${shippingCost.toFixed(2)}</p>
+                <p className="w-max">+{formatRupiahRaw(shippingCost)}</p>
               </div>
             </div>
 
             <motion.button className="flex h-[42px] w-full items-center justify-between rounded-[20px] bg-black px-[16px] py-[10px] opacity-80 disabled:opacity-60" disabled={isSubmitting} onClick={onPay} type="button" whileHover={prefersReducedMotion ? undefined : { y: -2, scale: 1.02 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}>
-              <p className="font-satoshi text-[16px] font-black leading-[normal] tracking-[2.4px] text-white">{isSubmitting ? "Processing..." : `Pay $${finalTotal.toFixed(2)}`}</p>
+              <p className="font-satoshi text-[16px] font-black leading-[normal] tracking-[2.4px] text-white">{isSubmitting ? "Processing..." : `Pay ${formatRupiahRaw(finalTotal)}`}</p>
             </motion.button>
             {errorMessage ? <p className="font-satoshi text-[14px] text-red-600">{errorMessage}</p> : null}
           </div>

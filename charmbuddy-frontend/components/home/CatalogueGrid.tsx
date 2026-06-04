@@ -9,9 +9,9 @@ import AppImage from "@/components/shared/AppImage";
 import { resolveApiAsset } from "@/lib/api/asset";
 import { useProducts } from "@/lib/api/hooks";
 import type { Product } from "@/lib/api/types";
+import { formatRupiah } from "@/lib/currency";
 import { cinematicEase, durations } from "@/lib/motion";
 import { routes } from "@/lib/routes";
-import { productUploadManifest } from "@/lib/static/product-upload-manifest";
 
 type CatalogueCard = {
   id: string;
@@ -44,8 +44,8 @@ function ProductCard({ card }: { card: CatalogueCard }) {
           <div className="w-[116px]">
             <p className="text-left text-[16px] tracking-[2.4px] font-fanlste">{card.name}</p>
             <div className="mt-[10px] flex items-center gap-[13px]">
-              <p className="text-[16px] tracking-[2.4px] font-fanlste">${card.price}</p>
-              <p className="text-[12px] tracking-[1.8px] text-[rgba(0,0,0,0.5)] line-through font-fanlste">${oldPrice}</p>
+              <p className="text-[16px] tracking-[2.4px] font-fanlste">{formatRupiah(card.price)}</p>
+              <p className="text-[12px] tracking-[1.8px] text-[rgba(0,0,0,0.5)] line-through font-fanlste">{formatRupiah(oldPrice)}</p>
             </div>
           </div>
           <div className="mb-[4px] flex w-[66px] items-center justify-between">
@@ -72,7 +72,7 @@ function chunkCards(cards: CatalogueCard[], size: number) {
 
 export default function CatalogueGrid() {
   const prefersReducedMotion = useReducedMotion();
-  const { products } = useProducts({ per_page: 12 });
+  const { products, isLoading, error } = useProducts({ per_page: 12 });
   const apiCards = useMemo<CatalogueCard[]>(
     () =>
       products.slice(0, 12).map((product: Product) => ({
@@ -84,18 +84,9 @@ export default function CatalogueGrid() {
       })),
     [products],
   );
-  const fallbackCards = useMemo<CatalogueCard[]>(
-    () =>
-      productUploadManifest.slice(0, 12).map((item) => ({
-        id: `fallback-${item.sku}`,
-        href: routes.catalogue,
-        name: item.name,
-        price: item.price,
-        image: item.image,
-      })),
-    [],
-  );
-  const cards = apiCards.length > 0 ? apiCards : fallbackCards;
+  const cards = apiCards;
+  const hasCards = cards.length > 0;
+  const emptyMessage = error ? "Catalogue belum bisa dimuat." : "Belum ada produk catalogue.";
 
   const mobilePages = useMemo(() => chunkCards(cards, 2), [cards]);
   const desktopPages = useMemo(() => chunkCards(cards, 4), [cards]);
@@ -127,10 +118,20 @@ export default function CatalogueGrid() {
           <div className="backdrop-blur-[13.5px] bg-[rgba(165,186,255,0.5)] border border-[rgba(255,255,255,0.4)] border-solid rounded-[50px] px-[24px] py-[6px] w-max shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]">
             <p className="h-max items-center justify-center text-center text-[20px] sm:text-[26px] tracking-[2.5px] font-fanlste italic leading-[1]">Catalogue</p>
           </div>
-          <div className="grid grid-cols-1 gap-[28px] sm:grid-cols-2">
-            {mobilePages[activeMobileIndex]?.map((card) => <ProductCard card={card} key={card.id} />)}
-          </div>
-          <div className="flex items-center gap-[41px]">
+          {isLoading ? (
+            <div className="grid grid-cols-1 gap-[28px] sm:grid-cols-2">
+              {Array.from({ length: 2 }, (_, index) => (
+                <div className="h-[350px] w-[241px] animate-pulse bg-white/70" key={`mobile-catalogue-skeleton-${index}`} />
+              ))}
+            </div>
+          ) : hasCards ? (
+            <div className="grid grid-cols-1 gap-[28px] sm:grid-cols-2">
+              {mobilePages[activeMobileIndex]?.map((card) => <ProductCard card={card} key={card.id} />)}
+            </div>
+          ) : (
+            <p className="max-w-[320px] text-center font-satoshi text-[15px] text-black/65">{emptyMessage}</p>
+          )}
+          {hasCards ? <div className="flex items-center gap-[41px]">
             <motion.button
               aria-label="Previous catalogue slide"
               className="grid h-[24px] w-[22px] place-items-center"
@@ -162,7 +163,7 @@ export default function CatalogueGrid() {
             >
               <AppImage alt="Next" className="h-[24px] w-[22px]" height={41} src="/home/catalog-arrow.svg" width={37} />
             </motion.button>
-          </div>
+          </div> : null}
           </div>
         </Reveal>
       </section>
@@ -176,10 +177,20 @@ export default function CatalogueGrid() {
               Catalogue
             </p>
           </div>
-          <div className="flex w-full items-center justify-center gap-[72px]">
-            {desktopPages[activeDesktopIndex]?.map((card) => <ProductCard card={card} key={card.id} />)}
-          </div>
-          <div className="flex items-center gap-[41px]">
+          {isLoading ? (
+            <div className="flex w-full items-center justify-center gap-[72px]">
+              {Array.from({ length: 4 }, (_, index) => (
+                <div className="h-[350px] w-[241px] animate-pulse bg-white/70" key={`desktop-catalogue-skeleton-${index}`} />
+              ))}
+            </div>
+          ) : hasCards ? (
+            <div className="flex w-full items-center justify-center gap-[72px]">
+              {desktopPages[activeDesktopIndex]?.map((card) => <ProductCard card={card} key={card.id} />)}
+            </div>
+          ) : (
+            <p className="font-satoshi text-[18px] text-black/65">{emptyMessage}</p>
+          )}
+          {hasCards ? <div className="flex items-center gap-[41px]">
             <motion.button
               aria-label="Previous catalogue slide"
               className="grid h-[24px] w-[22px] place-items-center"
@@ -211,7 +222,7 @@ export default function CatalogueGrid() {
             >
               <AppImage alt="Next" className="h-[24px] w-[22px]" height={41} src="/home/catalog-arrow.svg" width={37} />
             </motion.button>
-          </div>
+          </div> : null}
           </div>
         </Reveal>
       </section>

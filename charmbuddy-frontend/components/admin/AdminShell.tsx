@@ -7,6 +7,7 @@ import { useState } from "react";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminTopbar from "@/components/admin/AdminTopbar";
 import AdminBottomNav from "@/components/admin/mobile/AdminBottomNav";
+import RouteLoadingState from "@/components/shared/RouteLoadingState";
 import { routes } from "@/lib/routes";
 import { useRequireAdmin } from "@/lib/use-require-admin";
 
@@ -24,7 +25,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   if (!isAllowed) {
-    return null;
+    return <RouteLoadingState label="Memuat admin..." />;
   }
 
   const title = titleMap[pathname] ?? "Admin";

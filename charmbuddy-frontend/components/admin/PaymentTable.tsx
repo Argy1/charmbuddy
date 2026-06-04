@@ -3,7 +3,9 @@
 import { motion, useReducedMotion } from "framer-motion";
 
 import { getPaymentCustomerName } from "@/components/admin/customerDisplay";
+import { isPaymentReviewLocked } from "@/lib/api/payment-status";
 import type { AdminPayment } from "@/lib/api/types";
+import { formatRupiahRaw } from "@/lib/currency";
 
 type PaymentTableProps = {
   payments: AdminPayment[];
@@ -51,13 +53,13 @@ export default function PaymentTable({ payments, isLoading, onReview }: PaymentT
           </thead>
           <tbody>
             {payments.map((payment) => {
-              const orderLocked = ["Processed", "Shipped", "Finished"].includes(payment.order?.status ?? "");
+              const orderLocked = isPaymentReviewLocked(payment.order?.status);
               return (
               <tr className="border-b border-black/5" key={payment.id}>
                 <td className="px-[12px] py-[10px] font-satoshi text-[14px]">#{payment.id}</td>
                 <td className="px-[12px] py-[10px] font-satoshi text-[14px]">#{payment.order_id}</td>
                 <td className="px-[12px] py-[10px] font-satoshi text-[14px]">{getPaymentCustomerName(payment)}</td>
-                <td className="px-[12px] py-[10px] font-satoshi text-[14px]">${Number(payment.amount).toFixed(2)}</td>
+                <td className="px-[12px] py-[10px] font-satoshi text-[14px]">{formatRupiahRaw(payment.amount)}</td>
                 <td className="px-[12px] py-[10px]"><StatusBadge status={payment.status} /></td>
                 <td className="px-[12px] py-[10px]">
                   <motion.button
@@ -81,7 +83,7 @@ export default function PaymentTable({ payments, isLoading, onReview }: PaymentT
 
       <div className="grid grid-cols-1 gap-[10px] md:hidden">
         {payments.map((payment) => {
-          const orderLocked = payment.order?.status === "Shipped" || payment.order?.status === "Finished";
+          const orderLocked = isPaymentReviewLocked(payment.order?.status);
           return (
           <article className="rounded-[16px] border border-black/10 bg-white/80 p-[12px]" key={payment.id}>
             <div className="flex items-center justify-between">
@@ -90,7 +92,7 @@ export default function PaymentTable({ payments, isLoading, onReview }: PaymentT
             </div>
             <p className="mt-[8px] font-satoshi text-[14px] text-black/70">Order #{payment.order_id}</p>
             <p className="font-satoshi text-[14px] text-black/70">{getPaymentCustomerName(payment)}</p>
-            <p className="font-satoshi text-[14px] text-black/70">${Number(payment.amount).toFixed(2)}</p>
+            <p className="font-satoshi text-[14px] text-black/70">{formatRupiahRaw(payment.amount)}</p>
             <motion.button
               className="mt-[8px] rounded-[10px] bg-black px-[12px] py-[8px] font-satoshi text-[13px] text-white disabled:opacity-40 disabled:cursor-not-allowed"
               disabled={orderLocked}

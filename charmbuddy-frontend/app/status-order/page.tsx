@@ -8,11 +8,13 @@ import { resolveApiAsset } from "@/lib/api/asset";
 import { getOrderTrackingApi, listOrdersApi } from "@/lib/api/orders";
 import type { OrderTrackingPayload } from "@/lib/api/types";
 import { useAuth } from "@/lib/auth-context";
+import { formatRupiah } from "@/lib/currency";
 import AmbientBackdrop from "@/components/motion/AmbientBackdrop";
 import Reveal from "@/components/motion/Reveal";
 import AppImage from "@/components/shared/AppImage";
 import Footer from "@/components/shared/Footer";
 import HeaderTemplate from "@/components/shared/HeaderTemplate";
+import RouteLoadingState from "@/components/shared/RouteLoadingState";
 import { useRequireAuth } from "@/lib/use-require-auth";
 
 type TimelineStatus = {
@@ -43,7 +45,7 @@ type RouteInfo = {
 };
 
 function Money({ value, className }: { value: number; className: string }) {
-  return <p className={className}>${value.toFixed(2)}</p>;
+  return <p className={className}>{formatRupiah(value)}</p>;
 }
 
 function ItemCard({ item }: { item: ProductItem }) {
@@ -383,7 +385,7 @@ function StatusOrderPageContent() {
   };
 
   if (!isAllowed) {
-    return null;
+    return <RouteLoadingState label="Memuat status pesanan..." />;
   }
 
   return (
@@ -434,7 +436,7 @@ function StatusOrderPageContent() {
 
 export default function StatusOrderPage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<RouteLoadingState label="Memuat status pesanan..." />}>
       <StatusOrderPageContent />
     </Suspense>
   );

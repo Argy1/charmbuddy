@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 
 import type { Order, OrderItem } from "@/components/order/OrderCard";
 import AppImage from "@/components/shared/AppImage";
+import { formatRupiah } from "@/lib/currency";
 
 type OrderExpandedDetailProps = {
   order: Order;
@@ -91,7 +92,7 @@ export default function OrderExpandedDetail({ order, expanded, onToggle, onTrack
                 <AppImage alt={item.name} className="h-[65px] w-[111px] rounded-[5px] object-cover" fallbackSrc="/order-history/item-thumb.png" height={65} key={item.id} src={item.image} width={111} />
               ))}
             </div>
-            <p className="mr-[24px] font-satoshi text-[36px] font-bold leading-[normal] tracking-[5.4px] text-black">${order.total}</p>
+            <p className="mr-[24px] font-satoshi text-[36px] font-bold leading-[normal] tracking-[5.4px] text-black">{formatRupiah(order.total)}</p>
             <AppImage alt="Collapse details" className="h-[30px] w-[30px] rotate-180" height={30} src="/order-history/card-arrow.svg" width={30} />
           </div>
         </div>
@@ -128,9 +129,9 @@ export default function OrderExpandedDetail({ order, expanded, onToggle, onTrack
               <p className="font-satoshi text-[20px] font-bold leading-[normal] tracking-[3px] text-black">Type / {item.type}</p>
               <p className="font-satoshi text-[20px] font-bold leading-[normal] tracking-[3px] text-black">Color / {item.color}</p>
               <p className="font-satoshi text-[20px] font-bold leading-[normal] tracking-[3px] text-black">
-                ${item.unitPrice} x {item.qty} pc
+                {formatRupiah(item.unitPrice)} x {item.qty} pc
               </p>
-              <p className="font-satoshi text-[20px] font-bold leading-[normal] tracking-[3px] text-black">${item.unitPrice * item.qty}</p>
+              <p className="font-satoshi text-[20px] font-bold leading-[normal] tracking-[3px] text-black">{formatRupiah(item.unitPrice * item.qty)}</p>
             </div>
           </div>
         ))}

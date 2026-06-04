@@ -6,6 +6,7 @@ import { adminExportSalesReportCsvApi, adminExportSalesReportPrintHtmlApi, admin
 import { ApiError } from "@/lib/api/client";
 import type { AdminSalesReport } from "@/lib/api/types";
 import { useAuth } from "@/lib/auth-context";
+import { formatRupiahRaw } from "@/lib/currency";
 
 const statusOptions = ["", "Pending", "Paid", "Processed", "Shipped", "Finished"];
 
@@ -159,9 +160,9 @@ export default function AdminReportsPage() {
         <Card label="Paid Transactions" value={String(report?.summary.paid_transactions ?? 0)} />
         <Card label="Failed Transactions" value={String(report?.summary.failed_transactions ?? 0)} />
         <Card label="Pending Transactions" value={String(report?.summary.pending_transactions ?? 0)} />
-        <Card label="Gross Revenue" value={`$${Number(report?.summary.gross_revenue ?? 0).toFixed(2)}`} />
-        <Card label="Total Shipping" value={`$${Number(report?.summary.total_shipping ?? 0).toFixed(2)}`} />
-        <Card label="Total Discount" value={`$${Number(report?.summary.total_discount ?? 0).toFixed(2)}`} />
+        <Card label="Gross Revenue" value={formatRupiahRaw(report?.summary.gross_revenue ?? 0)} />
+        <Card label="Total Shipping" value={formatRupiahRaw(report?.summary.total_shipping ?? 0)} />
+        <Card label="Total Discount" value={formatRupiahRaw(report?.summary.total_discount ?? 0)} />
       </section>
 
       <section className="rounded-[18px] border border-black/10 bg-white/75 p-[12px]">
@@ -197,10 +198,10 @@ export default function AdminReportsPage() {
                       <p className="text-black/55">{row.payment_status}</p>
                     </td>
                     <td className="px-[8px] py-[8px]">{row.items_count}</td>
-                    <td className="px-[8px] py-[8px]">${Number(row.subtotal).toFixed(2)}</td>
-                    <td className="px-[8px] py-[8px]">${Number(row.shipping_cost).toFixed(2)}</td>
-                    <td className="px-[8px] py-[8px]">${Number(row.discount_amount).toFixed(2)}</td>
-                    <td className="px-[8px] py-[8px] font-bold">${Number(row.total_amount).toFixed(2)}</td>
+                    <td className="px-[8px] py-[8px]">{formatRupiahRaw(row.subtotal)}</td>
+                    <td className="px-[8px] py-[8px]">{formatRupiahRaw(row.shipping_cost)}</td>
+                    <td className="px-[8px] py-[8px]">{formatRupiahRaw(row.discount_amount)}</td>
+                    <td className="px-[8px] py-[8px] font-bold">{formatRupiahRaw(row.total_amount)}</td>
                   </tr>
                 ))}
               </tbody>

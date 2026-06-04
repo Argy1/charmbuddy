@@ -5,7 +5,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import AppImage from "@/components/shared/AppImage";
 import { getPaymentCustomerName } from "@/components/admin/customerDisplay";
 import { resolveApiAsset } from "@/lib/api/asset";
+import { resolveAdminPaymentProofSource } from "@/lib/api/payment-proof";
 import type { AdminPayment } from "@/lib/api/types";
+import { formatRupiah } from "@/lib/currency";
 
 type PaymentReviewModalProps = {
   open: boolean;
@@ -17,6 +19,8 @@ type PaymentReviewModalProps = {
 };
 
 export default function PaymentReviewModal({ open, payment, isSubmitting, onClose, onApprove, onReject }: PaymentReviewModalProps) {
+  const proofPath = resolveAdminPaymentProofSource(payment);
+
   return (
     <AnimatePresence>
       {open && payment ? (
@@ -31,16 +35,16 @@ export default function PaymentReviewModal({ open, payment, isSubmitting, onClos
             <h3 className="font-fanlste text-[30px] tracking-[1px]">Review Payment</h3>
             <p className="mt-[8px] font-satoshi text-[14px] text-black/70">Payment #{payment.id} - Order #{payment.order_id}</p>
             <p className="font-satoshi text-[14px] text-black/70">Customer: {getPaymentCustomerName(payment)}</p>
-            <p className="font-satoshi text-[14px] text-black/70">Amount: ${Number(payment.amount).toFixed(2)}</p>
+            <p className="font-satoshi text-[14px] text-black/70">Amount: {formatRupiah(payment.amount)}</p>
 
             <div className="mt-[12px]">
               <p className="mb-[6px] font-satoshi text-[13px] tracking-[1px] text-black/70">Payment Proof</p>
-              {payment.payment_proof_path ? (
+              {proofPath ? (
                 <AppImage
                   alt="Payment proof"
                   className="max-h-[260px] w-full rounded-[12px] border border-black/10 object-contain"
                   height={260}
-                  src={resolveApiAsset(payment.payment_proof_path, "/cart/product-mini.png")}
+                  src={resolveApiAsset(proofPath, "/cart/product-mini.png")}
                   width={520}
                 />
               ) : (

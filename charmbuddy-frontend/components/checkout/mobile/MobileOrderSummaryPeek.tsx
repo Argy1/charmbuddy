@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { formatRupiah, formatRupiahRaw } from "@/lib/currency";
 
 type MobileOrderSummaryPeekProps = {
   totalItems: number;
@@ -28,7 +29,7 @@ export default function MobileOrderSummaryPeek({
       <button className="flex w-full items-center justify-between" onClick={onToggle} type="button">
         <div>
           <p className="font-satoshi text-[12px] font-black tracking-[1.4px] text-black/70">ORDER SNAPSHOT</p>
-          <p className="font-satoshi text-[16px] font-black tracking-[1.6px] text-black">${finalTotal.toFixed(2)}</p>
+          <p className="font-satoshi text-[16px] font-black tracking-[1.6px] text-black">{formatRupiahRaw(finalTotal)}</p>
         </div>
         <span className="font-satoshi text-[12px] tracking-[1px] text-black/70">{isOpen ? "Hide details" : "Show details"}</span>
       </button>
@@ -49,15 +50,15 @@ export default function MobileOrderSummaryPeek({
               </div>
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>{formatRupiah(subtotal)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Discount</span>
-                <span>-${discountAmount.toFixed(2)}</span>
+                <span>-{formatRupiahRaw(discountAmount)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping</span>
-                <span>+${shippingCost.toFixed(2)}</span>
+                <span>+{formatRupiahRaw(shippingCost)}</span>
               </div>
             </div>
           </motion.div>

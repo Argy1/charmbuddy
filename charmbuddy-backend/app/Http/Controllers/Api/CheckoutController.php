@@ -12,6 +12,7 @@ use App\Services\OrderStatusHistoryService;
 use App\Services\PromoCodeService;
 use App\Services\StockMovementService;
 use App\Support\ApiResponse;
+use App\Support\Currency;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -104,15 +105,16 @@ class CheckoutController extends Controller
                     ], 422);
                 }
 
-                $subtotal = (float) $product->price * $cartItem->quantity;
+                $unitPrice = Currency::normalizeLegacyRupiah($product->price);
+                $subtotal = $unitPrice * $cartItem->quantity;
                 $totalProductPrice += $subtotal;
 
                 $orderItemsPayload[] = [
                     'product_id' => $product->id,
                     'quantity' => $cartItem->quantity,
                     'qty' => $cartItem->quantity,
-                    'price_at_checkout' => $product->price,
-                    'unit_price' => $product->price,
+                    'price_at_checkout' => $unitPrice,
+                    'unit_price' => $unitPrice,
                     'subtotal' => $subtotal,
                     'line_total' => $subtotal,
                     'product_name' => $product->name,

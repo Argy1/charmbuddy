@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 
 import type { AdminSummary } from "@/lib/api/types";
+import { formatRupiahRaw } from "@/lib/currency";
 
 type KpiCardsProps = {
   summary: AdminSummary | null;
@@ -45,7 +46,7 @@ export default function KpiCards({ summary, isLoading }: KpiCardsProps) {
       <KpiCard label="Successful Orders" value={String(summary.paid_orders)} />
       <KpiCard label="Shipped Orders" value={String(summary.shipped_orders)} />
       <KpiCard label="Finished Orders" value={String(summary.finished_orders ?? 0)} />
-      <KpiCard label="Revenue" value={`$${Number(summary.revenue).toFixed(2)}`} />
+      <KpiCard label="Revenue" value={formatRupiahRaw(summary.revenue)} />
       <KpiCard label="Low Stock Items" value={String(summary.low_stock_count)} />
     </section>
   );

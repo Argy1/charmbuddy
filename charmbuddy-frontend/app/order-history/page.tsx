@@ -14,6 +14,7 @@ import OrderExpandedDetail from "@/components/order/OrderExpandedDetail";
 import OrderHistoryHeader, { type SortKey } from "@/components/order/OrderHistoryHeader";
 import Footer from "@/components/shared/Footer";
 import HeaderTemplate from "@/components/shared/HeaderTemplate";
+import RouteLoadingState from "@/components/shared/RouteLoadingState";
 import { routes } from "@/lib/routes";
 import { useRequireAuth } from "@/lib/use-require-auth";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -149,7 +150,7 @@ function OrderHistoryPageContent() {
   };
 
   if (!isAllowed) {
-    return null;
+    return <RouteLoadingState label="Memuat riwayat pesanan..." />;
   }
 
   return (
@@ -223,7 +224,7 @@ function OrderHistoryPageContent() {
 
 export default function OrderHistoryPage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<RouteLoadingState label="Memuat riwayat pesanan..." />}>
       <OrderHistoryPageContent />
     </Suspense>
   );

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(del \"c:\\\\Users\\\\argyf\\\\Documents\\\\Semester 4\\\\Sistem Informasi\\\\charmbuddy\\\\charmbuddy-backend\\\\database\\\\migrations\\\\2026_05_09_051959_add_finished_status_to_orders_table.php\")",
+      "Bash(php artisan *)"
+    ]
+  }
+}

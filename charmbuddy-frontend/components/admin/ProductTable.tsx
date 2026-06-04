@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 
 import type { Product } from "@/lib/api/types";
+import { formatRupiah } from "@/lib/currency";
 
 type ProductTableProps = {
   products: Product[];
@@ -69,7 +70,7 @@ export default function ProductTable({ products, isLoading, onEdit, onDelete }: 
               <tr className="border-b border-black/5" key={product.id}>
                 <td className="px-[12px] py-[10px] font-satoshi text-[14px]">{product.name}</td>
                 <td className="px-[12px] py-[10px] font-satoshi text-[14px]">{product.category?.name ?? "-"}</td>
-                <td className="px-[12px] py-[10px] font-satoshi text-[14px]">${Number(product.price).toFixed(2)}</td>
+                <td className="px-[12px] py-[10px] font-satoshi text-[14px]">{formatRupiah(product.price)}</td>
                 <td className="px-[12px] py-[10px] font-satoshi text-[14px]">{product.stock}</td>
                 <td className="px-[12px] py-[10px] font-satoshi text-[14px]">{product.weight} g</td>
                 <td className="px-[12px] py-[10px]">
@@ -91,7 +92,7 @@ export default function ProductTable({ products, isLoading, onEdit, onDelete }: 
             <p className="mt-[6px] font-satoshi text-[14px] text-black/70">{product.category?.name ?? "-"}</p>
             <div className="mt-[10px] grid grid-cols-2 gap-y-[4px] font-satoshi text-[14px]">
               <p>Price</p>
-              <p className="text-right">${Number(product.price).toFixed(2)}</p>
+              <p className="text-right">{formatRupiah(product.price)}</p>
               <p>Stock</p>
               <p className="text-right">{product.stock}</p>
               <p>Weight</p>

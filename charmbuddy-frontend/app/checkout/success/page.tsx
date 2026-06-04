@@ -9,6 +9,7 @@ import InteractivePress from "@/components/motion/InteractivePress";
 import Reveal from "@/components/motion/Reveal";
 import Footer from "@/components/shared/Footer";
 import HeaderTemplate from "@/components/shared/HeaderTemplate";
+import RouteLoadingState from "@/components/shared/RouteLoadingState";
 import { routes } from "@/lib/routes";
 import { useRequireAuth } from "@/lib/use-require-auth";
 
@@ -20,7 +21,7 @@ function CheckoutSuccessPageContent() {
   const orderId = searchParams.get("order") ?? sessionOrderId;
   const trackOrderHref = useMemo(() => (orderId ? `${routes.statusOrder}?order=${orderId}` : routes.statusOrder), [orderId]);
   if (!isAllowed) {
-    return null;
+    return <RouteLoadingState label="Memuat status pembayaran..." />;
   }
 
   return (
@@ -61,7 +62,7 @@ function CheckoutSuccessPageContent() {
 
 export default function CheckoutSuccessPage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<RouteLoadingState label="Memuat status pembayaran..." />}>
       <CheckoutSuccessPageContent />
     </Suspense>
   );

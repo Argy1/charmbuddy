@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import type { ShippingOption } from "@/lib/api/types";
 import Reveal from "@/components/motion/Reveal";
 import AppImage from "@/components/shared/AppImage";
+import { formatRupiahRaw } from "@/lib/currency";
 
 type ShippingMethodProps = {
   options: ShippingOption[];
@@ -47,7 +48,7 @@ function ShippingCard({
           </div>
         </div>
         <p className="shrink-0 text-right font-satoshi text-[18px] font-bold leading-[normal] tracking-[2px] text-black sm:text-[20px]">
-          ${option.cost}
+          {formatRupiahRaw(option.cost)}
         </p>
       </div>
     </motion.button>

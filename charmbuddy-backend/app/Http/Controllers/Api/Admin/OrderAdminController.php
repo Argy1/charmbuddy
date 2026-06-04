@@ -122,13 +122,15 @@ class OrderAdminController extends Controller
             return $this->fail('Order belum dalam status Shipped.', 422);
         }
 
-        $order->update(['status' => 'Finished']);
-        $this->orderStatusHistoryService->record(
-            $order->fresh(),
-            'Finished',
-            auth()->id(),
-            'Order finished by admin.'
-        );
+        DB::transaction(function () use ($order) {
+            $order->update(['status' => 'Finished']);
+            $this->orderStatusHistoryService->record(
+                $order->fresh(),
+                'Finished',
+                auth()->id(),
+                'Order finished by admin.'
+            );
+        });
 
         return $this->success(
             $order->fresh()->load(['user:id,name,email', 'payment', 'items.product']),

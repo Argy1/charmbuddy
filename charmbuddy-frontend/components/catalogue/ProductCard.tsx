@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import AppImage from "@/components/shared/AppImage";
 import { resolveApiAsset } from "@/lib/api/asset";
 import type { Product } from "@/lib/api/types";
+import { formatRupiah } from "@/lib/currency";
 import { cinematicEase } from "@/lib/motion";
 import { routes } from "@/lib/routes";
 
@@ -38,8 +39,8 @@ export default function ProductCard({ className = "", product }: ProductCardProp
           <div className="flex w-[116px] flex-col gap-[13px] font-fanlste not-italic leading-[normal]">
             <p className="w-full text-center text-[16px] tracking-[2.4px] text-black">{product.name}</p>
             <div className="flex w-full items-center gap-[13px] whitespace-nowrap">
-              <p className="text-[16px] tracking-[2.4px] text-black">${product.price}</p>
-              <p className="line-through text-[12px] tracking-[1.8px] text-[rgba(0,0,0,0.5)]">${oldPrice}</p>
+              <p className="text-[16px] tracking-[2.4px] text-black">{formatRupiah(product.price)}</p>
+              <p className="line-through text-[12px] tracking-[1.8px] text-[rgba(0,0,0,0.5)]">{formatRupiah(oldPrice)}</p>
             </div>
           </div>
           <div className="flex w-[59px] items-center justify-between">

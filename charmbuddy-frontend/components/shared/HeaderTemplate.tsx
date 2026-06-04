@@ -7,11 +7,13 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 import AppImage from "@/components/shared/AppImage";
 import { useAuth } from "@/lib/auth-context";
+import { useCart } from "@/lib/cart-context";
 import { cinematicEase, durations } from "@/lib/motion";
 import { routes } from "@/lib/routes";
 
 export default function HeaderTemplate() {
   const { isLoggedIn } = useAuth();
+  const { totalItems } = useCart();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const prefersReducedMotion = useReducedMotion();
@@ -85,8 +87,13 @@ export default function HeaderTemplate() {
             </Link>
           </motion.div>
           <motion.div whileHover={{ scale: prefersReducedMotion ? 1 : 1.06 }} whileTap={{ scale: prefersReducedMotion ? 1 : 0.94 }}>
-            <Link className={actionClass(routes.cart)} href={routes.cart}>
+            <Link className={`${actionClass(routes.cart)} relative`} href={routes.cart}>
               <AppImage alt="" className="h-[28px] w-[28px] object-contain" height={28} src="/home/header-cart.svg" width={18} />
+              {totalItems > 0 ? (
+                <span className="absolute -right-[6px] -top-[6px] grid h-[18px] min-w-[18px] place-items-center rounded-full bg-red-500 px-[4px] font-satoshi text-[10px] font-black leading-none text-white">
+                  {totalItems > 99 ? "99+" : totalItems}
+                </span>
+              ) : null}
             </Link>
           </motion.div>
           <motion.div whileHover={{ scale: prefersReducedMotion ? 1 : 1.06 }} whileTap={{ scale: prefersReducedMotion ? 1 : 0.94 }}>

@@ -9,6 +9,7 @@ use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PaymentAdminController extends Controller
 {
@@ -48,6 +49,8 @@ class PaymentAdminController extends Controller
             ->latest()
             ->paginate($perPage);
 
+        $payments->getCollection()->transform(fn (Payment $payment) => $this->withProofMeta($payment));
+
         return $this->successPaginated($payments, 'Daftar pembayaran admin berhasil diambil.');
     }
 
@@ -57,14 +60,14 @@ class PaymentAdminController extends Controller
             ->with(['user:id,name,email', 'order.items.product'])
             ->findOrFail($id);
 
-        return $this->success($payment, 'Detail pembayaran berhasil diambil.');
+        return $this->success($this->withProofMeta($payment), 'Detail pembayaran berhasil diambil.');
     }
 
     public function approve(int $id): JsonResponse
     {
         $payment = Payment::query()->with('order')->findOrFail($id);
 
-        if (! $payment->payment_proof_path) {
+        if (! $this->proofPath($payment)) {
             return $this->fail('Bukti pembayaran belum tersedia.', 422);
         }
 
@@ -82,7 +85,7 @@ class PaymentAdminController extends Controller
         });
 
         return $this->success(
-            $payment->fresh()->load(['user:id,name,email', 'order.items.product']),
+            $this->withProofMeta($payment->fresh()->load(['user:id,name,email', 'order.items.product'])),
             'Pembayaran berhasil di-approve.'
         );
     }
@@ -105,8 +108,30 @@ class PaymentAdminController extends Controller
         });
 
         return $this->success(
-            $payment->fresh()->load(['user:id,name,email', 'order.items.product']),
+            $this->withProofMeta($payment->fresh()->load(['user:id,name,email', 'order.items.product'])),
             'Pembayaran berhasil di-reject.'
         );
+    }
+
+    private function proofPath(Payment $payment): ?string
+    {
+        $path = $payment->payment_proof_path
+            ?: ($payment->proof_path ?? null)
+            ?: ($payment->order?->payment_proof_path ?? null);
+
+        $path = trim((string) $path);
+
+        return $path !== '' ? $path : null;
+    }
+
+    private function withProofMeta(Payment $payment): Payment
+    {
+        $path = $this->proofPath($payment);
+
+        $payment->setAttribute('payment_proof_path', $path);
+        $payment->setAttribute('proof_path', $path);
+        $payment->setAttribute('proof_url', $path ? Storage::disk('public')->url($path) : null);
+
+        return $payment;
     }
 }

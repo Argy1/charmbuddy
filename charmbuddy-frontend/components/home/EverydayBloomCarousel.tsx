@@ -19,35 +19,36 @@ type CarouselItem = {
   image: string;
 };
 
-const fallbackItems: CarouselItem[] = [
-  { id: "fallback-1", slug: "diamond-necklace", title: "Melted Rose", subtitle: "Necklace", image: "/home/carousel-object.png" },
-  { id: "fallback-2", slug: "silver-bracelet", title: "Twilight Bloom", subtitle: "Bracelet", image: "/home/mosaic-4.png" },
-  { id: "fallback-3", slug: "heart-charm", title: "Ocean Charm", subtitle: "Bag Charm", image: "/home/mosaic-5.png" },
-];
-
 export default function EverydayBloomCarousel() {
   const prefersReducedMotion = useReducedMotion();
-  const { products } = useProducts({ per_page: 6 });
+  const { products, isLoading, error } = useProducts({ per_page: 6 });
   const items = useMemo<CarouselItem[]>(
     () =>
-      products.length > 0
-        ? products.slice(0, 6).map((product) => ({
+      products.slice(0, 6).map((product) => ({
             id: String(product.id),
             slug: product.slug,
             title: product.name,
             subtitle: product.category?.name ?? "Accessories",
             image: resolveApiAsset(product.image_path, "/home/carousel-object.png"),
-          }))
-        : fallbackItems,
+          })),
     [products],
   );
   const [activeIndex, setActiveIndex] = useState(0);
-  const activeItem = items[activeIndex] ?? fallbackItems[0];
-  const activeItemHref = routes.product(activeItem.slug);
+  const safeActiveIndex = items.length > 0 ? activeIndex % items.length : 0;
+  const activeItem = items[safeActiveIndex] ?? null;
+  const activeItemHref = activeItem ? routes.product(activeItem.slug) : routes.catalogue;
+  const emptyMessage = error ? "Produk pilihan belum bisa dimuat." : "Belum ada produk pilihan.";
+
   const goPrev = () => {
+    if (items.length === 0) {
+      return;
+    }
     setActiveIndex((prev) => (prev - 1 + items.length) % items.length);
   };
   const goNext = () => {
+    if (items.length === 0) {
+      return;
+    }
     setActiveIndex((prev) => (prev + 1) % items.length);
   };
 
@@ -70,6 +71,9 @@ export default function EverydayBloomCarousel() {
             >
               <AppImage alt="Prev" className="h-[18px] w-[18px]" height={18} src="/home/carousel-arrow.svg" width={18} />
             </motion.button>
+            {isLoading ? (
+              <div className="h-[320px] w-full max-w-[280px] animate-pulse rounded-[24px] bg-white/50" />
+            ) : activeItem ? (
             <Link className="flex flex-1 flex-col items-center justify-start max-w-[360px]" href={activeItemHref}>
               <motion.div
                 animate={prefersReducedMotion ? undefined : { y: [0, -10, 0] }}
@@ -83,6 +87,9 @@ export default function EverydayBloomCarousel() {
                 <p className="text-center font-fanlste text-[14px] sm:text-[16px] tracking-[3px]">{activeItem.subtitle}</p>
               </div>
             </Link>
+            ) : (
+              <p className="flex min-h-[220px] flex-1 items-center justify-center text-center font-satoshi text-[15px] text-black/65">{emptyMessage}</p>
+            )}
             <motion.button
               className="hidden sm:grid -translate-y-4.5 bg-[#8798FF] h-[40px] w-[40px] rounded-full place-items-center"
               onClick={goNext}
@@ -93,17 +100,17 @@ export default function EverydayBloomCarousel() {
               <AppImage alt="Next" className="h-[18px] w-[18px] rotate-180" height={18} src="/home/carousel-arrow.svg" width={18} />
             </motion.button>
           </div>
-          <div className="mt-[16px] flex items-center justify-center gap-[10px]">
+          {items.length > 0 ? <div className="mt-[16px] flex items-center justify-center gap-[10px]">
             {items.map((item, index) => (
               <button
                 aria-label={`Show ${item.title}`}
-                className={`h-[8px] rounded-full transition-all ${index === activeIndex ? "w-[24px] bg-[#705cb2]" : "w-[8px] bg-black/20"}`}
+                className={`h-[8px] rounded-full transition-all ${index === safeActiveIndex ? "w-[24px] bg-[#705cb2]" : "w-[8px] bg-black/20"}`}
                 key={item.id}
                 onClick={() => setActiveIndex(index)}
                 type="button"
               />
             ))}
-          </div>
+          </div> : null}
           </div>
         </Reveal>
       </section>
@@ -128,6 +135,11 @@ export default function EverydayBloomCarousel() {
                 <AppImage alt="Prev" className="h-[28px] w-[28px]" height={28} src="/home/carousel-arrow.svg" width={28} />
               </motion.button>
 
+              {isLoading ? (
+                <div className="flex h-[520px] flex-1 items-center justify-center">
+                  <div className="h-[420px] w-[520px] animate-pulse rounded-[28px] bg-white/45" />
+                </div>
+              ) : activeItem ? (
               <Link className="flex flex-1 flex-col items-center" href={activeItemHref}>
                 <div className="flex h-[480px] w-full items-end justify-center">
                   <motion.div
@@ -154,6 +166,9 @@ export default function EverydayBloomCarousel() {
                   <p className="mx-auto w-full text-[30px] tracking-[6px] text-center font-fanlste">{activeItem.subtitle}</p>
                 </div>
               </Link>
+              ) : (
+                <p className="flex h-[520px] flex-1 items-center justify-center text-center font-satoshi text-[20px] text-black/65">{emptyMessage}</p>
+              )}
 
               <motion.button
                 className="bg-[#8798FF] h-[70px] w-[70px] rounded-full grid place-items-center shrink-0"
@@ -166,17 +181,17 @@ export default function EverydayBloomCarousel() {
               </motion.button>
             </div>
           </div>
-          <div className="mt-[20px] flex items-center justify-center gap-[12px]">
+          {items.length > 0 ? <div className="mt-[20px] flex items-center justify-center gap-[12px]">
             {items.map((item, index) => (
               <button
                 aria-label={`Show ${item.title}`}
-                className={`h-[10px] rounded-full transition-all ${index === activeIndex ? "w-[32px] bg-[#705cb2]" : "w-[10px] bg-black/20"}`}
+                className={`h-[10px] rounded-full transition-all ${index === safeActiveIndex ? "w-[32px] bg-[#705cb2]" : "w-[10px] bg-black/20"}`}
                 key={`desktop-${item.id}`}
                 onClick={() => setActiveIndex(index)}
                 type="button"
               />
             ))}
-          </div>
+          </div> : null}
           </div>
         </Reveal>
       </section>

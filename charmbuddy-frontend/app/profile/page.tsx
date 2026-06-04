@@ -7,12 +7,13 @@ import OrdersTable from "@/components/profile/OrdersTable";
 import ProfileCard from "@/components/profile/ProfileCard";
 import Footer from "@/components/shared/Footer";
 import HeaderTemplate from "@/components/shared/HeaderTemplate";
+import RouteLoadingState from "@/components/shared/RouteLoadingState";
 import { useRequireAuth } from "@/lib/use-require-auth";
 
 export default function ProfilePage() {
   const isAllowed = useRequireAuth();
   if (!isAllowed) {
-    return null;
+    return <RouteLoadingState label="Memuat profil..." />;
   }
 
   return (

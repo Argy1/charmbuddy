@@ -17,23 +17,33 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::query()->updateOrCreate(
-            ['email' => 'admin@charmbuddy.com'],
-            [
-                'name' => 'Admin Charmbuddy',
-                'password' => Hash::make('password123'),
-                'role' => 'admin',
-            ],
-        );
+        $isLocalSeed = app()->environment(['local', 'testing']);
+        $adminEmail = env('SEED_ADMIN_EMAIL', $isLocalSeed ? 'admin@charmbuddy.com' : null);
+        $adminPassword = env('SEED_ADMIN_PASSWORD', $isLocalSeed ? 'password123' : null);
+        $customerEmail = env('SEED_CUSTOMER_EMAIL', $isLocalSeed ? 'test@example.com' : null);
+        $customerPassword = env('SEED_CUSTOMER_PASSWORD', $isLocalSeed ? 'password123' : null);
 
-        User::query()->updateOrCreate(
-            ['email' => 'test@example.com'],
-            [
-                'name' => 'Test User',
-                'password' => Hash::make('password123'),
-                'role' => 'customer',
-            ],
-        );
+        if ($adminEmail && $adminPassword) {
+            User::query()->updateOrCreate(
+                ['email' => $adminEmail],
+                [
+                    'name' => env('SEED_ADMIN_NAME', 'Admin Charmbuddy'),
+                    'password' => Hash::make($adminPassword),
+                    'role' => 'admin',
+                ],
+            );
+        }
+
+        if ($customerEmail && $customerPassword) {
+            User::query()->updateOrCreate(
+                ['email' => $customerEmail],
+                [
+                    'name' => env('SEED_CUSTOMER_NAME', 'Test User'),
+                    'password' => Hash::make($customerPassword),
+                    'role' => 'customer',
+                ],
+            );
+        }
         PromoCode::query()->updateOrCreate(
             ['code' => 'CHARM10'],
             [
@@ -65,4 +75,3 @@ class DatabaseSeeder extends Seeder
         ]);
     }
 }
-

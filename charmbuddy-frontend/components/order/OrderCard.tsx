@@ -3,6 +3,7 @@
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import AppImage from "@/components/shared/AppImage";
+import { formatRupiah } from "@/lib/currency";
 
 export type OrderItem = {
   id: string;
@@ -85,7 +86,7 @@ export default function OrderCard({ order, expanded, onToggle, onTrackOrder }: O
           </div>
 
           <div className="flex items-center gap-[12px] xl:gap-0">
-            <p className="font-satoshi text-[22px] font-bold leading-[normal] tracking-[3px] text-black sm:text-[28px] xl:mr-[24px] xl:text-[36px] xl:tracking-[5.4px]">${order.total}</p>
+            <p className="font-satoshi text-[22px] font-bold leading-[normal] tracking-[3px] text-black sm:text-[28px] xl:mr-[24px] xl:text-[36px] xl:tracking-[5.4px]">{formatRupiah(order.total)}</p>
 
             <AppImage
               alt="Toggle details"

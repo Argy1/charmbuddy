@@ -12,6 +12,7 @@ import HeaderTemplate from "@/components/shared/HeaderTemplate";
 import { resolveApiAsset } from "@/lib/api/asset";
 import { useProduct } from "@/lib/api/hooks";
 import { useCart } from "@/lib/cart-context";
+import { formatRupiah } from "@/lib/currency";
 import { routes } from "@/lib/routes";
 
 export default function ProductDetailPage() {
@@ -57,7 +58,7 @@ export default function ProductDetailPage() {
 
             <div className="flex flex-col gap-[16px] sm:gap-[20px]">
               <h1 className="page-title">{product.name}</h1>
-              <p className="section-title">${product.price}</p>
+              <p className="section-title">{formatRupiah(product.price)}</p>
               <p className="body-lead max-w-[620px] text-[rgba(0,0,0,0.6)]">{product.description}</p>
 
               <div className="mt-[8px] flex flex-wrap items-center gap-[12px] sm:gap-[16px]">

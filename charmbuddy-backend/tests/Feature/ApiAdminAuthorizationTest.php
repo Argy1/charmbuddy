@@ -89,6 +89,17 @@ class ApiAdminAuthorizationTest extends TestCase
             ->assertJsonPath('data.status', 'Shipped')
             ->assertJsonPath('data.tracking_number', 'JNE-123456789');
 
+        $this->putJson('/api/admin/orders/'.$order->id.'/finish')
+            ->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.status', 'Finished');
+
+        $this->getJson('/api/admin/payments/'.$payment->id)
+            ->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.payment_proof_path', 'payment-proofs/sample-proof.png')
+            ->assertJsonPath('data.proof_path', 'payment-proofs/sample-proof.png');
+
         $this->putJson('/api/admin/payments/'.$payment->id.'/reject')
             ->assertOk()
             ->assertJsonPath('success', true)

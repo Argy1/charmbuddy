@@ -138,6 +138,81 @@ class ApiCheckoutFlowTest extends TestCase
             ->assertJsonPath('data.order_id', $orderId);
     }
 
+    public function test_checkout_normalizes_legacy_product_prices_to_rupiah(): void
+    {
+        $user = User::factory()->create();
+        $category = Category::create([
+            'name' => 'Legacy Price',
+        ]);
+        $product = Product::create([
+            'category_id' => $category->id,
+            'name' => 'Charm Rizz Original',
+            'description' => 'Legacy product',
+            'price' => 21,
+            'stock' => 20,
+            'weight' => 95,
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $this->postJson('/api/cart/items', [
+            'product_id' => $product->id,
+            'qty' => 2,
+        ])->assertOk();
+
+        $checkoutResponse = $this->postJson('/api/checkout', [
+            'first_name' => 'Legacy',
+            'last_name' => 'Tester',
+            'email' => 'legacy.tester@example.com',
+            'phone' => '08123456789',
+            'address' => 'Jl. Legacy No. 10, Jakarta',
+            'description' => 'Legacy price order',
+            'shipping_courier' => 'JNE',
+            'shipping_service' => 'REG',
+            'shipping_eta' => '2-3 hari',
+            'shipping_cost' => 9000,
+        ]);
+
+        $checkoutResponse
+            ->assertCreated()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.subtotal', '42000.00')
+            ->assertJsonPath('data.total_price', '51000.00')
+            ->assertJsonPath('data.items.0.price_at_checkout', '21000.00')
+            ->assertJsonPath('data.payment.amount', '51000.00');
+    }
+
+    public function test_product_listing_filters_legacy_and_full_rupiah_prices_consistently(): void
+    {
+        $category = Category::create([
+            'name' => 'Filter Prices',
+        ]);
+
+        $legacyProduct = Product::create([
+            'category_id' => $category->id,
+            'name' => 'Legacy Charm',
+            'description' => 'Stored as 21 but displayed as 21000',
+            'price' => 21,
+            'stock' => 20,
+            'weight' => 95,
+        ]);
+
+        $fullRupiahProduct = Product::create([
+            'category_id' => $category->id,
+            'name' => 'Full Rupiah Charm',
+            'description' => 'Stored as 21000',
+            'price' => 21000,
+            'stock' => 20,
+            'weight' => 95,
+        ]);
+
+        $this->getJson('/api/products?min_price=21000&max_price=21000&per_page=10')
+            ->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonFragment(['id' => $legacyProduct->id])
+            ->assertJsonFragment(['id' => $fullRupiahProduct->id]);
+    }
+
     /**
      * @return array<int, Product>
      */

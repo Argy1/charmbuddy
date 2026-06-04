@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 
 import type { ShippingOption } from "@/lib/api/types";
+import { formatRupiahRaw } from "@/lib/currency";
 
 type MobileShippingSelectorProps = {
   options: ShippingOption[];
@@ -78,7 +79,7 @@ export default function MobileShippingSelector({ options, selectedOptionKey, isL
                           <p className="mt-[2px] font-satoshi text-[13px] tracking-[1px] text-black/65">Estimasi {option.eta}</p>
                         </div>
                         <div className="flex items-center gap-[8px]">
-                          <span className="font-satoshi text-[16px] font-black tracking-[1.6px] text-black">${option.cost}</span>
+                          <span className="font-satoshi text-[16px] font-black tracking-[1.6px] text-black">{formatRupiahRaw(option.cost)}</span>
                           <span className={`grid h-[18px] w-[18px] place-items-center rounded-full border ${selected ? "border-black bg-[#8798ff]" : "border-black/30 bg-white"}`}>
                             <span className={`h-[7px] w-[7px] rounded-full ${selected ? "bg-white" : "bg-transparent"}`} />
                           </span>
