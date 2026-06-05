@@ -12,6 +12,8 @@ import { resolveApiAsset } from "@/lib/api/asset";
 import { useAuth } from "@/lib/auth-context";
 import { routes } from "@/lib/routes";
 
+const DEFAULT_AVATAR_SRC = "/profile/avatar.png";
+
 export default function ProfileCard() {
   const { user, isLoggedIn, logout } = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
@@ -19,7 +21,7 @@ export default function ProfileCard() {
   const displayName = user?.name ?? "Guest User";
   const displayEmail = user?.email ?? "guest@bloomy.com";
   const username = displayEmail.split("@")[0];
-  const avatarSrc = resolveApiAsset(user?.avatar_path ?? null, "/profile/avatar.png");
+  const avatarSrc = resolveApiAsset(user?.avatar_path ?? null, DEFAULT_AVATAR_SRC);
 
   return (
     <Reveal className="w-full">
@@ -28,7 +30,7 @@ export default function ProfileCard() {
       <motion.div className="mt-[15px] w-full rounded-[20px] border border-black bg-white p-[16px] xl:min-h-[236px] xl:max-w-[697px] xl:p-[13px_22.5px]" whileHover={{ y: -3 }}>
         <div className="flex flex-col gap-[14px] sm:flex-row sm:items-start">
           <div className="mx-auto h-[140px] w-[140px] shrink-0 sm:mx-0 sm:h-[190px] sm:w-[190px]">
-            <AppImage alt="Avatar" className="h-full w-full rounded-full object-cover" height={190} src={avatarSrc} width={190} />
+            <AppImage alt="Avatar" className="h-full w-full rounded-full object-cover" fallbackSrc={DEFAULT_AVATAR_SRC} height={190} src={avatarSrc} width={190} />
           </div>
 
           <div className="flex min-w-0 flex-1 flex-col justify-between gap-[12px] sm:min-h-[195px]">

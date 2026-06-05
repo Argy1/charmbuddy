@@ -14,13 +14,15 @@ type Props = {
   onClose: () => void;
 };
 
+const DEFAULT_AVATAR_SRC = "/profile/avatar.png";
+
 export default function EditProfileModal({ isOpen, onClose }: Props) {
   const { user, isLoading, updateProfile } = useAuth();
   const [mounted, setMounted] = useState(false);
 
   const [name, setName] = useState(user?.name ?? "");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [avatarPreviewSrc, setAvatarPreviewSrc] = useState(resolveApiAsset(user?.avatar_path ?? null, "/profile/avatar.png"));
+  const [avatarPreviewSrc, setAvatarPreviewSrc] = useState(resolveApiAsset(user?.avatar_path ?? null, DEFAULT_AVATAR_SRC));
   const [avatarInputKey, setAvatarInputKey] = useState(0);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -35,7 +37,7 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
     if (isOpen) {
       setName(user?.name ?? "");
       setAvatarFile(null);
-      setAvatarPreviewSrc(resolveApiAsset(user?.avatar_path ?? null, "/profile/avatar.png"));
+      setAvatarPreviewSrc(resolveApiAsset(user?.avatar_path ?? null, DEFAULT_AVATAR_SRC));
       setAvatarInputKey((currentKey) => currentKey + 1);
       setCurrentPassword("");
       setNewPassword("");
@@ -47,7 +49,7 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
 
   useEffect(() => {
     if (!avatarFile) {
-      setAvatarPreviewSrc(resolveApiAsset(user?.avatar_path ?? null, "/profile/avatar.png"));
+      setAvatarPreviewSrc(resolveApiAsset(user?.avatar_path ?? null, DEFAULT_AVATAR_SRC));
       return;
     }
 
@@ -117,19 +119,19 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
 
   const displayEmail = user?.email ?? "";
   const username = displayEmail.split("@")[0];
-  const displayAvatarSrc = avatarPreviewSrc || resolveApiAsset(user?.avatar_path ?? null, "/profile/avatar.png");
+  const displayAvatarSrc = avatarPreviewSrc || resolveApiAsset(user?.avatar_path ?? null, DEFAULT_AVATAR_SRC);
   const shouldBypassImageOptimization = /^https?:\/\//.test(displayAvatarSrc) || displayAvatarSrc.startsWith("blob:");
 
   const handleAvatarChange = (file: File | null) => {
     setAvatarFile(file);
     if (!file) {
-      setAvatarPreviewSrc(resolveApiAsset(user?.avatar_path ?? null, "/profile/avatar.png"));
+      setAvatarPreviewSrc(resolveApiAsset(user?.avatar_path ?? null, DEFAULT_AVATAR_SRC));
     }
   };
 
   const handleResetAvatar = () => {
     setAvatarFile(null);
-    setAvatarPreviewSrc(resolveApiAsset(user?.avatar_path ?? null, "/profile/avatar.png"));
+    setAvatarPreviewSrc(resolveApiAsset(user?.avatar_path ?? null, DEFAULT_AVATAR_SRC));
     setAvatarInputKey((currentKey) => currentKey + 1);
   };
 
@@ -159,6 +161,7 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
                   <AppImage
                     alt="Avatar"
                     className="h-full w-full rounded-full object-cover border-[3px] border-white/60"
+                    fallbackSrc={DEFAULT_AVATAR_SRC}
                     height={150}
                     src={displayAvatarSrc}
                     unoptimized={shouldBypassImageOptimization}
@@ -213,6 +216,7 @@ export default function EditProfileModal({ isOpen, onClose }: Props) {
                     <AppImage
                       alt="Preview avatar"
                       className="h-full w-full rounded-full object-cover"
+                      fallbackSrc={DEFAULT_AVATAR_SRC}
                       height={72}
                       src={displayAvatarSrc}
                       unoptimized={shouldBypassImageOptimization}
