@@ -5,8 +5,11 @@ import { resolveApiAsset } from "@/lib/api/asset";
 describe("resolveApiAsset", () => {
   it("resolves storage-backed relative upload paths through /storage", () => {
     expect(resolveApiAsset("avatars/user.jpg", "/fallback.png")).toBe("http://127.0.0.1:8000/storage/avatars/user.jpg");
-    expect(resolveApiAsset("products/item.png", "/fallback.png")).toBe("http://127.0.0.1:8000/storage/products/item.png");
     expect(resolveApiAsset("payment-proofs/proof.png", "/fallback.png")).toBe("http://127.0.0.1:8000/storage/payment-proofs/proof.png");
+  });
+
+  it("resolves product paths through the backend product asset route", () => {
+    expect(resolveApiAsset("products/item.png", "/fallback.png")).toBe("http://127.0.0.1:8000/products/item.png");
   });
 
   it("keeps existing absolute and storage-prefixed paths stable", () => {

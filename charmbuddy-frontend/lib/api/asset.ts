@@ -24,6 +24,10 @@ export function resolveApiAsset(path: string | null | undefined, fallback: strin
     return `${API_ASSET_BASE}/${trimmedPath}`;
   }
 
+  if (trimmedPath.startsWith("products/")) {
+    return `${API_ASSET_BASE}/${trimmedPath}`;
+  }
+
   if (trimmedPath.startsWith("/")) {
     return `${API_ASSET_BASE}${trimmedPath}`;
   }

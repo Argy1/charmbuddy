@@ -157,6 +157,20 @@ class ApiCheckoutFlowTest extends TestCase
             ->assertHeader('content-type', 'image/jpeg');
     }
 
+    public function test_product_asset_route_serves_storage_uploads_and_public_seed_assets(): void
+    {
+        Storage::fake('public');
+
+        UploadedFile::fake()->image('uploaded-product.jpg')->storeAs('products', 'uploaded-product.jpg', 'public');
+
+        $this->get('/products/uploaded-product.jpg')
+            ->assertOk()
+            ->assertHeader('content-type', 'image/jpeg');
+
+        $this->get('/products/clara-bow.png')
+            ->assertOk();
+    }
+
     public function test_checkout_normalizes_legacy_product_prices_to_rupiah(): void
     {
         $user = User::factory()->create();
