@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Suspense, useMemo, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -22,6 +22,7 @@ type TimelineStatus = {
   title: string;
   desc: string;
   date: string;
+  active: boolean;
 };
 
 type ProductItem = {
@@ -67,36 +68,34 @@ function ItemCard({ item }: { item: ProductItem }) {
   );
 }
 
-function TimelineItem({ item, active, onClick }: { item: TimelineStatus; active: boolean; onClick: () => void }) {
-  const prefersReducedMotion = useReducedMotion();
-
+function TimelineItem({ item }: { item: TimelineStatus }) {
   return (
-    <motion.button className="flex min-h-[59px] w-full flex-col items-start gap-[8px] text-left sm:flex-row sm:items-center sm:justify-between" onClick={onClick} type="button" whileHover={prefersReducedMotion ? undefined : { x: 4 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.995 }}>
+    <div className="flex min-h-[59px] w-full flex-col items-start gap-[8px] text-left sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center">
-        <div className="h-[40px] w-[40px] rounded-[50px] bg-white p-[5px]">
-          <AppImage alt="Status" className="h-[30px] w-[30px]" height={30} src="/status-order/timeline-check-b.svg" width={30} />
+        <div className={`grid h-[40px] w-[40px] place-items-center rounded-[50px] ${item.active ? "bg-white p-[5px]" : "border border-black/25 bg-white/50"}`}>
+          {item.active ? (
+            <AppImage alt="Completed status" className="h-[30px] w-[30px]" height={30} src="/status-order/timeline-check-b.svg" width={30} />
+          ) : (
+            <span className="h-[14px] w-[14px] rounded-full border border-black/45 bg-transparent" />
+          )}
         </div>
         <div className="ml-[20px]">
-          <p className="font-satoshi text-[20px] font-bold leading-[normal] text-black xl:text-[24px]">{item.title}</p>
+          <p className={`font-satoshi text-[20px] font-bold leading-[normal] xl:text-[24px] ${item.active ? "text-black" : "text-black/45"}`}>{item.title}</p>
           <p className="font-satoshi text-[16px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:text-[20px]">{item.desc}</p>
         </div>
       </div>
-      <p className={`pl-[60px] font-satoshi text-[16px] font-medium leading-[normal] sm:pl-0 xl:text-[20px] ${active ? "text-black" : "text-[rgba(0,0,0,0.5)]"}`}>{item.date}</p>
-    </motion.button>
+      <p className={`pl-[60px] font-satoshi text-[16px] font-medium leading-[normal] sm:pl-0 xl:text-[20px] ${item.active ? "text-black" : "text-[rgba(0,0,0,0.35)]"}`}>{item.active ? item.date : "-"}</p>
+    </div>
   );
 }
 
 function LeftCard({
-  timelineStep,
-  setTimelineStep,
   items,
   timelineData,
   transactionId,
   orderDate,
   total,
 }: {
-  timelineStep: number;
-  setTimelineStep: (idx: number) => void;
   items: ProductItem[];
   timelineData: TimelineStatus[];
   transactionId: string;
@@ -136,8 +135,8 @@ function LeftCard({
           <div className="relative mt-[15px] min-h-[527px]">
             <AppImage alt="Timeline" className="absolute left-[22px] top-[10px] hidden h-[452.00027604809657px] w-[1.9357614184264094px] sm:block" height={452} src="/status-order/timeline-line-vertical.svg" width={2} />
             <div className="flex h-full flex-col justify-between">
-              {timelineData.map((status, idx) => (
-                <TimelineItem active={idx <= timelineStep} item={status} key={status.id} onClick={() => setTimelineStep(idx)} />
+              {timelineData.map((status) => (
+                <TimelineItem item={status} key={status.id} />
               ))}
             </div>
           </div>
@@ -149,7 +148,7 @@ function LeftCard({
 
 function ShippingCard({ routeInfo }: { routeInfo: RouteInfo }) {
   return (
-    <section className="w-full max-w-[658px] rounded-[20px] border border-black bg-[rgba(255,255,255,0.5)] backdrop-blur-[14.7px] xl:min-h-[400px]">
+    <section className="w-full max-w-[658px] rounded-[20px] border border-black bg-[rgba(255,255,255,0.5)] backdrop-blur-[14.7px]">
       <div className="mx-auto mt-[28px] w-full max-w-[564px] px-[16px] pb-[24px] xl:mt-[35px] xl:px-0">
         <div className="flex min-h-[50px] items-center justify-between">
           <p className="font-satoshi text-[24px] font-bold leading-[normal] text-black xl:text-[32px]">{routeInfo.from}</p>
@@ -157,7 +156,7 @@ function ShippingCard({ routeInfo }: { routeInfo: RouteInfo }) {
           <p className="font-satoshi text-[24px] font-bold leading-[normal] text-black xl:text-[32px]">{routeInfo.to}</p>
         </div>
 
-        <div className="mt-[20px] flex min-h-[89px] justify-between gap-[12px] xl:mt-[26px]">
+        <div className="mt-[20px] flex min-h-[89px] flex-col justify-between gap-[12px] sm:flex-row xl:mt-[26px]">
           <div className="max-w-[313px] space-y-[5px] font-satoshi text-[16px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:text-[20px]">
             <p>{routeInfo.packageInfo}</p>
             <p>{routeInfo.category}</p>
@@ -169,8 +168,6 @@ function ShippingCard({ routeInfo }: { routeInfo: RouteInfo }) {
           </div>
           <Money className="self-end font-satoshi text-[24px] font-bold leading-[normal] text-black xl:text-[32px]" value={routeInfo.total} />
         </div>
-
-        <AppImage alt="Map" className="mt-[26px] h-[146px] w-full rounded-[10px] object-cover" height={146} src="/status-order/map-image.png" width={564} />
       </div>
     </section>
   );
@@ -180,14 +177,12 @@ function OrderDetailsCard({
   orderId,
   total,
   orderProgressStep,
-  setOrderProgressStep,
 }: {
   orderId: string;
   total: number;
   orderProgressStep: number;
-  setOrderProgressStep: (v: number) => void;
 }) {
-  const prefersReducedMotion = useReducedMotion();
+  const progressLabels = ["Accepted", "Order Picked Up", "Delivered"];
 
   return (
     <section className="w-full max-w-[658px] rounded-[20px] border border-black bg-[rgba(255,255,255,0.5)] backdrop-blur-[14.7px] xl:min-h-[400px]">
@@ -200,21 +195,23 @@ function OrderDetailsCard({
         <div className="mt-[25px] h-[40px] w-full max-w-[586px]">
           <AppImage alt="Progress Line" className="ml-[20px] mt-[20px] h-[1px] w-[calc(100%-40px)]" height={1} src="/status-order/order-details-line.svg" width={546} />
           <div className="relative -mt-[21px] flex w-full items-center justify-between">
-            <div className="ml-[20px] h-[40px] w-[40px] rounded-[50px] bg-white p-[5px]">
-              <AppImage alt="Done" className="h-[30px] w-[30px]" height={30} src="/status-order/timeline-check-b.svg" width={30} />
-            </div>
-            <div className="h-[40px] w-[40px] rounded-[50px] bg-white p-[5px]">
-              <AppImage alt="Done" className="h-[30px] w-[30px]" height={30} src="/status-order/timeline-check-b.svg" width={30} />
-            </div>
-            <AppImage alt="Pending" className="h-[30px] w-[30px]" height={30} src="/status-order/order-details-pending-circle.svg" width={30} />
+            {progressLabels.map((label, idx) => (
+              <div className={`${idx === 0 ? "ml-[20px]" : ""} grid h-[40px] w-[40px] place-items-center rounded-full bg-white p-[5px]`} key={label}>
+                {idx <= orderProgressStep ? (
+                  <AppImage alt={`${label} completed`} className="h-[30px] w-[30px]" height={30} src="/status-order/timeline-check-b.svg" width={30} />
+                ) : (
+                  <span className="h-[30px] w-[30px] rounded-full border-[2px] border-black bg-white" />
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
         <div className="mt-[25px] flex h-[32px] w-full items-center justify-between gap-[8px] font-satoshi text-[20px] font-medium leading-[normal] text-[rgba(0,0,0,0.5)] xl:text-[24px]">
-          {["Accepted", "Order Picked Up", "Delivered"].map((label, idx) => (
-            <motion.button className={idx <= orderProgressStep ? "text-black" : "text-[rgba(0,0,0,0.5)]"} key={label} onClick={() => setOrderProgressStep(idx)} type="button" whileHover={prefersReducedMotion ? undefined : { y: -1 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}>
+          {progressLabels.map((label, idx) => (
+            <p className={idx <= orderProgressStep ? "text-black" : "text-[rgba(0,0,0,0.5)]"} key={label}>
               {label}
-            </motion.button>
+            </p>
           ))}
         </div>
 
@@ -240,18 +237,6 @@ function StatusOrderPageContent() {
 
   const [trackingData, setTrackingData] = useState<OrderTrackingPayload | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [timelineStep, setTimelineStep] = useState(0);
-  const [orderProgressStep, setOrderProgressStep] = useState(0);
-
-  const mapTimelineToProgress = (step: number) => {
-    if (step <= 0) {
-      return 0;
-    }
-    if (step <= 1) {
-      return 1;
-    }
-    return 2;
-  };
 
   useEffect(() => {
     if (!isAuthResolved || !token) {
@@ -333,6 +318,7 @@ function StatusOrderPageContent() {
       id: step.id,
       title: step.title,
       desc: step.desc,
+      active: step.active,
       date: step.at
         ? new Date(step.at).toLocaleDateString("id-ID", {
             day: "2-digit",
@@ -369,20 +355,22 @@ function StatusOrderPageContent() {
     };
   }, [trackingData]);
 
-  useEffect(() => {
-    if (!trackingData) {
-      return;
+  const orderProgressStep = useMemo(() => {
+    const hasSent = timelineData.some((step) => step.id === "sent" && step.active);
+    const hasProcessed = timelineData.some((step) => step.id === "processed" && step.active);
+    const hasPaid = timelineData.some((step) => step.id === "paid" && step.active);
+
+    if (hasSent) {
+      return 2;
     }
-
-    const activeIndex = trackingData.timeline.reduce((lastActive, step, idx) => (step.active ? idx : lastActive), 0);
-    setTimelineStep(activeIndex);
-    setOrderProgressStep(mapTimelineToProgress(activeIndex));
-  }, [trackingData]);
-
-  const handleTimelineStep = (step: number) => {
-    setTimelineStep(step);
-    setOrderProgressStep(mapTimelineToProgress(step));
-  };
+    if (hasProcessed) {
+      return 1;
+    }
+    if (hasPaid) {
+      return 0;
+    }
+    return -1;
+  }, [timelineData]);
 
   if (!isAllowed) {
     return <RouteLoadingState label="Memuat status pesanan..." />;
@@ -407,9 +395,7 @@ function StatusOrderPageContent() {
             <LeftCard
               items={baseItems}
               orderDate={new Date(trackingData.order.created_at).toLocaleString("id-ID")}
-              setTimelineStep={handleTimelineStep}
               timelineData={timelineData}
-              timelineStep={timelineStep}
               total={trackingData.order.total}
               transactionId={trackingData.order.order_number}
             />
@@ -420,7 +406,6 @@ function StatusOrderPageContent() {
             <OrderDetailsCard
               orderId={trackingData?.order.order_number ?? "-"}
               orderProgressStep={orderProgressStep}
-              setOrderProgressStep={setOrderProgressStep}
               total={trackingData?.order.total ?? 0}
             />
           </motion.div>

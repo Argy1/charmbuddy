@@ -9,7 +9,6 @@ use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class PaymentAdminController extends Controller
 {
@@ -130,7 +129,7 @@ class PaymentAdminController extends Controller
 
         $payment->setAttribute('payment_proof_path', $path);
         $payment->setAttribute('proof_path', $path);
-        $payment->setAttribute('proof_url', $path ? Storage::disk('public')->url($path) : null);
+        $payment->setAttribute('proof_url', $path ? '/storage/'.ltrim($path, '/') : null);
 
         return $payment;
     }

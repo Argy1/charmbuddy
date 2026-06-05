@@ -98,7 +98,8 @@ class ApiAdminAuthorizationTest extends TestCase
             ->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonPath('data.payment_proof_path', 'payment-proofs/sample-proof.png')
-            ->assertJsonPath('data.proof_path', 'payment-proofs/sample-proof.png');
+            ->assertJsonPath('data.proof_path', 'payment-proofs/sample-proof.png')
+            ->assertJsonPath('data.proof_url', '/storage/payment-proofs/sample-proof.png');
 
         $this->putJson('/api/admin/payments/'.$payment->id.'/reject')
             ->assertOk()

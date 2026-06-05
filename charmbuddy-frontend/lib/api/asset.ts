@@ -7,21 +7,26 @@ export function resolveApiAsset(path: string | null | undefined, fallback: strin
     return fallback;
   }
 
-  if (path.startsWith("http://") || path.startsWith("https://")) {
-    return path;
+  const trimmedPath = path.trim();
+  if (!trimmedPath) {
+    return fallback;
   }
 
-  if (path.startsWith("/")) {
-    return `${API_ASSET_BASE}${path}`;
+  if (trimmedPath.startsWith("http://") || trimmedPath.startsWith("https://")) {
+    return trimmedPath;
   }
 
-  if (path.startsWith("storage/")) {
-    return `${API_ASSET_BASE}/${path}`;
+  if (trimmedPath.startsWith("/storage/")) {
+    return `${API_ASSET_BASE}${trimmedPath}`;
   }
 
-  if (path.startsWith("products/")) {
-    return `${API_ASSET_BASE}/${path}`;
+  if (trimmedPath.startsWith("storage/")) {
+    return `${API_ASSET_BASE}/${trimmedPath}`;
   }
 
-  return `${API_ASSET_BASE}/storage/${path}`;
+  if (trimmedPath.startsWith("/")) {
+    return `${API_ASSET_BASE}${trimmedPath}`;
+  }
+
+  return `${API_ASSET_BASE}/storage/${trimmedPath}`;
 }

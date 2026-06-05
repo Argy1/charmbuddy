@@ -130,12 +130,31 @@ class ApiCheckoutFlowTest extends TestCase
             ->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonPath('data.order.id', $orderId)
-            ->assertJsonCount(4, 'data.timeline');
+            ->assertJsonCount(4, 'data.timeline')
+            ->assertJsonPath('data.timeline.0.id', 'pending')
+            ->assertJsonPath('data.timeline.0.active', true)
+            ->assertJsonPath('data.timeline.1.id', 'paid')
+            ->assertJsonPath('data.timeline.1.active', false)
+            ->assertJsonPath('data.timeline.2.id', 'processed')
+            ->assertJsonPath('data.timeline.2.active', false)
+            ->assertJsonPath('data.timeline.3.id', 'sent')
+            ->assertJsonPath('data.timeline.3.active', false);
 
         $this->getJson('/api/orders/'.$orderId.'/status')
             ->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonPath('data.order_id', $orderId);
+    }
+
+    public function test_public_storage_route_serves_uploaded_files_without_symlink_dependency(): void
+    {
+        Storage::fake('public');
+
+        $path = UploadedFile::fake()->image('avatar.jpg')->storeAs('avatars', 'avatar.jpg', 'public');
+
+        $this->get('/storage/'.$path)
+            ->assertOk()
+            ->assertHeader('content-type', 'image/jpeg');
     }
 
     public function test_checkout_normalizes_legacy_product_prices_to_rupiah(): void

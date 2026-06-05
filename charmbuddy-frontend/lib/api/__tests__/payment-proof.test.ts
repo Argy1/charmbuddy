@@ -15,14 +15,14 @@ const basePayment: AdminPayment = {
 };
 
 describe("payment proof helpers", () => {
-  it("prefers proof_url over stored paths", () => {
+  it("prefers stored paths over proof_url", () => {
     expect(
       resolveAdminPaymentProofSource({
         ...basePayment,
         proof_url: "https://example.test/storage/proof.png",
         payment_proof_path: "payment-proofs/proof.png",
       }),
-    ).toBe("https://example.test/storage/proof.png");
+    ).toBe("payment-proofs/proof.png");
   });
 
   it("falls back through payment and order proof path variants", () => {
