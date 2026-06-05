@@ -23,7 +23,7 @@ class RajaOngkirService
             ]);
 
             throw ValidationException::withMessages([
-                'rajaongkir' => 'Gagal mengambil data provinsi dari RajaOngkir.',
+                'rajaongkir' => $this->errorMessage($exception, 'Gagal mengambil data provinsi dari RajaOngkir.'),
             ]);
         }
 
@@ -48,7 +48,7 @@ class RajaOngkirService
             ]);
 
             throw ValidationException::withMessages([
-                'rajaongkir' => 'Gagal mengambil data kota dari RajaOngkir.',
+                'rajaongkir' => $this->errorMessage($exception, 'Gagal mengambil data kota dari RajaOngkir.'),
             ]);
         }
 
@@ -82,7 +82,7 @@ class RajaOngkirService
             ]);
 
             throw ValidationException::withMessages([
-                'rajaongkir' => 'Gagal mengambil ongkir dari RajaOngkir.',
+                'rajaongkir' => $this->errorMessage($exception, 'Gagal mengambil ongkir dari RajaOngkir.'),
             ]);
         }
 
@@ -146,5 +146,15 @@ class RajaOngkirService
     {
         return rtrim(config('services.rajaongkir.base_url', 'https://rajaongkir.komerce.id/api/v1'), '/');
     }
-}
 
+    private function errorMessage(RequestException $exception, string $fallback): string
+    {
+        $upstreamMessage = trim((string) data_get($exception->response?->json(), 'meta.message'));
+
+        if ($upstreamMessage === '') {
+            return $fallback;
+        }
+
+        return "RajaOngkir: {$upstreamMessage}";
+    }
+}
