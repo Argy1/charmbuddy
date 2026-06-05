@@ -47,4 +47,17 @@ class SecurityHeadersTest extends TestCase
             ->assertOk()
             ->assertHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
     }
+
+    public function test_public_assets_can_be_embedded_cross_origin(): void
+    {
+        $this->get('/products/clara-bow.png')
+            ->assertOk()
+            ->assertHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+
+        $this->withHeader('Origin', 'https://charmbuddy.vercel.app')
+            ->get('/products/clara-bow.png')
+            ->assertOk()
+            ->assertHeader('Cross-Origin-Resource-Policy', 'cross-origin')
+            ->assertHeader('Access-Control-Allow-Origin', 'https://charmbuddy.vercel.app');
+    }
 }

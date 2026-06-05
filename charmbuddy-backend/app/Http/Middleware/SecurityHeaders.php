@@ -33,8 +33,14 @@ class SecurityHeaders
         // Prevent Flash / Acrobat cross-domain requests to this API
         $response->headers->set('X-Permitted-Cross-Domain-Policies', 'none');
 
-        // Prevent other sites from embedding API responses (spectre/side-channel attacks)
-        $response->headers->set('Cross-Origin-Resource-Policy', 'same-site');
+        // API JSON stays protected, but public upload assets must be embeddable by
+        // the Vercel frontend even though Railway is a different site.
+        if ($request->is('storage/*') || $request->is('products/*')) {
+            $response->headers->set('Cross-Origin-Resource-Policy', 'cross-origin');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+        } else {
+            $response->headers->set('Cross-Origin-Resource-Policy', 'same-site');
+        }
 
         // Force HTTPS when running under TLS. Railway/Vercel-style proxies may
         // forward HTTPS via headers before Laravel sees the request as secure.
