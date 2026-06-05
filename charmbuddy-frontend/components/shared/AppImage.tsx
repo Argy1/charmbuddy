@@ -11,7 +11,7 @@ type AppImageProps = Omit<ImageProps, "src" | "alt"> & {
 
 export default function AppImage({ src, alt, fallbackSrc, onError, unoptimized, ...props }: AppImageProps) {
   const [currentSrc, setCurrentSrc] = useState(src);
-  const shouldBypassOptimization = /^https?:\/\//.test(currentSrc);
+  const shouldBypassOptimization = /^(https?:|blob:|data:)/.test(currentSrc);
 
   useEffect(() => {
     setCurrentSrc(src);

@@ -9,6 +9,7 @@ type PaymentMethodModalProps = {
   onBrowse?: () => void;
   onOverlayClick?: () => void;
   selectedFileName?: string;
+  selectedFilePreviewUrl?: string;
   isUploading?: boolean;
   errorMessage?: string;
 };
@@ -59,23 +60,39 @@ function InstructionRight() {
   );
 }
 
-function UploadBox({ onBrowse, selectedFileName }: { onBrowse?: () => void; selectedFileName?: string }) {
+function UploadBox({ onBrowse, selectedFileName, selectedFilePreviewUrl }: { onBrowse?: () => void; selectedFileName?: string; selectedFilePreviewUrl?: string }) {
   return (
-    <div className="flex h-[250px] w-[250px] items-center justify-between bg-[#d9d9d9] px-[91px] py-[22px]">
-      <div className="flex w-[121px] flex-col items-start gap-[34px]">
-        <div className="flex h-[61px] w-full flex-col items-center gap-[10px]">
+    <div className="relative flex h-[250px] w-[250px] items-center justify-center overflow-hidden bg-[#d9d9d9]">
+      {selectedFilePreviewUrl ? (
+        <>
+          <AppImage
+            alt={selectedFileName ? `Preview bukti transfer ${selectedFileName}` : "Preview bukti transfer"}
+            className="object-contain"
+            fill
+            sizes="250px"
+            src={selectedFilePreviewUrl}
+            unoptimized
+          />
+          <div className="absolute inset-x-0 top-0 bg-black/45 px-[10px] py-[8px]">
+            <p className="truncate text-center font-satoshi text-[12px] font-bold tracking-[1px] text-white">{selectedFileName ?? "Selected"}</p>
+          </div>
+        </>
+      ) : (
+        <div className="flex w-[121px] flex-col items-center gap-[34px]">
+          <div className="flex h-[61px] w-full flex-col items-center gap-[10px]">
           <AppImage alt="Camera" className="h-[24px] w-[24px]" height={24} src="/payment-method/camera.svg" width={24} />
           <p className="w-full text-center font-satoshi text-[20px] font-bold leading-[normal] tracking-[3px] text-[rgba(0,0,0,0.5)]">{selectedFileName ? "Selected" : "Drop Here"}</p>
         </div>
-        <button className="flex h-[43px] w-full items-center justify-center rounded-[50px] bg-black px-[16px] py-[8px]" onClick={onBrowse} type="button">
+        </div>
+      )}
+        <button className="absolute bottom-[22px] left-1/2 flex h-[43px] w-[121px] -translate-x-1/2 items-center justify-center rounded-[50px] bg-black px-[16px] py-[8px] shadow-[0px_8px_18px_rgba(0,0,0,0.18)]" onClick={onBrowse} type="button">
           <p className="font-satoshi text-[20px] font-bold leading-[normal] tracking-[3px] text-white">Browse</p>
         </button>
-      </div>
     </div>
   );
 }
 
-export default function PaymentMethodModal({ open = true, asPage = false, onDone, onBrowse, onOverlayClick, selectedFileName, isUploading = false, errorMessage }: PaymentMethodModalProps) {
+export default function PaymentMethodModal({ open = true, asPage = false, onDone, onBrowse, onOverlayClick, selectedFileName, selectedFilePreviewUrl, isUploading = false, errorMessage }: PaymentMethodModalProps) {
   const prefersReducedMotion = useReducedMotion();
 
   if (!open) {
@@ -121,7 +138,7 @@ export default function PaymentMethodModal({ open = true, asPage = false, onDone
 
             <PaymentRow />
             <InstructionLeft />
-            <UploadBox onBrowse={onBrowse} selectedFileName={selectedFileName} />
+            <UploadBox onBrowse={onBrowse} selectedFileName={selectedFileName} selectedFilePreviewUrl={selectedFilePreviewUrl} />
             <InstructionRight />
 
             <motion.button className="flex h-[43px] w-[121px] items-center justify-center rounded-[50px] bg-black px-[16px] py-[8px] disabled:opacity-60" disabled={isUploading} onClick={onDone} type="button" whileHover={prefersReducedMotion ? undefined : { y: -2, scale: 1.04 }} whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}>
@@ -143,7 +160,7 @@ export default function PaymentMethodModal({ open = true, asPage = false, onDone
             <div className="mt-[34px] grid grid-cols-[minmax(0,353px)_minmax(0,349px)] gap-[72px]">
               <div className="flex flex-col gap-[24px]">
                 <InstructionLeft />
-                <UploadBox onBrowse={onBrowse} selectedFileName={selectedFileName} />
+                <UploadBox onBrowse={onBrowse} selectedFileName={selectedFileName} selectedFilePreviewUrl={selectedFilePreviewUrl} />
               </div>
               <div className="flex flex-col gap-[28px] pt-[2px]">
                 <InstructionRight />
