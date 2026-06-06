@@ -118,7 +118,7 @@ class PaymentAdminController extends Controller
             ?: ($payment->proof_path ?? null)
             ?: ($payment->order?->payment_proof_path ?? null);
 
-        $path = trim((string) $path);
+        $path = $this->normalizeProofPath($path);
 
         return $path !== '' ? $path : null;
     }
@@ -132,5 +132,19 @@ class PaymentAdminController extends Controller
         $payment->setAttribute('proof_url', $path ? '/storage/'.ltrim($path, '/') : null);
 
         return $payment;
+    }
+
+    private function normalizeProofPath(?string $path): string
+    {
+        $normalized = trim(str_replace('\\', '/', (string) $path));
+        $normalized = ltrim($normalized, '/');
+
+        foreach (['storage/', 'public/'] as $prefix) {
+            if (str_starts_with($normalized, $prefix)) {
+                return substr($normalized, strlen($prefix));
+            }
+        }
+
+        return $normalized;
     }
 }

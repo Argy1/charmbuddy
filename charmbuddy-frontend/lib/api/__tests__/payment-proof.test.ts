@@ -47,4 +47,9 @@ describe("payment proof helpers", () => {
       }),
     ).toBe("payment-proofs/order.png");
   });
+
+  it("normalizes legacy local storage prefixes", () => {
+    expect(resolveAdminPaymentProofSource({ ...basePayment, payment_proof_path: "public/payment-proofs/a.png" })).toBe("payment-proofs/a.png");
+    expect(resolveAdminPaymentProofSource({ ...basePayment, payment_proof_path: "/storage/payment-proofs/a.png" })).toBe("storage/payment-proofs/a.png");
+  });
 });

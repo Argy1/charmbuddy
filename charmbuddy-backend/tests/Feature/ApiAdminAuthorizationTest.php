@@ -71,7 +71,7 @@ class ApiAdminAuthorizationTest extends TestCase
             'order_id' => $order->id,
             'amount' => 260,
             'status' => 'Pending',
-            'payment_proof_path' => 'payment-proofs/sample-proof.png',
+            'payment_proof_path' => 'public/payment-proofs/sample-proof.png',
         ]);
 
         Sanctum::actingAs($admin);
