@@ -1,0 +1,2 @@
+[build]
+buildCommand = "php artisan storage:link --force"
